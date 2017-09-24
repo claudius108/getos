@@ -5,7 +5,7 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
-import ro.kuberam.getos.controllers.GetosController;
+import ro.kuberam.getos.controllers.MainController;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 
@@ -17,8 +17,9 @@ public class Main extends Application {
 		BorderPane pane = loader.load();
 		Scene scene = new Scene(pane, 650, 400);
 		primaryStage.setScene(scene);
-		GetosController controller = ((GetosController) loader.getController());
+		MainController controller = ((MainController) loader.getController());
 
+		controller.setHostServices(getHostServices());
 		controller.setStage(primaryStage);
 		
 		primaryStage.show();

@@ -11,7 +11,7 @@
 
 <BorderPane prefHeight="-1.0" prefWidth="-1.0" stylesheets="@app.css"
 	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="ro.kuberam.getos.controllers.GetosController">
+	fx:controller="ro.kuberam.getos.controllers.MainController">
 	<top>
 		<MenuBar prefHeight="25.0">
 			<menus>
@@ -46,7 +46,7 @@
 				<Menu mnemonicParsing="false" text="Help">
 					<items>
 						<MenuItem mnemonicParsing="false" text="Update" />
-						<MenuItem mnemonicParsing="false" onAction="#aboutAction"
+						<MenuItem mnemonicParsing="false" onAction="#menuHelpAbout"
 							text="About" />
 					</items>
 				</Menu>
