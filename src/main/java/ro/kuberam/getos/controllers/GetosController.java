@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
+import ro.kuberam.getos.ui.AboutDialog;
 
 public class GetosController implements Initializable {
 
@@ -19,7 +20,7 @@ public class GetosController implements Initializable {
 
 	@FXML
 	void aboutAction(ActionEvent event) {
-		AboutDialog aboutDialog = new AboutDialog(stage);
+		AboutDialog aboutDialog = new AboutDialog();
 		aboutDialog.showAbout();
 	}
 
