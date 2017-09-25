@@ -1,4 +1,4 @@
-package ro.kuberam.getos.controllers;
+package ro.kuberam.getos.controller;
 
 import java.io.IOException;
 import java.net.URL;

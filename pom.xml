@@ -19,7 +19,7 @@
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>8.8.3</version>
 				<configuration>
-					<mainClass>ro.kuberam.getos.Main</mainClass>
+					<mainClass>ro.kuberam.getos.App</mainClass>
 					<jfxMainAppJarName>getos.jar</jfxMainAppJarName>
 				</configuration>
 			</plugin>
