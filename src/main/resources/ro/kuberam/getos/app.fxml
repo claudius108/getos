@@ -11,7 +11,7 @@
 
 <BorderPane prefHeight="-1.0" prefWidth="-1.0" stylesheets="@app.css"
 	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="ro.kuberam.getos.controller.MainController">
+	fx:controller="ro.kuberam.getos.controller.MainWindowController">
 	<top>
 		<MenuBar prefHeight="25.0">
 			<menus>

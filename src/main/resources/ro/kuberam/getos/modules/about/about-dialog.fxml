@@ -10,7 +10,7 @@
 	<content>
 		<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="103.0" prefWidth="480.0">
 			<children>
-				<Hyperlink fx:id="hyperlink" layoutX="89.0" layoutY="59.0" onMouseClicked="#openHomePageAction" text="http://kuberam.ro" />
+				<Hyperlink fx:id="hyperlink" layoutX="89.0" layoutY="59.0" text="http://kuberam.ro" />
 				<Label layoutX="26.0" layoutY="29.0" text="Version 0.0.1." />
 				<Label layoutX="25.0" layoutY="63.0" text="Visit us at" />
 			</children>

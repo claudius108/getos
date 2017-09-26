@@ -3,14 +3,17 @@ package ro.kuberam.getos.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import ro.kuberam.getos.controller.factory.ControllerFactory;
+import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 
-public class MainController implements Initializable {
+public class MainWindowController extends StageController {
 
 	private Stage stage;
 	private HostServices hostServices;
@@ -25,8 +28,18 @@ public class MainController implements Initializable {
 		AboutDialogController.create(stage, hostServices);
 	}
 
+	public MainWindowController(Application application, Stage stage) {
+		super(application, stage);
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		super.initialize(location, resources);
+	}
+
+	public static void create(Application application, Stage stage) throws Exception {
+		FXMLLoader.load(MainWindowController.class.getResource("/ro/kuberam/getos/app.fxml"), null, null,
+				new ControllerFactory(application, stage));
 	}
 
 	public void setStage(Stage stage) {
