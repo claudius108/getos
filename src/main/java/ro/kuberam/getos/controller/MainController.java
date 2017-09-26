@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
+import ro.kuberam.getos.modules.about.AboutDialogController;
 
 public class MainController implements Initializable {
 

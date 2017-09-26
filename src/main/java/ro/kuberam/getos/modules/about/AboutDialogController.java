@@ -1,4 +1,4 @@
-package ro.kuberam.getos.controller;
+package ro.kuberam.getos.modules.about;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,7 +40,7 @@ public final class AboutDialogController implements Initializable {
 		dialog.initOwner(parent);
 
 		FXMLLoader loader = new FXMLLoader(
-				AboutDialogController.class.getResource("/ro/kuberam/getos/dialogs/about-dialog.fxml"));
+				AboutDialogController.class.getResource("/ro/kuberam/getos/modules/about/about-dialog.fxml"));
 		Parent dialogRoot = loader.load();
 
 		dialog.setScene(new Scene(dialogRoot));
