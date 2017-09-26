@@ -21,7 +21,7 @@ public class MainController implements Initializable {
 
 	@FXML
 	void menuHelpAbout(ActionEvent event) throws Exception {
-		AboutDialogController.create(hostServices);
+		AboutDialogController.create(stage, hostServices);
 	}
 
 	@Override
