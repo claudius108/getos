@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="-1.0" prefWidth="-1.0" stylesheets="@app.css"
+<BorderPane fx:id="mRoot" prefHeight="-1.0" prefWidth="-1.0" stylesheets="@app.css"
 	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="ro.kuberam.getos.controller.MainWindowController">
 	<top>

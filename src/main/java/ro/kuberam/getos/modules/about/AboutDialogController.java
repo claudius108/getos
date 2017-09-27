@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
-import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,23 +24,15 @@ public final class AboutDialogController extends StageController {
 	@FXML
 	private Hyperlink hyperlink;
 
-	private static HostServices hostServices;
-	private static Application application;
-	private static Stage stage;
-
 	public AboutDialogController(Application application, Stage stage) {
 		super(application, stage);
-	}
-
-	public AboutDialogController() {
-		this(application, stage);
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		dialog.lookupButton(ButtonType.CLOSE).setOnMouseClicked((MouseEvent ev) -> stage.close());
+		dialog.lookupButton(ButtonType.CLOSE).setOnMouseClicked((MouseEvent ev) -> getStage().close());
 
 		hyperlink.setOnAction(event -> {
 			getApplication().getHostServices().showDocument(hyperlink.getText());
@@ -49,11 +40,8 @@ public final class AboutDialogController extends StageController {
 		});
 	}
 
-	public static void create(Stage parent, HostServices hostServices) throws Exception {
-		setHostServices(hostServices);
-
+	public static void create(Stage parent) throws Exception {
 		Stage dialog = new Stage();
-		setStage(dialog);
 		dialog.initOwner(parent);
 
 		FXMLLoader loader = new FXMLLoader(
@@ -64,14 +52,6 @@ public final class AboutDialogController extends StageController {
 		dialog.initModality(Modality.APPLICATION_MODAL);
 
 		dialog.show();
-	}
-
-	public static void setHostServices(HostServices hostServices) {
-		AboutDialogController.hostServices = hostServices;
-	}
-
-	public static void setStage(Stage stage) {
-		AboutDialogController.stage = stage;
 	}
 
 }
