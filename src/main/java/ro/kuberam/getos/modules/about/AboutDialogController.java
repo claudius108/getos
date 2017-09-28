@@ -6,20 +6,21 @@ import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.StageController;
 
 public final class AboutDialogController extends StageController {
 
 	@FXML
-	private DialogPane dialog;
+	private DialogPane mRoot;
 
 	@FXML
 	private Hyperlink hyperlink;
@@ -32,26 +33,33 @@ public final class AboutDialogController extends StageController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		dialog.lookupButton(ButtonType.CLOSE).setOnMouseClicked((MouseEvent ev) -> getStage().close());
+		mRoot.lookupButton(ButtonType.CLOSE).setOnMouseClicked((MouseEvent ev) -> getStage().close());
 
 		hyperlink.setOnAction(event -> {
 			getApplication().getHostServices().showDocument(hyperlink.getText());
 			event.consume();
 		});
+
+		Stage stage = getStage();
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setTitle(resources.getString("about_title"));
+		stage.setScene(new Scene(mRoot));
+		stage.setResizable(false);
+		stage.centerOnScreen();
+
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+			getStage().hide();
+			event.consume();
+		});
+
+		stage.show();
 	}
 
-	public static void create(Stage parent) throws Exception {
-		Stage dialog = new Stage();
-		dialog.initOwner(parent);
-
-		FXMLLoader loader = new FXMLLoader(
-				AboutDialogController.class.getResource("/ro/kuberam/getos/modules/about/about-dialog.fxml"));
-		Parent dialogRoot = loader.load();
-
-		dialog.setScene(new Scene(dialogRoot));
-		dialog.initModality(Modality.APPLICATION_MODAL);
-
-		dialog.show();
+	public static void create(Application application, Stage parent) throws Exception {
+		Stage stage = new Stage();
+		stage.initOwner(parent);
+		FXMLLoader.load(AboutDialogController.class.getResource("/ro/kuberam/getos/modules/about/about-dialog.fxml"),
+				ResourceBundle.getBundle("ro.kuberam.getos.ui"), null, new ControllerFactory(application, stage));
 	}
 
 }
