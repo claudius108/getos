@@ -36,7 +36,7 @@ public final class AboutDialogController extends StageController {
 		mRoot.lookupButton(ButtonType.CLOSE).setOnMouseClicked((MouseEvent ev) -> getStage().close());
 
 		hyperlink.setOnAction(event -> {
-			getApplication().getHostServices().showDocument(hyperlink.getText());
+			getApplication().getHostServices().showDocument(resources.getString("about_title"));
 			event.consume();
 		});
 
