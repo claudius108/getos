@@ -8,45 +8,45 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane fx:id="mRoot" prefHeight="-1.0" prefWidth="-1.0" stylesheets="@app.css"
-	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="ro.kuberam.getos.controller.MainWindowController">
+<BorderPane fx:id="mRoot" prefHeight="-1.0" prefWidth="-1.0"
+	stylesheets="@app.css" xmlns="http://javafx.com/javafx/8.0.111"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.controller.MainWindowController">
 	<top>
 		<MenuBar prefHeight="25.0">
 			<menus>
-				<Menu mnemonicParsing="false" text="Project">
+				<Menu mnemonicParsing="false" text="%project">
 					<items>
-						<MenuItem mnemonicParsing="false" text="New" />
-						<MenuItem mnemonicParsing="false" text="Open…" />
-						<Menu mnemonicParsing="false" text="Open Recent" />
+						<MenuItem mnemonicParsing="false" text="%new" />
+						<MenuItem mnemonicParsing="false" text="%open" />
+						<Menu mnemonicParsing="false" text="%open_recent" />
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" text="Close" />
-						<MenuItem mnemonicParsing="false" text="Save" />
-						<MenuItem mnemonicParsing="false" text="Save As…" />
+						<MenuItem mnemonicParsing="false" text="%close" />
+						<MenuItem mnemonicParsing="false" text="%save" />
+						<MenuItem mnemonicParsing="false" text="%save_as" />
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem mnemonicParsing="false" onAction="#quitAction"
-							text="Quit" />
+							text="%quit" />
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="Extract">
+				<Menu mnemonicParsing="false" text="%extract">
 					<items>
-						<MenuItem mnemonicParsing="false" text="Tables" />
-						<MenuItem mnemonicParsing="false" text="Text" />
-						<MenuItem mnemonicParsing="false" text="Named Entities" />
-						<MenuItem mnemonicParsing="false" text="Bibliography" />
+						<MenuItem mnemonicParsing="false" text="%tables" />
+						<MenuItem mnemonicParsing="false" text="%text" />
+						<MenuItem mnemonicParsing="false" text="%named_entities" />
+						<MenuItem mnemonicParsing="false" text="%bibliography" />
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="Convert">
+				<Menu mnemonicParsing="false" text="%convert">
 					<items>
-						<MenuItem mnemonicParsing="false" text="Table to XML" />
-						<MenuItem mnemonicParsing="false" text="Text to XML" />
+						<MenuItem mnemonicParsing="false" text="%table_to_xml" />
+						<MenuItem mnemonicParsing="false" text="%text_to_xml" />
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="Help">
+				<Menu mnemonicParsing="false" text="%help">
 					<items>
-						<MenuItem mnemonicParsing="false" text="Update" />
+						<MenuItem mnemonicParsing="false" text="%update" />
 						<MenuItem mnemonicParsing="false" onAction="#menuHelpAbout"
-							text="About" />
+							text="%about" />
 					</items>
 				</Menu>
 			</menus>
