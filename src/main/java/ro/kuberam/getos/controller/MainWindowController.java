@@ -43,7 +43,7 @@ public final class MainWindowController extends StageController {
 		super.initialize(location, resources);
 
 		Stage stage = getStage();
-		stage.setTitle(resources.getString("appname"));
+		stage.setTitle(resources.getString("appname") + " v. " + resources.getString("appversion"));
 		stage.setScene(new Scene(mRoot));
 		stage.centerOnScreen();
 		stage.setResizable(true);
