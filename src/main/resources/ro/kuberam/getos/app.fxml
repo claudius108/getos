@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -14,39 +13,37 @@
 	<top>
 		<MenuBar prefHeight="25.0">
 			<menus>
-				<Menu mnemonicParsing="false" text="%project">
+				<Menu text="%project">
 					<items>
-						<MenuItem mnemonicParsing="false" text="%new" />
-						<MenuItem mnemonicParsing="false" text="%open" />
-						<Menu mnemonicParsing="false" text="%open_recent" />
-						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" text="%close" />
-						<MenuItem mnemonicParsing="false" text="%save" />
-						<MenuItem mnemonicParsing="false" text="%save_as" />
-						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" onAction="#quitAction"
-							text="%quit" />
+						<MenuItem text="%new" />
+						<MenuItem text="%open" />
+						<Menu text="%open_recent" />
+						<SeparatorMenuItem mnemonicParsing="false"/>
+						<MenuItem text="%close" />
+						<MenuItem text="%save" />
+						<MenuItem text="%save_as" />
+						<SeparatorMenuItem mnemonicParsing="false"/>
+						<MenuItem fx:id="mItemClose" text="%quit" />
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="%extract">
+				<Menu text="%extract">
 					<items>
-						<MenuItem mnemonicParsing="false" text="%tables" />
-						<MenuItem mnemonicParsing="false" text="%text" />
-						<MenuItem mnemonicParsing="false" text="%named_entities" />
-						<MenuItem mnemonicParsing="false" text="%bibliography" />
+						<MenuItem text="%tables" />
+						<MenuItem text="%text" />
+						<MenuItem text="%named_entities" />
+						<MenuItem text="%bibliography" />
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="%convert">
+				<Menu text="%convert">
 					<items>
-						<MenuItem mnemonicParsing="false" text="%table_to_xml" />
-						<MenuItem mnemonicParsing="false" text="%text_to_xml" />
+						<MenuItem text="%table_to_xml" />
+						<MenuItem text="%text_to_xml" />
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="%help">
+				<Menu text="%help">
 					<items>
-						<MenuItem mnemonicParsing="false" text="%update" />
-						<MenuItem mnemonicParsing="false" onAction="#menuHelpAbout"
-							text="%about" />
+						<MenuItem text="%update" />
+						<MenuItem fx:id="mItemAbout" text="%about" />
 					</items>
 				</Menu>
 			</menus>

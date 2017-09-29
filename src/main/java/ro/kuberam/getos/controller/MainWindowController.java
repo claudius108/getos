@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
@@ -23,6 +24,12 @@ public final class MainWindowController extends StageController {
 
 	@FXML
 	private BorderPane mRoot;
+
+	@FXML
+	private MenuItem mItemAbout;
+
+	@FXML
+	private MenuItem mItemClose;
 
 	@FXML
 	void quitAction(ActionEvent event) {
@@ -42,6 +49,16 @@ public final class MainWindowController extends StageController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		mItemClose.setOnAction(event -> {
+			onStageClose();
+			event.consume();
+		});
+
+		mItemAbout.setOnAction(event -> {
+			showAboutDialog();
+			event.consume();
+		});
+
 		Stage stage = getStage();
 		stage.setTitle(resources.getString("appname") + " v. " + resources.getString("appversion"));
 		stage.setScene(new Scene(mRoot));
@@ -55,6 +72,23 @@ public final class MainWindowController extends StageController {
 		try {
 			FXMLLoader.load(MainWindowController.class.getResource("/ro/kuberam/getos/app.fxml"),
 					ResourceBundle.getBundle("ro.kuberam.getos.ui"), null, new ControllerFactory(application, stage));
+		} catch (Exception ex) {
+			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
+			if (ex.getCause() != null) {
+				Utils.showErrorDialog(null, ex.getCause().getLocalizedMessage());
+			} else {
+				Utils.showErrorDialog(null, ex.getLocalizedMessage());
+			}
+		}
+	}
+
+	private void onStageClose() {
+		getStage().hide();
+	}
+
+	private void showAboutDialog() {
+		try {
+			AboutDialogController.create(getApplication(), getStage());
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 			if (ex.getCause() != null) {
