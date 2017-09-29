@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ButtonType?>
 <?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
-<DialogPane fx:id="mRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.modules.about.AboutDialogController">
+<DialogPane fx:id="mRoot" maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0"
+	prefWidth="480.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="ro.kuberam.getos.modules.about.AboutDialogController">
 	<content>
-		<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="103.0" prefWidth="480.0">
+		<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="103.0"
+			prefWidth="480.0">
 			<children>
-				<Hyperlink fx:id="hyperlink" layoutX="89.0" layoutY="59.0" text="http://kuberam.ro" />
-				<Label layoutX="26.0" layoutY="29.0" text="Version 0.0.1." />
-				<Label layoutX="25.0" layoutY="63.0" text="Visit us at" />
+				<Hyperlink fx:id="hyperlink" layoutX="26.0" layoutY="61.0"
+					text="%homelink" />
+				<HBox layoutX="26.0" layoutY="29.0" spacing="0">
+					<children>
+						<Label text="%appname" />
+						<Label text="%appversion">
+							<padding>
+								<Insets left="5.0" />
+							</padding>
+						</Label>
+					</children>
+				</HBox>
 			</children>
 		</AnchorPane>
 	</content>
-   <buttonTypes>
-      <ButtonType fx:constant="CLOSE" />
-   </buttonTypes>
+	<buttonTypes>
+		<ButtonType fx:constant="CLOSE" />
+	</buttonTypes>
 </DialogPane>
