@@ -13,17 +13,27 @@
 	<top>
 		<MenuBar prefHeight="25.0">
 			<menus>
+				<Menu text="%file">
+					<items>
+						<MenuItem text="%new_file" />
+						<MenuItem text="%open_file" />
+						<Menu text="%open_recent_files" />
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem text="%save_file" />
+						<MenuItem text="%save_file_as" />
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem text="%close_file" />
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem fx:id="mItemClose" text="%quit" />
+					</items>
+				</Menu>
 				<Menu text="%project">
 					<items>
-						<MenuItem text="%new" />
-						<MenuItem text="%open" />
-						<Menu text="%open_recent" />
-						<SeparatorMenuItem mnemonicParsing="false"/>
-						<MenuItem text="%close" />
-						<MenuItem text="%save" />
-						<MenuItem text="%save_as" />
-						<SeparatorMenuItem mnemonicParsing="false"/>
-						<MenuItem fx:id="mItemClose" text="%quit" />
+						<MenuItem text="%new_project" />
+						<MenuItem text="%open_project" />
+						<Menu text="%open_recent_projects" />
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem text="%save_project_as" />
 					</items>
 				</Menu>
 				<Menu text="%extract">
