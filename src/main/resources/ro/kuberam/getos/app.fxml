@@ -4,10 +4,10 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane fx:id="mRoot" prefHeight="-1.0" prefWidth="-1.0"
+<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0"
 	stylesheets="@app.css" xmlns="http://javafx.com/javafx/8.0.111"
 	xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.controller.MainWindowController">
 	<top>
@@ -16,7 +16,7 @@
 				<Menu text="%file">
 					<items>
 						<MenuItem text="%new_file" />
-						<MenuItem text="%open_file" />
+						<MenuItem fx:id="openFileMenuItem" text="%open_file" />
 						<Menu text="%open_recent_files" />
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem text="%save_file" />
@@ -60,7 +60,6 @@
 		</MenuBar>
 	</top>
 	<center>
-		<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="362.0"
-			prefWidth="640.0" />
+		<TabPane fx:id="tabPane" BorderPane.alignment="CENTER" />
 	</center>
 </BorderPane>

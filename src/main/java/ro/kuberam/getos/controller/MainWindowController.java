@@ -1,17 +1,20 @@
 package ro.kuberam.getos.controller;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.StageController;
@@ -23,7 +26,10 @@ public final class MainWindowController extends StageController {
 	private final static String TAG = MainWindowController.class.getSimpleName();
 
 	@FXML
-	private BorderPane mRoot;
+	private BorderPane root;
+
+	@FXML
+	private MenuItem openFileMenuItem;
 
 	@FXML
 	private MenuItem mItemAbout;
@@ -32,14 +38,9 @@ public final class MainWindowController extends StageController {
 	private MenuItem mItemClose;
 
 	@FXML
-	void quitAction(ActionEvent event) {
-		getStage().close();
-	}
+	private TabPane mTabPane;
 
-	@FXML
-	void menuHelpAbout(ActionEvent event) throws Exception {
-		AboutDialogController.create(getApplication(), getStage());
-	}
+	private FileChooser fileChooser;
 
 	public MainWindowController(Application application, Stage stage) {
 		super(application, stage);
@@ -48,6 +49,11 @@ public final class MainWindowController extends StageController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
+
+		openFileMenuItem.setOnAction(event -> {
+			loadFile();
+			event.consume();
+		});
 
 		mItemClose.setOnAction(event -> {
 			onStageClose();
@@ -59,9 +65,13 @@ public final class MainWindowController extends StageController {
 			event.consume();
 		});
 
+		fileChooser = new FileChooser();
+		fileChooser.setInitialFileName("");
+		// mFileChooser.getExtensionFilters().addAll(ParserFileType.getExtensionFilters());
+
 		Stage stage = getStage();
 		stage.setTitle(resources.getString("appname") + " v. " + resources.getString("appversion"));
-		stage.setScene(new Scene(mRoot));
+		stage.setScene(new Scene(root));
 		stage.centerOnScreen();
 		stage.setResizable(true);
 
@@ -75,10 +85,26 @@ public final class MainWindowController extends StageController {
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 			if (ex.getCause() != null) {
-				Utils.showErrorDialog(null, ex.getCause().getLocalizedMessage());
+				Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
 			} else {
-				Utils.showErrorDialog(null, ex.getLocalizedMessage());
+				Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
 			}
+		}
+	}
+
+	private void loadFile() {
+		ResourceBundle resourceBundle = getResources();
+
+		fileChooser.setTitle(resourceBundle.getString("open_file_dialog_title"));
+
+		File file = fileChooser.showOpenDialog(getStage());
+		if (file != null) {
+			fileChooser.setTitle(resourceBundle.getString("load"));
+			fileChooser.setInitialDirectory(file.getParentFile());
+
+			// We load file according to their extensions, not the content
+			// ParserFileType type = ParserFileType.getTypeByExtension(file);
+			// createNewEditorTab(type, file, true);
 		}
 	}
 
@@ -92,9 +118,9 @@ public final class MainWindowController extends StageController {
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 			if (ex.getCause() != null) {
-				Utils.showErrorDialog(null, ex.getCause().getLocalizedMessage());
+				Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
 			} else {
-				Utils.showErrorDialog(null, ex.getLocalizedMessage());
+				Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
 			}
 		}
 	}
