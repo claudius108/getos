@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
@@ -43,6 +44,9 @@ public final class MainWindowController extends StageController {
 
 	@FXML
 	private TabPane tabPane;
+
+	@FXML
+	private Label statusLabel;
 
 	private final ArrayList<EditorTabController> tabControllers;
 	private FileChooser fileChooser;
@@ -160,31 +164,24 @@ public final class MainWindowController extends StageController {
 				tabControllers.remove(newTabController);
 				newTabController.shutDown();
 				if (tabPane.getTabs().size() == 1) {
-					mParserChooser.getSelectionModel().select(null);
-					mParserChooser.setDisable(true);
-					mStatusLabel.setText("");
+					statusLabel.setText("");
 				}
 			});
 			newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue) {
-					EditorTabController tabController = mTabControllers.get(mTabPane.getTabs().indexOf(newTab));
+					EditorTabController tabController = tabControllers.get(tabPane.getTabs().indexOf(newTab));
 					tabController.onEditorTabSelected();
-
-					mParserChooser.valueProperty().removeListener(mParserChooserListener);
-					mParserChooser.getSelectionModel().select(tabController.getParserFileType());
-					mParserChooser.valueProperty().addListener(mParserChooserListener);
 				}
 			});
 
 			newTabController.setEditorPane(newTab);
-			newTabController.setStatusLabel(mStatusLabel);
+			newTabController.setStatusLabel(statusLabel);
 			tabControllers.add(newTabController);
 			tabPane.getTabs().add(newTab);
 			if (loadFile) {
 				newTabController.loadContent();
 			}
-			mParserChooser.setDisable(false);
-			mTabPane.getSelectionModel().select(newTab);
+			tabPane.getSelectionModel().select(newTab);
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 			if (ex.getCause() != null) {

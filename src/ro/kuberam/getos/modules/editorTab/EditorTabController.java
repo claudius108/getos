@@ -31,14 +31,12 @@ public final class EditorTabController extends StageController {
 	@FXML
 	private SplitPane mSplitPane;
 
-	private ContextMenu mEditorContextMenu;
-
 	private String mStatusMessage;
 	private Paint mStatusColor;
 	private Label mStatusLabel;
 
 	private ViewerFileType fileType;
-	private EditorTab editorTab;
+	private EditorTab mEditorTab;
 
 	private final ExecutorService mExecutorService;
 
@@ -121,6 +119,14 @@ public final class EditorTabController extends StageController {
 		return false;
 	}
 
+	public void setEditorPane(EditorTab editorTab) {
+		mEditorTab = editorTab;
+	}
+
+	public EditorTab getEditorTab() {
+		return mEditorTab;
+	}
+
 	public BorderPane getRoot() {
 		return mRoot;
 	}
@@ -135,10 +141,6 @@ public final class EditorTabController extends StageController {
 
 	public Label getStatusLabel() {
 		return mStatusLabel;
-	}
-
-	public EditorTab getEditorTab() {
-		return editorTab;
 	}
 
 }

@@ -62,4 +62,19 @@
 	<center>
 		<TabPane fx:id="tabPane" BorderPane.alignment="CENTER" />
 	</center>
+	<bottom>
+		<BorderPane BorderPane.alignment="CENTER">
+			<left>
+				<HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
+					<padding>
+						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+					</padding>
+					<Label fx:id="statusLabel" />
+				</HBox>
+			</left>
+			<padding>
+				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+			</padding>
+		</BorderPane>
+	</bottom>
 </BorderPane>
