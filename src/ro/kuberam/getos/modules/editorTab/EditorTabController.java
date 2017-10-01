@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
@@ -29,7 +28,7 @@ public final class EditorTabController extends StageController {
 	private BorderPane mRoot;
 
 	@FXML
-	private SplitPane mSplitPane;
+	private SplitPane contentPane;
 
 	private String mStatusMessage;
 	private Paint mStatusColor;
@@ -79,6 +78,8 @@ public final class EditorTabController extends StageController {
 	public void loadContent() {
 		String line;
 		StringBuilder stringBuilder = new StringBuilder();
+
+		Logger.getLogger(TAG).log(Level.INFO, fileType.getName());
 
 		// File file = getEditorTab().getFile();
 		// String lineSeparator = String.format("%n");
@@ -131,8 +132,8 @@ public final class EditorTabController extends StageController {
 		return mRoot;
 	}
 
-	public SplitPane getSplitPane() {
-		return mSplitPane;
+	public SplitPane getContentPane() {
+		return contentPane;
 	}
 
 	public void setStatusLabel(Label label) {

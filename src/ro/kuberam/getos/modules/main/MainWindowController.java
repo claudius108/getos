@@ -111,10 +111,10 @@ public final class MainWindowController extends StageController {
 		if (file != null) {
 			fileChooser.setInitialDirectory(file.getParentFile());
 
-			Utils.showAlert(AlertType.INFORMATION, null, Utils.getExtension(file));
-
-			// We load file according to their extensions, not the content
 			ViewerFileType type = ViewerFileType.getTypeByExtension(file);
+
+			Logger.getLogger(TAG).log(Level.INFO, "ViewerFileType = " + type.getName());
+
 			createNewEditorTab(type, file, true);
 		}
 	}
@@ -156,6 +156,7 @@ public final class MainWindowController extends StageController {
 			EditorTab newTab = new EditorTab(file);
 			newTab.setClosable(true);
 			newTab.setContent(newTabController.getRoot());
+
 			newTab.setOnCloseRequest(event -> {
 				// todo: show yes/no save dialog
 				if (newTabController.isEdited()) {

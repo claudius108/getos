@@ -7,7 +7,8 @@
 <BorderPane fx:id="mRoot" xmlns="http://javafx.com/javafx/8.0.65"
 	xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.modules.editorTab.EditorTabController">
 	<center>
-		<SplitPane fx:id="mSplitPane" dividerPositions="0.5">
+		<SplitPane fx:id="contentPane">
+			<items />
 		</SplitPane>
 	</center>
 </BorderPane>
