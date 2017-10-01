@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.modules.about.AboutDialogController;
+import ro.kuberam.getos.modules.viewers.ViewerFileType;
 import ro.kuberam.getos.utils.Utils;
 
 public final class MainWindowController extends StageController {
@@ -67,7 +68,7 @@ public final class MainWindowController extends StageController {
 
 		fileChooser = new FileChooser();
 		fileChooser.setInitialFileName("");
-		// mFileChooser.getExtensionFilters().addAll(ParserFileType.getExtensionFilters());
+		fileChooser.getExtensionFilters().addAll(ViewerFileType.getExtensionFilters());
 
 		Stage stage = getStage();
 		stage.setTitle(resources.getString("appname") + " v. " + resources.getString("appversion"));
