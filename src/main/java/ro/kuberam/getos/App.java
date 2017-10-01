@@ -2,7 +2,7 @@ package ro.kuberam.getos;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import ro.kuberam.getos.controller.MainWindowController;
+import ro.kuberam.getos.modules.main.MainWindowController;
 
 public class App extends Application {
 

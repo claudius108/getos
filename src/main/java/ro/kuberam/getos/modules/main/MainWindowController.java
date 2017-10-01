@@ -1,4 +1,4 @@
-package ro.kuberam.getos.controller;
+package ro.kuberam.getos.modules.main;
 
 import java.io.File;
 import java.net.URL;
@@ -99,8 +99,9 @@ public final class MainWindowController extends StageController {
 
 		File file = fileChooser.showOpenDialog(getStage());
 		if (file != null) {
-			fileChooser.setTitle(resourceBundle.getString("load"));
 			fileChooser.setInitialDirectory(file.getParentFile());
+
+			Utils.showAlert(AlertType.INFORMATION, null, Utils.getExtension(file));
 
 			// We load file according to their extensions, not the content
 			// ParserFileType type = ParserFileType.getTypeByExtension(file);
