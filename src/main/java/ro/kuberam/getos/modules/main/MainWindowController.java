@@ -2,6 +2,7 @@ package ro.kuberam.getos.modules.main;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +20,8 @@ import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.modules.about.AboutDialogController;
+import ro.kuberam.getos.modules.editorTab.EditorTab;
+import ro.kuberam.getos.modules.editorTab.EditorTabController;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
 import ro.kuberam.getos.utils.Utils;
 
@@ -39,12 +42,14 @@ public final class MainWindowController extends StageController {
 	private MenuItem mItemClose;
 
 	@FXML
-	private TabPane mTabPane;
+	private TabPane tabPane;
 
+	private final ArrayList<EditorTabController> tabControllers;
 	private FileChooser fileChooser;
 
 	public MainWindowController(Application application, Stage stage) {
 		super(application, stage);
+		tabControllers = new ArrayList<>();
 	}
 
 	@Override
@@ -105,18 +110,81 @@ public final class MainWindowController extends StageController {
 			Utils.showAlert(AlertType.INFORMATION, null, Utils.getExtension(file));
 
 			// We load file according to their extensions, not the content
-			// ParserFileType type = ParserFileType.getTypeByExtension(file);
-			// createNewEditorTab(type, file, true);
+			ViewerFileType type = ViewerFileType.getTypeByExtension(file);
+			createNewEditorTab(type, file, true);
 		}
 	}
 
 	private void onStageClose() {
+		tabControllers.forEach(tabController -> {
+			if (tabController.isEdited()) {
+				// todo: show yes/no save dialog
+				tabController.saveContent();
+			}
+			tabController.shutDown();
+		});
+
 		getStage().hide();
 	}
 
 	private void showAboutDialog() {
 		try {
 			AboutDialogController.create(getApplication(), getStage());
+		} catch (Exception ex) {
+			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
+			if (ex.getCause() != null) {
+				Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
+			} else {
+				Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
+			}
+		}
+	}
+
+	private void createNewEditorTab(ViewerFileType type, File file, boolean loadFile) {
+		if (type == null) {
+			Utils.showAlert(AlertType.ERROR, file.getName(), getResources().getString("cant_handle_filetype"));
+			return;
+		}
+
+		try {
+			EditorTabController newTabController = EditorTabController.create(getApplication(), getStage(), type);
+
+			EditorTab newTab = new EditorTab(file);
+			newTab.setClosable(true);
+			newTab.setContent(newTabController.getRoot());
+			newTab.setOnCloseRequest(event -> {
+				// todo: show yes/no save dialog
+				if (newTabController.isEdited()) {
+					newTabController.saveContent();
+				}
+				tabControllers.remove(newTabController);
+				newTabController.shutDown();
+				if (tabPane.getTabs().size() == 1) {
+					mParserChooser.getSelectionModel().select(null);
+					mParserChooser.setDisable(true);
+					mStatusLabel.setText("");
+				}
+			});
+			newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
+				if (newValue) {
+					EditorTabController tabController = mTabControllers.get(mTabPane.getTabs().indexOf(newTab));
+					tabController.onEditorTabSelected();
+
+					mParserChooser.valueProperty().removeListener(mParserChooserListener);
+					mParserChooser.getSelectionModel().select(tabController.getParserFileType());
+					mParserChooser.valueProperty().addListener(mParserChooserListener);
+				}
+			});
+
+			newTabController.setEditorPane(newTab);
+			newTabController.setStatusLabel(mStatusLabel);
+			tabControllers.add(newTabController);
+			tabPane.getTabs().add(newTab);
+			if (loadFile) {
+				newTabController.loadContent();
+			}
+			mParserChooser.setDisable(false);
+			mTabPane.getSelectionModel().select(newTab);
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 			if (ex.getCause() != null) {

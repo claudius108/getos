@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane fx:id="mRoot" xmlns="http://javafx.com/javafx/8.0.65"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.modules.editorTab.EditorTabController">
+	<center>
+		<SplitPane fx:id="mSplitPane" dividerPositions="0.5">
+		</SplitPane>
+	</center>
+</BorderPane>
