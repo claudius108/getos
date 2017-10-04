@@ -84,6 +84,7 @@ public final class MainWindowController extends StageController {
 		stage.setScene(new Scene(root));
 		stage.centerOnScreen();
 		stage.setResizable(true);
+		stage.setMaximized(true);
 
 		stage.show();
 	}
@@ -112,8 +113,6 @@ public final class MainWindowController extends StageController {
 			fileChooser.setInitialDirectory(file.getParentFile());
 
 			ViewerFileType type = ViewerFileType.getTypeByExtension(file);
-
-			Logger.getLogger(TAG).log(Level.INFO, "ViewerFileType = " + type.getName());
 
 			createNewEditorTab(type, file, true);
 		}

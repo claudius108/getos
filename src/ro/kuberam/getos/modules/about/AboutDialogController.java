@@ -20,7 +20,7 @@ import ro.kuberam.getos.controller.factory.StageController;
 public final class AboutDialogController extends StageController {
 
 	@FXML
-	private DialogPane mRoot;
+	private DialogPane root;
 
 	@FXML
 	private Hyperlink hyperlink;
@@ -33,7 +33,7 @@ public final class AboutDialogController extends StageController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		mRoot.lookupButton(ButtonType.CLOSE).setOnMouseClicked((MouseEvent ev) -> getStage().close());
+		root.lookupButton(ButtonType.CLOSE).setOnMouseClicked((MouseEvent ev) -> getStage().close());
 
 		hyperlink.setOnAction(event -> {
 			getApplication().getHostServices().showDocument(resources.getString("homelink"));
@@ -43,7 +43,7 @@ public final class AboutDialogController extends StageController {
 		Stage stage = getStage();
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle(resources.getString("about_title"));
-		stage.setScene(new Scene(mRoot));
+		stage.setScene(new Scene(root));
 		stage.setResizable(false);
 		stage.centerOnScreen();
 
@@ -58,6 +58,7 @@ public final class AboutDialogController extends StageController {
 	public static void create(Application application, Stage parent) throws Exception {
 		Stage stage = new Stage();
 		stage.initOwner(parent);
+		
 		FXMLLoader.load(AboutDialogController.class.getResource("/ro/kuberam/getos/modules/about/about-dialog.fxml"),
 				ResourceBundle.getBundle("ro.kuberam.getos.ui"), null, new ControllerFactory(application, stage));
 	}
