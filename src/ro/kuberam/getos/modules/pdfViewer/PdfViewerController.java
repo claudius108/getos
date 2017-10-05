@@ -21,18 +21,23 @@
 package ro.kuberam.getos.modules.pdfViewer;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-import org.jpedal.PdfDecoderFX;
 import org.jpedal.examples.viewer.gui.javafx.dialog.FXInputDialog;
 import org.jpedal.exception.PdfException;
 import org.jpedal.external.PluginHandler;
 import org.jpedal.objects.PdfPageData;
 
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -57,45 +62,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import ro.kuberam.getos.controller.factory.ControllerFactory;
+import ro.kuberam.getos.controller.factory.StageController;
 
-/**
- * <h2><b>BaseViewerFX</b></h2>
- * <p>
- * <p>
- * If you are compiling, you will need to download all the examples source files
- * from :
- * <a href="http://www.idrsolutions.com/how-to-view-pdf-files-in-java/">How to
- * View PDF File in Java.</a>
- * </p>
- * <p>
- * <p>
- * <b>Run directly from jar with java -cp jpedal.jar
- * org/jpedal/examples/baseviewer/BaseViewerFX</b>
- * </p>
- * <p>
- * <p>
- * There are plenty of tutorials on how to configure the Viewer on our website
- * <a href="http://www.idrsolutions.com/java-pdf-library-support/">Support
- * Section.</a>
- * </p>
- * <p>
- * <p>
- * This class provides example code to create a bare-bones PDF Viewer in JavaFX.
- * </p>
- * <p>
- * <p>
- * <a href=
- * "http://files.idrsolutions.com/samplecode/org/jpedal/examples/baseviewer/BaseViewer.java.html">
- * Click here for a bare-bones PDF Viewer in Java Swing.</a>
- * </p>
- * <p>
- * <p>
- * <a href=
- * "http://www.idrsolutions.com/java-pdf-library-support/http://www.idrsolutions.com/java-pdf-library-support/">
- * For more help and tutorials, visit our websites Support Section.</a>
- * </p>
- */
-public class PdfViewer {
+public class PdfViewerController extends StageController {
+
+	@FXML
+	private BorderPane root;
 
 	private final org.jpedal.PdfDecoderFX pdf = new org.jpedal.PdfDecoderFX();
 
@@ -110,8 +83,6 @@ public class PdfViewer {
 				// its orientation
 		NONE
 	}
-
-	String PDFfile;
 
 	// Variable to hold the current file/directory
 	File file;
@@ -158,15 +129,13 @@ public class PdfViewer {
 
 	FitToPage zoomMode = FitToPage.AUTO;
 
-	/**
-	 * launches BaseViewerFX viewer using supplied stage for displaying PDF
-	 * files
-	 *
-	 * @param stage
-	 *            is of type final Stage
-	 */
-	public void create(final Stage stage, String filePath) {
-		stage.setTitle("Base Viewer FX - " + PdfDecoderFX.version);
+	public PdfViewerController(Application application, Stage stage) {
+		super(application, stage);
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		super.initialize(location, resources);
 
 		// Set page if set in JVM flag
 		final String pageNum = System.getProperty("org.jpedal.page");
@@ -176,17 +145,17 @@ public class PdfViewer {
 
 		}
 
-		this.stage = stage;
 		scene = setupViewer(800, 600);
 
 		/*
 		 * setup initial display Setting this before loadPDF() gives access to
 		 * the toolbar buttons when called in loadPDF() via id.
 		 */
+		Stage stage = getStage();
+		
 		stage.setScene(scene);
 		stage.show();
 
-		file = new File(filePath);
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -199,6 +168,14 @@ public class PdfViewer {
 		});
 
 		addListeners();
+	}
+
+	public static void create(Application application, Stage parent, File file) throws IOException {
+		Stage stage = new Stage();
+		stage.initOwner(parent);
+
+		FXMLLoader.load(PdfViewerController.class.getResource("/ro/kuberam/getos/modules/pdfViewer/PDF-viewer.fxml"),
+				ResourceBundle.getBundle("ro.kuberam.getos.ui"), null, new ControllerFactory(application, stage));
 	}
 
 	/**
@@ -253,6 +230,10 @@ public class PdfViewer {
 		scene = new Scene(root, w * FXscaling, h * FXscaling);
 
 		return scene;
+	}
+
+	public BorderPane getRoot() {
+		return root;
 	}
 
 	public void addListeners() {
@@ -328,10 +309,10 @@ public class PdfViewer {
 		final ToolBar toolbar = new ToolBar();
 
 		final Button open = new Button("Open");
-		final Button back = new Button("Back");
+		final Button back = new Button("▲");
 		final ComboBox<String> pages = new ComboBox<String>();
 		final Label pageCount = new Label();
-		final Button forward = new Button("Forward");
+		final Button forward = new Button("▼");
 		final Button zoomIn = new Button("Zoom in");
 		final Button zoomOut = new Button("Zoom out");
 		final Button fitWidth = new Button("Fit to Width");
@@ -405,8 +386,6 @@ public class PdfViewer {
 		forward.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				System.out.println(currentPage);
-
 				if (currentPage < pdf.getPageCount()) {
 					goToPage(currentPage + 1);
 				}
@@ -519,8 +498,8 @@ public class PdfViewer {
 
 		scale = 1; // Reset to default for new page
 
-		PDFfile = input.getAbsolutePath();
-		fileLoc.setText(PDFfile);
+		// PDFfile = input.getAbsolutePath();
+		// fileLoc.setText(PDFfile);
 
 		openFile(input, null, false);
 
@@ -540,8 +519,8 @@ public class PdfViewer {
 		}
 
 		scale = 1; // Reset to default for new page
-		PDFfile = input;
-		fileLoc.setText(PDFfile);
+		// PDFfile = input;
+		// fileLoc.setText(PDFfile);
 
 		if (input.startsWith("http")) {
 			openFile(null, input, true);
@@ -780,13 +759,6 @@ public class PdfViewer {
 	private void goToPage(final int newPage) {
 		currentPage = newPage;
 		decodePage();
-	}
-
-	/**
-	 * @return the case sensitive full path and name of the PDF file
-	 */
-	public String getPDFfilename() {
-		return PDFfile;
 	}
 
 	private void adjustPagePosition(final Bounds nb) {

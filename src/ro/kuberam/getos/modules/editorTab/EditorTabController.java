@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
@@ -18,17 +19,25 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.StageController;
+import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
+import ro.kuberam.getos.utils.Utils;
 
 public final class EditorTabController extends StageController {
 
 	private final static String TAG = EditorTabController.class.getSimpleName();
 
 	@FXML
-	private BorderPane mRoot;
+	private BorderPane root;
 
 	@FXML
 	private SplitPane contentPane;
+
+	@FXML
+	private BorderPane sourcePane;
+
+	@FXML
+	private BorderPane targetPane;
 
 	private String mStatusMessage;
 	private Paint mStatusColor;
@@ -58,8 +67,6 @@ public final class EditorTabController extends StageController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
-
-		ResourceBundle resourceBundle = getResources();
 	}
 
 	public void onEditorTabSelected() {
@@ -76,23 +83,22 @@ public final class EditorTabController extends StageController {
 	}
 
 	public void loadContent() {
-		String line;
-		StringBuilder stringBuilder = new StringBuilder();
+		String fileTypeName = fileType.getName();
 
-		Logger.getLogger(TAG).log(Level.INFO, fileType.getName());
-
-		// File file = getEditorTab().getFile();
-		// String lineSeparator = String.format("%n");
-		// try (BufferedReader reader = new BufferedReader(new
-		// FileReader(file))) {
-		// while ((line = reader.readLine()) != null) {
-		// stringBuilder.append(line).append(lineSeparator);
-		// }
-		// } catch (IOException ex) {
-		// Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
-		// }
-		//
-		// mCodeArea.replaceText(stringBuilder.toString());
+		switch (fileTypeName) {
+		case "PDF":
+			try {
+				PdfViewerController.create(getApplication(), getStage(), getEditorTab().getFile());
+			} catch (Exception ex) {
+				Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
+				if (ex.getCause() != null) {
+					Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
+				} else {
+					Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
+				}
+			}
+			break;
+		}
 	}
 
 	private void setStatusMessage(String message, Paint color) {
@@ -129,11 +135,7 @@ public final class EditorTabController extends StageController {
 	}
 
 	public BorderPane getRoot() {
-		return mRoot;
-	}
-
-	public SplitPane getContentPane() {
-		return contentPane;
+		return root;
 	}
 
 	public void setStatusLabel(Label label) {

@@ -42,7 +42,7 @@ public final class AboutDialogController extends StageController {
 
 		Stage stage = getStage();
 		stage.initModality(Modality.APPLICATION_MODAL);
-		stage.setTitle(resources.getString("about_title"));
+		stage.setTitle(resources.getString("about_dialog_title"));
 		stage.setScene(new Scene(root));
 		stage.setResizable(false);
 		stage.centerOnScreen();
