@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jpedal.examples.viewer.gui.javafx.dialog.FXInputDialog;
 import org.jpedal.exception.PdfException;
@@ -39,7 +41,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -67,6 +68,8 @@ import ro.kuberam.getos.controller.factory.StageController;
 
 public class PdfViewerController extends StageController {
 
+	private final static String TAG = PdfViewerController.class.getSimpleName();
+
 	@FXML
 	private BorderPane root;
 
@@ -75,6 +78,15 @@ public class PdfViewerController extends StageController {
 
 	@FXML
 	private Button forwardButton;
+
+	@FXML
+	private ScrollPane centerPane;
+
+	@FXML
+	private Group contentPane;
+
+	@FXML
+	private Label fileLocation;
 
 	private final org.jpedal.PdfDecoderFX pdf = new org.jpedal.PdfDecoderFX();
 
@@ -91,7 +103,7 @@ public class PdfViewerController extends StageController {
 	}
 
 	// Variable to hold the current file/directory
-	File file;
+	static File pFile;
 
 	// These two variables are to do with PDF encryption & passwords
 	private String password; // Holds the password from the JVM or from User
@@ -105,11 +117,6 @@ public class PdfViewerController extends StageController {
 	private ScrollPane center;
 
 	// Group is a container which holds the decoded PDF content
-	private Group group;
-
-	// For the location of the pdf file
-	private Text fileLoc;
-
 	private float scale = 1.0f;
 
 	private final float[] scalings = { 0.01f, 0.1f, 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f, 4.0f, 7.5f, 10.0f };
@@ -121,10 +128,6 @@ public class PdfViewerController extends StageController {
 	private static final float insetY = 25;
 
 	private int currentPage = 1;
-
-	Stage stage;
-
-	Scene scene;
 
 	/*
 	 * Controls size of the stage, in theory setting this to a higher value will
@@ -143,6 +146,13 @@ public class PdfViewerController extends StageController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		centerPane.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
+			@Override
+			public void changed(final ObservableValue<? extends Bounds> ov, final Bounds ob, final Bounds nb) {
+				adjustPagePosition(nb);
+			}
+		});
+
 		// Set page if set in JVM flag
 		final String pageNum = System.getProperty("org.jpedal.page");
 		if (pageNum != null) {
@@ -151,98 +161,9 @@ public class PdfViewerController extends StageController {
 
 		}
 
-		scene = setupViewer(800, 600);
-
-		/*
-		 * setup initial display Setting this before loadPDF() gives access to
-		 * the toolbar buttons when called in loadPDF() via id.
-		 */
 		Stage stage = getStage();
-
+		Scene scene = new Scene(root, 800 * FXscaling, 600 * FXscaling);
 		stage.setScene(scene);
-		stage.show();
-
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				loadPDF(file);
-				// Unset the page
-				if (System.getProperty("org.jpedal.page") != null) {
-					// System.setProperty("org.jpedal.page", "");
-				}
-			}
-		});
-
-		addListeners();
-	}
-
-	public static void create(Application application, Stage parent, File file) throws IOException {
-		Stage stage = new Stage();
-		stage.initOwner(parent);
-
-		FXMLLoader.load(PdfViewerController.class.getResource("/ro/kuberam/getos/modules/pdfViewer/PDF-viewer.fxml"),
-				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfViewer.pdfViewer"), null, new ControllerFactory(application, stage));
-	}
-
-	/**
-	 * creates all the components and adds change listeners for auto-centering
-	 * for JavaFX PDF viewer
-	 *
-	 * @param w
-	 *            The width to use for the viewer
-	 * @param h
-	 *            The height to use for the viewer
-	 * @return scene
-	 */
-	public Scene setupViewer(final int w, final int h) {
-
-		// Setting up layout panes and assigning them to the appropiate
-		// locations
-		final BorderPane root = new BorderPane();
-
-		top = new VBox();
-
-		root.setTop(top);
-
-		top.getChildren().add(setupToolBar());
-
-		bottom = new HBox();
-		bottom.setPadding(new Insets(0, 10, 0, 10));
-		root.setBottom(bottom);
-
-		center = new ScrollPane();
-		center.setPannable(true);
-		center.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-		center.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-
-		// Needs to be added via group so resizes
-		group = new Group();
-		group.getChildren().add(pdf);
-		center.setContent(group);
-		root.setCenter(center);
-
-		center.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
-			@Override
-			public void changed(final ObservableValue<? extends Bounds> ov, final Bounds ob, final Bounds nb) {
-				adjustPagePosition(nb);
-			}
-		});
-
-		// Sets the text to be displayed at the bottom of the FX Viewer
-		fileLoc = new Text("No PDF Selected");
-		fileLoc.setId("file_location");
-		bottom.getChildren().add(fileLoc);
-
-		scene = new Scene(root, w * FXscaling, h * FXscaling);
-
-		return scene;
-	}
-
-	public BorderPane getRoot() {
-		return root;
-	}
-
-	public void addListeners() {
 
 		// Auto adjust so dynamically resized as viewer width alters
 		scene.widthProperty().addListener(new ChangeListener<Number>() {
@@ -290,11 +211,11 @@ public class PdfViewerController extends StageController {
 				if (db.hasFiles()) {
 					success = true;
 					// Only get the first file from the list
-					file = db.getFiles().get(0);
+					pFile = db.getFiles().get(0);
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
-							loadPDF(file);
+							loadPDF(pFile);
 						}
 					});
 				}
@@ -302,6 +223,81 @@ public class PdfViewerController extends StageController {
 				event.consume();
 			}
 		});
+
+		stage.show();
+
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				loadPDF(pFile);
+				// Unset the page
+				if (System.getProperty("org.jpedal.page") != null) {
+					// System.setProperty("org.jpedal.page", "");
+				}
+			}
+		});
+	}
+
+	public static void create(Application application, Stage parent, File file) throws IOException {
+		Stage stage = new Stage();
+		stage.initOwner(parent);
+
+		pFile = file;
+
+		FXMLLoader.load(PdfViewerController.class.getResource("/ro/kuberam/getos/modules/pdfViewer/PDF-viewer.fxml"),
+				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfViewer.pdfViewer"), null,
+				new ControllerFactory(application, stage));
+	}
+
+	/**
+	 * creates all the components and adds change listeners for auto-centering
+	 * for JavaFX PDF viewer
+	 *
+	 * @param w
+	 *            The width to use for the viewer
+	 * @param h
+	 *            The height to use for the viewer
+	 * @return scene
+	 */
+	// public Scene setupViewer(final int w, final int h) {
+	//
+	// // Setting up layout panes and assigning them to the appropiate
+	// // locations
+	// final BorderPane root = new BorderPane();
+	//
+	// top = new VBox();
+	//
+	// root.setTop(top);
+	//
+	// top.getChildren().add(setupToolBar());
+	//
+	// bottom = new HBox();
+	// bottom.setPadding(new Insets(0, 10, 0, 10));
+	// root.setBottom(bottom);
+	//
+	// center = new ScrollPane();
+	// center.setPannable(true);
+	// center.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+	// center.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+	//
+	// root.setCenter(center);
+	//
+	// center.viewportBoundsProperty().addListener(new ChangeListener<Bounds>()
+	// {
+	// @Override
+	// public void changed(final ObservableValue<? extends Bounds> ov, final
+	// Bounds ob, final Bounds nb) {
+	// adjustPagePosition(nb);
+	// }
+	// });
+	//
+	// scene = new Scene(root, w * FXscaling, h * FXscaling);
+	//
+	// return scene;
+	// }
+
+	public BorderPane getRoot() {
+		return root;
 	}
 
 	/**
@@ -343,8 +339,8 @@ public class PdfViewerController extends StageController {
 				chooser.setTitle("Open PDF file");
 
 				// Open directory from existing directory
-				if (file != null) {
-					final File existDirectory = file.getParentFile();
+				if (pFile != null) {
+					final File existDirectory = pFile.getParentFile();
 					if (existDirectory.exists()) {
 						chooser.setInitialDirectory(existDirectory);
 					}
@@ -355,13 +351,13 @@ public class PdfViewerController extends StageController {
 						"*.pdf");
 				chooser.getExtensionFilters().add(extFilter);
 
-				file = chooser.showOpenDialog(null);
+				pFile = chooser.showOpenDialog(null);
 
-				if (file != null) {
+				if (pFile != null) {
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
-							loadPDF(file);
+							loadPDF(pFile);
 						}
 					});
 				}
@@ -484,7 +480,8 @@ public class PdfViewerController extends StageController {
 		HBox.setHgrow(spacerLeft, Priority.ALWAYS);
 		HBox.setHgrow(spacerRight, Priority.ALWAYS);
 
-		toolbar.getItems().addAll(open, spacerLeft, back, pages, pageCount, forward, zoomIn, zoomOut, spacerRight);
+		toolbar.getItems().addAll(open, spacerLeft, back, pages, pageCount, forward, zoomIn, zoomOut, spacerRight,
+				fitWidth);
 
 		return toolbar;
 	}
@@ -544,6 +541,8 @@ public class PdfViewerController extends StageController {
 			} else {
 				pdf.openPdfFile(input.getAbsolutePath());
 			}
+			
+			Logger.getLogger(TAG).log(Level.INFO, "pdf.getPageCount() = " + pdf.getPageCount());
 
 			if (customPluginHandle != null) {
 				if (isURL) {
@@ -637,7 +636,7 @@ public class PdfViewerController extends StageController {
 			inputPasswordField.setText("Please Try Again");
 		}
 
-		final FXInputDialog passwordInput = new FXInputDialog(stage, titleText.getText()) {
+		final FXInputDialog passwordInput = new FXInputDialog(getStage(), titleText.getText()) {
 			@Override
 			protected void positiveClose() {
 				super.positiveClose();
@@ -670,14 +669,15 @@ public class PdfViewerController extends StageController {
 
 		// Handle how we fit the content to the page width or height
 		if (fitToPage == FitToPage.WIDTH) {
-			final float width = (float) (scene.getWidth());
+			final float width = (float) (getStage().getWidth());
 			if (rotation == 90 || rotation == 270) {
 				scale = (width - insetX - insetX) / pageH;
 			} else {
 				scale = (width - insetX - insetX) / pageW;
 			}
 		} else if (fitToPage == FitToPage.HEIGHT) {
-			final float height = (float) (scene.getHeight() - top.getBoundsInLocal().getHeight() - bottom.getHeight());
+			final float height = (float) (getStage().getScene().getHeight() - top.getBoundsInLocal().getHeight()
+					- bottom.getHeight());
 
 			if (rotation == 90 || rotation == 270) {
 				scale = (height - insetY - insetY) / pageW;
@@ -769,13 +769,13 @@ public class PdfViewerController extends StageController {
 
 	private void adjustPagePosition(final Bounds nb) {
 
-		double adjustment = ((nb.getWidth() / 2) - (group.getBoundsInLocal().getWidth() / 2));
+		double adjustment = ((nb.getWidth() / 2) - (contentPane.getBoundsInLocal().getWidth() / 2));
 
 		// Keep the group within the viewport of the scrollpane
 		if (adjustment < 0) {
 			adjustment = 0;
 		}
-		group.setTranslateX(adjustment);
+		contentPane.setTranslateX(adjustment);
 	}
 
 	// Set a space between the top toolbar and the page
