@@ -70,6 +70,12 @@ public class PdfViewerController extends StageController {
 	@FXML
 	private BorderPane root;
 
+	@FXML
+	private Button backButton;
+
+	@FXML
+	private Button forwardButton;
+
 	private final org.jpedal.PdfDecoderFX pdf = new org.jpedal.PdfDecoderFX();
 
 	PluginHandler customPluginHandle;
@@ -152,7 +158,7 @@ public class PdfViewerController extends StageController {
 		 * the toolbar buttons when called in loadPDF() via id.
 		 */
 		Stage stage = getStage();
-		
+
 		stage.setScene(scene);
 		stage.show();
 
@@ -175,7 +181,7 @@ public class PdfViewerController extends StageController {
 		stage.initOwner(parent);
 
 		FXMLLoader.load(PdfViewerController.class.getResource("/ro/kuberam/getos/modules/pdfViewer/PDF-viewer.fxml"),
-				ResourceBundle.getBundle("ro.kuberam.getos.ui"), null, new ControllerFactory(application, stage));
+				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfViewer.pdfViewer"), null, new ControllerFactory(application, stage));
 	}
 
 	/**
