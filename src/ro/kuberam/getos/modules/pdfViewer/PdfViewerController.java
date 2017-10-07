@@ -36,7 +36,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,24 +43,18 @@ import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToolBar;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.StageController;
@@ -74,16 +67,25 @@ public class PdfViewerController extends StageController {
 	private BorderPane root;
 
 	@FXML
+	private VBox top;
+
+	@FXML
 	private Button backButton;
 
 	@FXML
 	private Button forwardButton;
 
 	@FXML
-	private ScrollPane centerPane;
+	private Label pgCountLabel;
+
+	@FXML
+	private ScrollPane center;
 
 	@FXML
 	private Group contentPane;
+
+	@FXML
+	private HBox bottom;
 
 	@FXML
 	private Label fileLocation;
@@ -111,12 +113,6 @@ public class PdfViewerController extends StageController {
 	private boolean closePasswordPrompt; // Controls whether or not we should
 											// close the prompt box
 
-	// Layout panes
-	private VBox top;
-	private HBox bottom;
-	private ScrollPane center;
-
-	// Group is a container which holds the decoded PDF content
 	private float scale = 1.0f;
 
 	private final float[] scalings = { 0.01f, 0.1f, 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f, 4.0f, 7.5f, 10.0f };
@@ -146,20 +142,16 @@ public class PdfViewerController extends StageController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		centerPane.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
+		center.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
 			@Override
 			public void changed(final ObservableValue<? extends Bounds> ov, final Bounds ob, final Bounds nb) {
 				adjustPagePosition(nb);
 			}
 		});
 
-		// Set page if set in JVM flag
-		final String pageNum = System.getProperty("org.jpedal.page");
-		if (pageNum != null) {
-
-			currentPage = Integer.parseInt(pageNum);
-
-		}
+		fileLocation.setText(pFile.getName());
+		
+		contentPane.getChildren().add(pdf);
 
 		Stage stage = getStage();
 		Scene scene = new Scene(root, 800 * FXscaling, 600 * FXscaling);
@@ -170,9 +162,7 @@ public class PdfViewerController extends StageController {
 			@Override
 			public void changed(final ObservableValue<? extends Number> observableValue, final Number oldSceneWidth,
 					final Number newSceneWidth) {
-
 				fitToX(zoomMode);
-
 			}
 		});
 
@@ -215,7 +205,7 @@ public class PdfViewerController extends StageController {
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
-							loadPDF(pFile);
+							openFile(pFile);
 						}
 					});
 				}
@@ -229,11 +219,7 @@ public class PdfViewerController extends StageController {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				loadPDF(pFile);
-				// Unset the page
-				if (System.getProperty("org.jpedal.page") != null) {
-					// System.setProperty("org.jpedal.page", "");
-				}
+				openFile(pFile);
 			}
 		});
 	}
@@ -245,7 +231,7 @@ public class PdfViewerController extends StageController {
 		pFile = file;
 
 		FXMLLoader.load(PdfViewerController.class.getResource("/ro/kuberam/getos/modules/pdfViewer/PDF-viewer.fxml"),
-				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfViewer.pdfViewer"), null,
+				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfViewer.ui"), null,
 				new ControllerFactory(application, stage));
 	}
 
@@ -276,9 +262,6 @@ public class PdfViewerController extends StageController {
 	// root.setBottom(bottom);
 	//
 	// center = new ScrollPane();
-	// center.setPannable(true);
-	// center.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-	// center.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 	//
 	// root.setCenter(center);
 	//
@@ -290,15 +273,6 @@ public class PdfViewerController extends StageController {
 	// adjustPagePosition(nb);
 	// }
 	// });
-	//
-	// scene = new Scene(root, w * FXscaling, h * FXscaling);
-	//
-	// return scene;
-	// }
-
-	public BorderPane getRoot() {
-		return root;
-	}
 
 	/**
 	 * Sets up a MenuBar to be used at the top of the window. It contains one
@@ -306,257 +280,197 @@ public class PdfViewerController extends StageController {
 	 *
 	 * @return ToolBar object used at the top of the user interface
 	 */
-	private ToolBar setupToolBar() {
+	// private ToolBar setupToolBar() {
+	//
+	// final ToolBar toolbar = new ToolBar();
+	//
+	// final Button open = new Button("Open");
+	// final Button back = new Button("▲");
+	// final ComboBox<String> pages = new ComboBox<String>();
+	// final Label pageCount = new Label();
+	// final Button forward = new Button("▼");
+	// final Button zoomIn = new Button("Zoom in");
+	// final Button zoomOut = new Button("Zoom out");
+	// final Button fitWidth = new Button("Fit to Width");
+	// final Button fitHeight = new Button("Fit to Height");
+	// final Button fitPage = new Button("Fit to Page");
+	//
+	// open.setId("open");
+	// back.setId("back");
+	// pageCount.setId("pgCount");
+	// pages.setId("pages");
+	// forward.setId("forward");
+	// zoomIn.setId("zoomIn");
+	// zoomOut.setId("zoomOut");
+	// fitWidth.setId("fitWidth");
+	// fitHeight.setId("fitHeight");
+	// fitPage.setId("fitPage");
+	//
+	// open.setOnAction(new EventHandler<ActionEvent>() {
+	// @Override
+	// public void handle(final ActionEvent t) {
+	// final FileChooser chooser = new FileChooser();
+	// chooser.setTitle("Open PDF file");
+	//
+	// // Open directory from existing directory
+	// if (pFile != null) {
+	// final File existDirectory = pFile.getParentFile();
+	// if (existDirectory.exists()) {
+	// chooser.setInitialDirectory(existDirectory);
+	// }
+	// }
+	//
+	// // Set extension filter
+	// final FileChooser.ExtensionFilter extFilter = new
+	// FileChooser.ExtensionFilter("PDF files (*.pdf)",
+	// "*.pdf");
+	// chooser.getExtensionFilters().add(extFilter);
+	//
+	// pFile = chooser.showOpenDialog(null);
+	//
+	// if (pFile != null) {
+	// Platform.runLater(new Runnable() {
+	// @Override
+	// public void run() {
+	// openFile(pFile);
+	// }
+	// });
+	// }
+	// }
+	// });
+	//
+	// pages.getSelectionModel().selectedIndexProperty().addListener(new
+	// ChangeListener<Number>() {
+	// @Override
+	// public void changed(final ObservableValue<? extends Number> ov, final
+	// Number oldVal, final Number newVal) {
+	// if (newVal.intValue() != -1 && newVal.intValue() + 1 != currentPage) {
+	// final int newPage = newVal.intValue() + 1;
+	// goToPage(newPage);
+	// }
+	// }
+	// });
+	//
+	// back.setOnAction(new EventHandler<ActionEvent>() {
+	//
+	// @Override
+	// public void handle(final ActionEvent t) {
+	// if (currentPage > 1) {
+	// goToPage(currentPage - 1);
+	// }
+	//
+	// }
+	// });
+	//
+	// forward.setOnAction(new EventHandler<ActionEvent>() {
+	// @Override
+	// public void handle(final ActionEvent t) {
+	// if (currentPage < pdf.getPageCount()) {
+	// goToPage(currentPage + 1);
+	// }
+	//
+	// }
+	// });
+	//
+	// zoomIn.setOnAction(new EventHandler<ActionEvent>() {
+	//
+	// @Override
+	// public void handle(final ActionEvent t) {
+	// zoomMode = FitToPage.NONE;
+	//
+	// if (currentScaling < scalings.length - 1) {
+	//
+	// currentScaling = findClosestIndex(scale, scalings);
+	//
+	// if (scale >= scalings[findClosestIndex(scale, scalings)]) {
+	//
+	// currentScaling++;
+	//
+	// }
+	//
+	// scale = scalings[currentScaling];
+	//
+	// }
+	//
+	// pdf.setPageParameters(scale, currentPage);
+	// adjustPagePosition(centerPane.getViewportBounds());
+	// }
+	// });
+	//
+	// zoomOut.setOnAction(new EventHandler<ActionEvent>() {
+	//
+	// @Override
+	// public void handle(final ActionEvent t) {
+	// zoomMode = FitToPage.NONE;
+	//
+	// if (currentScaling > 0) {
+	//
+	// currentScaling = findClosestIndex(scale, scalings);
+	//
+	// if (scale <= scalings[findClosestIndex(scale, scalings)]) {
+	//
+	// currentScaling--;
+	//
+	// }
+	//
+	// scale = scalings[currentScaling];
+	//
+	// }
+	//
+	// pdf.setPageParameters(scale, currentPage);
+	// adjustPagePosition(centerPane.getViewportBounds());
+	// }
+	// });
+	//
+	// fitWidth.setOnAction(new EventHandler<ActionEvent>() {
+	//
+	// @Override
+	// public void handle(final ActionEvent t) {
+	// zoomMode = FitToPage.WIDTH;
+	// fitToX(FitToPage.WIDTH);
+	//
+	// }
+	// });
+	//
+	// fitHeight.setOnAction(new EventHandler<ActionEvent>() {
+	//
+	// @Override
+	// public void handle(final ActionEvent t) {
+	// zoomMode = FitToPage.HEIGHT;
+	// fitToX(FitToPage.HEIGHT);
+	//
+	// }
+	// });
+	//
+	// fitPage.setOnAction(new EventHandler<ActionEvent>() {
+	//
+	// @Override
+	// public void handle(final ActionEvent t) {
+	// zoomMode = FitToPage.AUTO;
+	// fitToX(FitToPage.AUTO);
+	//
+	// }
+	// });
+	//
+	// final Region spacerLeft = new Region();
+	// final Region spacerRight = new Region();
+	// HBox.setHgrow(spacerLeft, Priority.ALWAYS);
+	// HBox.setHgrow(spacerRight, Priority.ALWAYS);
+	//
+	// toolbar.getItems().addAll(open, spacerLeft, back, pages, pageCount,
+	// forward, zoomIn, zoomOut, spacerRight,
+	// fitWidth);
+	//
+	// return toolbar;
+	// }
 
-		final ToolBar toolbar = new ToolBar();
-
-		final Button open = new Button("Open");
-		final Button back = new Button("▲");
-		final ComboBox<String> pages = new ComboBox<String>();
-		final Label pageCount = new Label();
-		final Button forward = new Button("▼");
-		final Button zoomIn = new Button("Zoom in");
-		final Button zoomOut = new Button("Zoom out");
-		final Button fitWidth = new Button("Fit to Width");
-		final Button fitHeight = new Button("Fit to Height");
-		final Button fitPage = new Button("Fit to Page");
-
-		open.setId("open");
-		back.setId("back");
-		pageCount.setId("pgCount");
-		pages.setId("pages");
-		forward.setId("forward");
-		zoomIn.setId("zoomIn");
-		zoomOut.setId("zoomOut");
-		fitWidth.setId("fitWidth");
-		fitHeight.setId("fitHeight");
-		fitPage.setId("fitPage");
-
-		open.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(final ActionEvent t) {
-				final FileChooser chooser = new FileChooser();
-				chooser.setTitle("Open PDF file");
-
-				// Open directory from existing directory
-				if (pFile != null) {
-					final File existDirectory = pFile.getParentFile();
-					if (existDirectory.exists()) {
-						chooser.setInitialDirectory(existDirectory);
-					}
-				}
-
-				// Set extension filter
-				final FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)",
-						"*.pdf");
-				chooser.getExtensionFilters().add(extFilter);
-
-				pFile = chooser.showOpenDialog(null);
-
-				if (pFile != null) {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							loadPDF(pFile);
-						}
-					});
-				}
-			}
-		});
-
-		pages.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(final ObservableValue<? extends Number> ov, final Number oldVal, final Number newVal) {
-				if (newVal.intValue() != -1 && newVal.intValue() + 1 != currentPage) {
-					final int newPage = newVal.intValue() + 1;
-					goToPage(newPage);
-				}
-			}
-		});
-
-		back.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(final ActionEvent t) {
-				if (currentPage > 1) {
-					goToPage(currentPage - 1);
-				}
-
-			}
-		});
-
-		forward.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(final ActionEvent t) {
-				if (currentPage < pdf.getPageCount()) {
-					goToPage(currentPage + 1);
-				}
-
-			}
-		});
-
-		zoomIn.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(final ActionEvent t) {
-				zoomMode = FitToPage.NONE;
-
-				if (currentScaling < scalings.length - 1) {
-
-					currentScaling = findClosestIndex(scale, scalings);
-
-					if (scale >= scalings[findClosestIndex(scale, scalings)]) {
-
-						currentScaling++;
-
-					}
-
-					scale = scalings[currentScaling];
-
-				}
-
-				pdf.setPageParameters(scale, currentPage);
-				adjustPagePosition(center.getViewportBounds());
-			}
-		});
-
-		zoomOut.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(final ActionEvent t) {
-				zoomMode = FitToPage.NONE;
-
-				if (currentScaling > 0) {
-
-					currentScaling = findClosestIndex(scale, scalings);
-
-					if (scale <= scalings[findClosestIndex(scale, scalings)]) {
-
-						currentScaling--;
-
-					}
-
-					scale = scalings[currentScaling];
-
-				}
-
-				pdf.setPageParameters(scale, currentPage);
-				adjustPagePosition(center.getViewportBounds());
-			}
-		});
-
-		fitWidth.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(final ActionEvent t) {
-				zoomMode = FitToPage.WIDTH;
-				fitToX(FitToPage.WIDTH);
-
-			}
-		});
-
-		fitHeight.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(final ActionEvent t) {
-				zoomMode = FitToPage.HEIGHT;
-				fitToX(FitToPage.HEIGHT);
-
-			}
-		});
-
-		fitPage.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(final ActionEvent t) {
-				zoomMode = FitToPage.AUTO;
-				fitToX(FitToPage.AUTO);
-
-			}
-		});
-
-		final Region spacerLeft = new Region();
-		final Region spacerRight = new Region();
-		HBox.setHgrow(spacerLeft, Priority.ALWAYS);
-		HBox.setHgrow(spacerRight, Priority.ALWAYS);
-
-		toolbar.getItems().addAll(open, spacerLeft, back, pages, pageCount, forward, zoomIn, zoomOut, spacerRight,
-				fitWidth);
-
-		return toolbar;
-	}
-
-	/**
-	 * Take a File handle to PDF file on local file system and displays in PDF
-	 * viewer
-	 *
-	 * @param input
-	 *            The PDF file to load in the viewer
-	 */
-	public void loadPDF(final File input) {
-
-		if (input == null) {
-			return;
-		}
-
-		scale = 1; // Reset to default for new page
-
-		// PDFfile = input.getAbsolutePath();
-		// fileLoc.setText(PDFfile);
-
-		openFile(input, null, false);
-
-	}
-
-	/**
-	 * Take a File handle to PDF file on local file system and displays in PDF
-	 * viewer
-	 *
-	 * @param input
-	 *            The PDF file to load in the viewer
-	 */
-	public void loadPDF(final String input) {
-
-		if (input == null) {
-			return;
-		}
-
-		scale = 1; // Reset to default for new page
-		// PDFfile = input;
-		// fileLoc.setText(PDFfile);
-
-		if (input.startsWith("http")) {
-			openFile(null, input, true);
-		} else {
-			openFile(new File(input), null, false);
-		}
-
-	}
-
-	private void openFile(final File input, final String url, final boolean isURL) {
+	private void openFile(final File input) {
 		try {
 			// Open the pdf file so we can check for encryption
-			if (isURL) {
-				pdf.openPdfFileFromURL(url, false);
-			} else {
-				pdf.openPdfFile(input.getAbsolutePath());
-			}
-			
-			Logger.getLogger(TAG).log(Level.INFO, "pdf.getPageCount() = " + pdf.getPageCount());
+			pdf.openPdfFile(input.getAbsolutePath());
 
 			if (customPluginHandle != null) {
-				if (isURL) {
-					customPluginHandle.setFileName(url);
-				} else {
-					customPluginHandle.setFileName(input.getAbsolutePath());
-				}
-			}
-
-			if (System.getProperty("org.jpedal.page") != null && !System.getProperty("org.jpedal.page").isEmpty()) {
-				currentPage = currentPage < 1 ? 1 : currentPage;
-				currentPage = currentPage > pdf.getPageCount() ? pdf.getPageCount() : currentPage;
-			} else {
-				currentPage = 1;
+				customPluginHandle.setFileName(input.getAbsolutePath());
 			}
 
 			// This code block deals with user input and JVM passwords in
@@ -584,27 +498,17 @@ public class PdfViewerController extends StageController {
 					// If we have a password, try and open the PdfFile again
 					// with the password
 					if (password != null) {
-
-						if (isURL) {
-							pdf.openPdfFileFromURL(url, false, password);
-						} else {
-							pdf.openPdfFile(input.getAbsolutePath());
-						}
-
+						pdf.openPdfFile(input.getAbsolutePath());
 					}
-					passwordCount += 1; // Increment he password attempt
+					passwordCount += 1; // Increment the password attempt
 
 				}
 
 			}
 
 			// Set up top bar values
-			((Labeled) top.lookup("#pgCount")).setText("/" + pdf.getPageCount());
-			final ComboBox<String> pages = ((ComboBox<String>) top.lookup("#pages"));
-			pages.getItems().clear();
-			for (int i = 1; i <= pdf.getPageCount(); i++) {
-				pages.getItems().add(String.valueOf(i));
-			}
+			pgCountLabel.setText("/" + pdf.getPageCount());
+
 			// Goes to the first page and starts the decoding process
 			goToPage(currentPage);
 
@@ -720,10 +624,8 @@ public class PdfViewerController extends StageController {
 
 		try {
 			final PdfPageData pageData = pdf.getPdfPageData();
-			final int rotation = pageData.getRotation(currentPage); // rotation
-																	// angle of
-																	// current
-																	// page
+			final int rotation = pageData.getRotation(currentPage);
+			Logger.getLogger(TAG).log(Level.INFO, "rotation = " + rotation);
 
 			/*
 			 * Only call this when the page is displayed vertically, otherwise
@@ -748,18 +650,19 @@ public class PdfViewerController extends StageController {
 
 	private void updateNavButtons() {
 		if (currentPage > 1) {
-			top.lookup("#back").setDisable(false);
+			backButton.setDisable(false);
 		} else {
-			top.lookup("#back").setDisable(true);
+			backButton.setDisable(true);
 		}
 
 		if (currentPage < pdf.getPageCount()) {
-			top.lookup("#forward").setDisable(false);
+			forwardButton.setDisable(false);
 		} else {
-			top.lookup("#forward").setDisable(true);
+			forwardButton.setDisable(true);
 		}
 
-		((ComboBox) top.lookup("#pages")).getSelectionModel().select(currentPage - 1);
+		// ((ComboBox)
+		// top.lookup("#pages")).getSelectionModel().select(currentPage - 1);
 	}
 
 	private void goToPage(final int newPage) {
@@ -794,3 +697,19 @@ public class PdfViewerController extends StageController {
 		this.customPluginHandle = customPluginHandle;
 	}
 }
+
+// Create PDF documents
+// Assemble documents (split, merge, combine, remove pages)
+// Encrypt documents using RC4 or AES encryption, set passwords and permissions
+// Apply and verify digital signatures
+// Import, export and fill interactive form data
+// Convert documents to TIFF, JPEG, PNG images
+// Extract text content
+// Print PDF documents
+// Convert PDFs to images
+// Permanently Redact PDFs
+// Optional OCR module
+// Add file attachments, header & footers, watermarks, bookmarks
+// Edit document properties such as title, keywords, subject
+// Linearize PDF documents for fast web viewing
+// Create PDF layers and draw onto them
