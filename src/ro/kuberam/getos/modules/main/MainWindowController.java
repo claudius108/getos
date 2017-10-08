@@ -31,7 +31,7 @@ public final class MainWindowController extends StageController {
 	private final static String TAG = MainWindowController.class.getSimpleName();
 
 	@FXML
-	private BorderPane root;
+	private BorderPane mRoot;
 
 	@FXML
 	private MenuItem openFileMenuItem;
@@ -81,7 +81,7 @@ public final class MainWindowController extends StageController {
 
 		Stage stage = getStage();
 		stage.setTitle(resources.getString("appname") + " v. " + resources.getString("appversion"));
-		stage.setScene(new Scene(root));
+		stage.setScene(new Scene(mRoot));
 		stage.centerOnScreen();
 		stage.setResizable(true);
 		stage.setMaximized(true);
@@ -91,7 +91,7 @@ public final class MainWindowController extends StageController {
 
 	public static void create(Application application, Stage stage) throws Exception {
 		try {
-			FXMLLoader.load(MainWindowController.class.getResource("/ro/kuberam/getos/app.fxml"),
+			FXMLLoader.load(MainWindowController.class.getResource("/ro/kuberam/getos/modules/main/app.fxml"),
 					ResourceBundle.getBundle("ro.kuberam.getos.ui"), null, new ControllerFactory(application, stage));
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);

@@ -58,6 +58,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.StageController;
+import ro.kuberam.getos.modules.editorTab.EditorTabController;
 
 public class PdfViewerController extends StageController {
 
@@ -130,8 +131,6 @@ public class PdfViewerController extends StageController {
 	 * increase image quality as there's more pixels due to higher image
 	 * resolutions
 	 */
-	static final int FXscaling = 1;
-
 	FitToPage zoomMode = FitToPage.AUTO;
 
 	public PdfViewerController(Application application, Stage stage) {
@@ -150,11 +149,11 @@ public class PdfViewerController extends StageController {
 		});
 
 		fileLocation.setText(pFile.getName());
-		
+
 		contentPane.getChildren().add(pdf);
 
 		Stage stage = getStage();
-		Scene scene = new Scene(root, 800 * FXscaling, 600 * FXscaling);
+		Scene scene = new Scene(root);
 		stage.setScene(scene);
 
 		// Auto adjust so dynamically resized as viewer width alters
@@ -224,15 +223,21 @@ public class PdfViewerController extends StageController {
 		});
 	}
 
-	public static void create(Application application, Stage parent, File file) throws IOException {
-		Stage stage = new Stage();
-		stage.initOwner(parent);
-
+	public static PdfViewerController create(Application application, Stage stage, File file) throws IOException {
 		pFile = file;
-
-		FXMLLoader.load(PdfViewerController.class.getResource("/ro/kuberam/getos/modules/pdfViewer/PDF-viewer.fxml"),
+		
+		FXMLLoader loader = new FXMLLoader(
+				EditorTabController.class.getResource("/ro/kuberam/getos/modules/pdfViewer/PDF-viewer.fxml"),
 				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfViewer.ui"), null,
 				new ControllerFactory(application, stage));
+
+		loader.load();
+
+		return loader.getController();
+	}
+	
+	public BorderPane getRoot() {
+		return root;
 	}
 
 	/**
@@ -507,7 +512,7 @@ public class PdfViewerController extends StageController {
 			}
 
 			// Set up top bar values
-			pgCountLabel.setText("/" + pdf.getPageCount());
+			pgCountLabel.setText(getResources().getString("pages_number_prefix") + " " + pdf.getPageCount());
 
 			// Goes to the first page and starts the decoding process
 			goToPage(currentPage);

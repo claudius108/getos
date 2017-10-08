@@ -88,7 +88,10 @@ public final class EditorTabController extends StageController {
 		switch (fileTypeName) {
 		case "PDF":
 			try {
-				PdfViewerController.create(getApplication(), getStage(), getEditorTab().getFile());
+				PdfViewerController viewerController = PdfViewerController.create(getApplication(), getStage(),
+						getEditorTab().getFile());
+
+				sourcePane.getChildren().add(viewerController.getRoot());
 			} catch (Exception ex) {
 				Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 				if (ex.getCause() != null) {

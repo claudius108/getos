@@ -27,8 +27,8 @@
 							<Tooltip text="%forward_button_tooltip" />
 						</tooltip>
 					</Button>
-					<TextField prefHeight="26.0" prefWidth="46.0" />
-					<Label fx:id="pgCountLabel" />
+					<TextField prefHeight="26.0" prefWidth="46.0" style="-fx-border-radius: 5 0 0 5; -fx-background-radius: 5 0 0 5;" />
+					<Label fx:id="pgCountLabel" style="-fx-border-radius: 0 5 5 0; -fx-background-radius: 0 5 5 0;" />
 				</items>
 			</ToolBar>
 		</VBox>
