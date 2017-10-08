@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane fx:id="mRoot" prefHeight="600.0" prefWidth="800.0"
+<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0"
 	stylesheets="@app.css" xmlns="http://javafx.com/javafx/8.0.111"
 	xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.modules.main.MainWindowController">
 	<top>

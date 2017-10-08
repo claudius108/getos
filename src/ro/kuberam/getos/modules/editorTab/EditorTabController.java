@@ -19,7 +19,6 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.StageController;
-import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
 import ro.kuberam.getos.utils.Utils;
 
@@ -44,15 +43,21 @@ public final class EditorTabController extends StageController {
 	private Label mStatusLabel;
 
 	private ViewerFileType fileType;
-	private EditorTab mEditorTab;
+	private static EditorTab mEditorTab;
 
 	private final ExecutorService mExecutorService;
 
 	public static EditorTabController create(Application application, Stage stage, ViewerFileType type)
 			throws Exception {
+		Logger.getLogger(TAG).log(Level.INFO, "type = " + type.getName());
+		
+//		FXMLLoader loader = new FXMLLoader(
+//				EditorTabController.class.getResource("/ro/kuberam/getos/modules/editorTab/EditorTab.fxml"),
+//				ResourceBundle.getBundle("ro.kuberam.getos.ui"), null, new ControllerFactory(application, stage, type));
+		
 		FXMLLoader loader = new FXMLLoader(
-				EditorTabController.class.getResource("/ro/kuberam/getos/modules/editorTab/EditorTab.fxml"),
-				ResourceBundle.getBundle("ro.kuberam.getos.ui"), null, new ControllerFactory(application, stage, type));
+				EditorTabController.class.getResource("/ro/kuberam/getos/modules/pdfViewer/PDF-viewer.fxml"),
+				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfViewer.ui"), null, new ControllerFactory(application, stage, getEditorTab().getFile()));
 
 		loader.load();
 		return loader.getController();
@@ -60,6 +65,7 @@ public final class EditorTabController extends StageController {
 
 	public EditorTabController(Application application, Stage stage, ViewerFileType type) {
 		super(application, stage);
+		
 		fileType = type;
 		mExecutorService = Executors.newFixedThreadPool(2);
 	}
@@ -88,10 +94,10 @@ public final class EditorTabController extends StageController {
 		switch (fileTypeName) {
 		case "PDF":
 			try {
-				PdfViewerController viewerController = PdfViewerController.create(getApplication(), getStage(),
-						getEditorTab().getFile());
+//				PdfViewerController viewerController = PdfViewerController.create(getApplication(), getStage(),
+//						getEditorTab().getFile());
 
-				sourcePane.getChildren().add(viewerController.getRoot());
+				//root.getChildren().add(viewerController.getRoot());
 			} catch (Exception ex) {
 				Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 				if (ex.getCause() != null) {
@@ -133,7 +139,7 @@ public final class EditorTabController extends StageController {
 		mEditorTab = editorTab;
 	}
 
-	public EditorTab getEditorTab() {
+	public static EditorTab getEditorTab() {
 		return mEditorTab;
 	}
 

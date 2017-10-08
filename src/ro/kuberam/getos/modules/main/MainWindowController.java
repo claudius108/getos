@@ -31,7 +31,7 @@ public final class MainWindowController extends StageController {
 	private final static String TAG = MainWindowController.class.getSimpleName();
 
 	@FXML
-	private BorderPane mRoot;
+	private BorderPane root;
 
 	@FXML
 	private MenuItem openFileMenuItem;
@@ -81,7 +81,7 @@ public final class MainWindowController extends StageController {
 
 		Stage stage = getStage();
 		stage.setTitle(resources.getString("appname") + " v. " + resources.getString("appversion"));
-		stage.setScene(new Scene(mRoot));
+		stage.setScene(new Scene(root));
 		stage.centerOnScreen();
 		stage.setResizable(true);
 		stage.setMaximized(true);

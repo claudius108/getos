@@ -59,6 +59,7 @@ import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.modules.editorTab.EditorTabController;
+import ro.kuberam.getos.modules.viewers.ViewerFileType;
 
 public class PdfViewerController extends StageController {
 
@@ -90,6 +91,8 @@ public class PdfViewerController extends StageController {
 
 	@FXML
 	private Label fileLocation;
+
+	private ViewerFileType fileType;
 
 	private final org.jpedal.PdfDecoderFX pdf = new org.jpedal.PdfDecoderFX();
 
@@ -133,8 +136,10 @@ public class PdfViewerController extends StageController {
 	 */
 	FitToPage zoomMode = FitToPage.AUTO;
 
-	public PdfViewerController(Application application, Stage stage) {
+	public PdfViewerController(Application application, Stage stage, File file) {
 		super(application, stage);
+
+		pFile = file;
 	}
 
 	@Override
@@ -225,7 +230,7 @@ public class PdfViewerController extends StageController {
 
 	public static PdfViewerController create(Application application, Stage stage, File file) throws IOException {
 		pFile = file;
-		
+
 		FXMLLoader loader = new FXMLLoader(
 				EditorTabController.class.getResource("/ro/kuberam/getos/modules/pdfViewer/PDF-viewer.fxml"),
 				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfViewer.ui"), null,
@@ -235,7 +240,7 @@ public class PdfViewerController extends StageController {
 
 		return loader.getController();
 	}
-	
+
 	public BorderPane getRoot() {
 		return root;
 	}
