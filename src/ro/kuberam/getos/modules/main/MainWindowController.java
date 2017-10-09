@@ -19,10 +19,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
+import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
 import ro.kuberam.getos.modules.editorTab.EditorTabController;
+import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
 import ro.kuberam.getos.utils.Utils;
 
@@ -48,7 +50,8 @@ public final class MainWindowController extends StageController {
 	@FXML
 	private Label statusLabel;
 
-	private final ArrayList<EditorTabController> tabControllers;
+	EditorController newTabController = null;
+	private final ArrayList<EditorController> tabControllers;
 	private FileChooser fileChooser;
 
 	public MainWindowController(Application application, Stage stage) {
@@ -148,9 +151,28 @@ public final class MainWindowController extends StageController {
 			Utils.showAlert(AlertType.ERROR, file.getName(), getResources().getString("cant_handle_filetype"));
 			return;
 		}
+		String fileTypeName = type.getName();
 
 		try {
-			EditorTabController newTabController = EditorTabController.create(getApplication(), getStage(), type);
+			switch (fileTypeName) {
+			case "PDF":
+				try {
+					newTabController = PdfViewerController.create(getApplication(), getStage(), file);
+//					PdfViewerController viewerController = PdfViewerController.create(getApplication(), getStage(),
+//							getEditorTab().getFile());
+
+					//root.getChildren().add(viewerController.getRoot());
+				} catch (Exception ex) {
+					Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
+					if (ex.getCause() != null) {
+						Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
+					} else {
+						Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
+					}
+				}
+				break;
+			}
+//			EditorTabController newTabController = EditorTabController.create(getApplication(), getStage(), type, file);
 
 			EditorTab newTab = new EditorTab(file);
 			newTab.setClosable(true);
@@ -169,18 +191,18 @@ public final class MainWindowController extends StageController {
 			});
 			newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue) {
-					EditorTabController tabController = tabControllers.get(tabPane.getTabs().indexOf(newTab));
+					EditorController tabController = tabControllers.get(tabPane.getTabs().indexOf(newTab));
 					tabController.onEditorTabSelected();
 				}
 			});
 
 			newTabController.setEditorPane(newTab);
-			newTabController.setStatusLabel(statusLabel);
+			//newTabController.setStatusLabel(statusLabel);
 			tabControllers.add(newTabController);
 			tabPane.getTabs().add(newTab);
-			if (loadFile) {
-				newTabController.loadContent();
-			}
+//			if (loadFile) {
+//				newTabController.loadContent();
+//			}
 			tabPane.getSelectionModel().select(newTab);
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);

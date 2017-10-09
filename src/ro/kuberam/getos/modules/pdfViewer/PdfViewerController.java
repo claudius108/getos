@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,11 +58,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
-import ro.kuberam.getos.controller.factory.StageController;
+import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.modules.editorTab.EditorTabController;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
 
-public class PdfViewerController extends StageController {
+public class PdfViewerController extends EditorController {
 
 	private final static String TAG = PdfViewerController.class.getSimpleName();
 
@@ -137,14 +138,14 @@ public class PdfViewerController extends StageController {
 	FitToPage zoomMode = FitToPage.AUTO;
 
 	public PdfViewerController(Application application, Stage stage, File file) {
-		super(application, stage);
-
-		pFile = file;
+		super(application, stage, file);
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
+		
+		Logger.getLogger(TAG).log(Level.INFO, "pFile = " + pFile);
 
 		center.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
 			@Override
@@ -153,7 +154,7 @@ public class PdfViewerController extends StageController {
 			}
 		});
 
-		fileLocation.setText(pFile.getName());
+		//fileLocation.setText(pFile.getName());
 
 		contentPane.getChildren().add(pdf);
 
@@ -229,6 +230,7 @@ public class PdfViewerController extends StageController {
 	}
 
 	public static PdfViewerController create(Application application, Stage stage, File file) throws IOException {
+		Logger.getLogger(TAG).log(Level.INFO, "file = " + file);
 		pFile = file;
 
 		FXMLLoader loader = new FXMLLoader(
@@ -635,7 +637,6 @@ public class PdfViewerController extends StageController {
 		try {
 			final PdfPageData pageData = pdf.getPdfPageData();
 			final int rotation = pageData.getRotation(currentPage);
-			Logger.getLogger(TAG).log(Level.INFO, "rotation = " + rotation);
 
 			/*
 			 * Only call this when the page is displayed vertically, otherwise

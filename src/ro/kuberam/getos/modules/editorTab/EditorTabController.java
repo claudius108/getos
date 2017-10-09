@@ -1,5 +1,6 @@
 package ro.kuberam.getos.modules.editorTab;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -11,7 +12,6 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
@@ -19,10 +19,8 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.StageController;
-import ro.kuberam.getos.modules.viewers.ViewerFileType;
-import ro.kuberam.getos.utils.Utils;
 
-public final class EditorTabController extends StageController {
+public class EditorTabController extends StageController {
 
 	private final static String TAG = EditorTabController.class.getSimpleName();
 
@@ -42,14 +40,13 @@ public final class EditorTabController extends StageController {
 	private Paint mStatusColor;
 	private Label mStatusLabel;
 
-	private ViewerFileType fileType;
 	private static EditorTab mEditorTab;
 
 	private final ExecutorService mExecutorService;
 
-	public static EditorTabController create(Application application, Stage stage, ViewerFileType type)
+	public static EditorTabController create(Application application, Stage stage, File file)
 			throws Exception {
-		Logger.getLogger(TAG).log(Level.INFO, "type = " + type.getName());
+		Logger.getLogger(TAG).log(Level.INFO, "file = " + file);
 		
 //		FXMLLoader loader = new FXMLLoader(
 //				EditorTabController.class.getResource("/ro/kuberam/getos/modules/editorTab/EditorTab.fxml"),
@@ -57,16 +54,15 @@ public final class EditorTabController extends StageController {
 		
 		FXMLLoader loader = new FXMLLoader(
 				EditorTabController.class.getResource("/ro/kuberam/getos/modules/pdfViewer/PDF-viewer.fxml"),
-				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfViewer.ui"), null, new ControllerFactory(application, stage, getEditorTab().getFile()));
+				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfViewer.ui"), null, new ControllerFactory(application, stage, file));
 
 		loader.load();
 		return loader.getController();
 	}
 
-	public EditorTabController(Application application, Stage stage, ViewerFileType type) {
+	public EditorTabController(Application application, Stage stage, File file) {
 		super(application, stage);
 		
-		fileType = type;
 		mExecutorService = Executors.newFixedThreadPool(2);
 	}
 
@@ -89,25 +85,25 @@ public final class EditorTabController extends StageController {
 	}
 
 	public void loadContent() {
-		String fileTypeName = fileType.getName();
-
-		switch (fileTypeName) {
-		case "PDF":
-			try {
-//				PdfViewerController viewerController = PdfViewerController.create(getApplication(), getStage(),
-//						getEditorTab().getFile());
-
-				//root.getChildren().add(viewerController.getRoot());
-			} catch (Exception ex) {
-				Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
-				if (ex.getCause() != null) {
-					Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
-				} else {
-					Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
-				}
-			}
-			break;
-		}
+//		String fileTypeName = fileType.getName();
+//
+//		switch (fileTypeName) {
+//		case "PDF":
+//			try {
+////				PdfViewerController viewerController = PdfViewerController.create(getApplication(), getStage(),
+////						getEditorTab().getFile());
+//
+//				//root.getChildren().add(viewerController.getRoot());
+//			} catch (Exception ex) {
+//				Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
+//				if (ex.getCause() != null) {
+//					Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
+//				} else {
+//					Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
+//				}
+//			}
+//			break;
+//		}
 	}
 
 	private void setStatusMessage(String message, Paint color) {

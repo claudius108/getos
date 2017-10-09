@@ -49,7 +49,7 @@ public final class ControllerFactory implements Callback<Class<?>, Object> {
 	public Object call(Class<?> type) {
 		try {
 			if (EditorTabController.class.isAssignableFrom(type)) {
-				return new EditorTabController(mApplication, mStage, viewerFileType);
+				return new EditorTabController(mApplication, mStage, pFile);
 			} else if (PdfViewerController.class.isAssignableFrom(type)) {
 				return new PdfViewerController(mApplication, mStage, pFile);
 			} else if (StageController.class.isAssignableFrom(type)) {
