@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import ro.kuberam.getos.modules.editorTab.EditorTabController;
 import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
 
@@ -14,43 +13,36 @@ public final class ControllerFactory implements Callback<Class<?>, Object> {
 
 	private final Application mApplication;
 	private final Stage mStage;
-	private final ViewerFileType viewerFileType;
 	private final File pFile;
 
 	public ControllerFactory(Application application) {
 		mApplication = application;
 		mStage = null;
-		viewerFileType = null;
 		pFile = null;
 	}
 
 	public ControllerFactory(Application application, Stage stage) {
 		mApplication = application;
 		mStage = stage;
-		viewerFileType = null;
 		pFile = null;
 	}
 
 	public ControllerFactory(Application application, Stage stage, ViewerFileType type) {
 		mApplication = application;
 		mStage = stage;
-		viewerFileType = type;
 		pFile = null;
 	}
 
 	public ControllerFactory(Application application, Stage stage, File file) {
 		mApplication = application;
 		mStage = stage;
-		viewerFileType = null;
 		pFile = file;
 	}
 
 	@Override
 	public Object call(Class<?> type) {
 		try {
-			if (EditorTabController.class.isAssignableFrom(type)) {
-				return new EditorTabController(mApplication, mStage, pFile);
-			} else if (PdfViewerController.class.isAssignableFrom(type)) {
+			if (PdfViewerController.class.isAssignableFrom(type)) {
 				return new PdfViewerController(mApplication, mStage, pFile);
 			} else if (StageController.class.isAssignableFrom(type)) {
 				return type.getConstructors()[0].newInstance(mApplication, mStage);

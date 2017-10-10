@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,7 +41,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -59,8 +57,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
-import ro.kuberam.getos.modules.editorTab.EditorTabController;
-import ro.kuberam.getos.modules.viewers.ViewerFileType;
 
 public class PdfViewerController extends EditorController {
 
@@ -92,8 +88,6 @@ public class PdfViewerController extends EditorController {
 
 	@FXML
 	private Label fileLocation;
-
-	private ViewerFileType fileType;
 
 	private final org.jpedal.PdfDecoderFX pdf = new org.jpedal.PdfDecoderFX();
 
@@ -144,8 +138,6 @@ public class PdfViewerController extends EditorController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
-		
-		Logger.getLogger(TAG).log(Level.INFO, "pFile = " + pFile);
 
 		center.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
 			@Override
@@ -154,16 +146,12 @@ public class PdfViewerController extends EditorController {
 			}
 		});
 
-		//fileLocation.setText(pFile.getName());
+		fileLocation.setText(pFile.getName());
 
 		contentPane.getChildren().add(pdf);
 
-		Stage stage = getStage();
-		Scene scene = new Scene(root);
-		stage.setScene(scene);
-
 		// Auto adjust so dynamically resized as viewer width alters
-		scene.widthProperty().addListener(new ChangeListener<Number>() {
+		getStage().getScene().widthProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(final ObservableValue<? extends Number> observableValue, final Number oldSceneWidth,
 					final Number newSceneWidth) {
@@ -171,7 +159,7 @@ public class PdfViewerController extends EditorController {
 			}
 		});
 
-		scene.heightProperty().addListener(new ChangeListener<Number>() {
+		getStage().getScene().heightProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(final ObservableValue<? extends Number> observableValue, final Number oldSceneHeight,
 					final Number newSceneHeight) {
@@ -186,7 +174,7 @@ public class PdfViewerController extends EditorController {
 		 * extends the clipboard class, detect a file being dragged onto the
 		 * scene and if the user drops the file we load it.
 		 */
-		scene.setOnDragOver(new EventHandler<DragEvent>() {
+		getStage().getScene().setOnDragOver(new EventHandler<DragEvent>() {
 			@Override
 			public void handle(final DragEvent event) {
 				final Dragboard db = event.getDragboard();
@@ -198,7 +186,7 @@ public class PdfViewerController extends EditorController {
 			}
 		});
 
-		scene.setOnDragDropped(new EventHandler<DragEvent>() {
+		getStage().getScene().setOnDragDropped(new EventHandler<DragEvent>() {
 			@Override
 			public void handle(final DragEvent event) {
 				final Dragboard db = event.getDragboard();
@@ -219,7 +207,7 @@ public class PdfViewerController extends EditorController {
 			}
 		});
 
-		stage.show();
+		//stage.show();
 
 		Platform.runLater(new Runnable() {
 			@Override
@@ -234,7 +222,7 @@ public class PdfViewerController extends EditorController {
 		pFile = file;
 
 		FXMLLoader loader = new FXMLLoader(
-				EditorTabController.class.getResource("/ro/kuberam/getos/modules/pdfViewer/PDF-viewer.fxml"),
+				PdfViewerController.class.getResource("/ro/kuberam/getos/modules/pdfViewer/PDF-viewer.fxml"),
 				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfViewer.ui"), null,
 				new ControllerFactory(application, stage));
 
@@ -272,19 +260,7 @@ public class PdfViewerController extends EditorController {
 	// bottom = new HBox();
 	// bottom.setPadding(new Insets(0, 10, 0, 10));
 	// root.setBottom(bottom);
-	//
-	// center = new ScrollPane();
-	//
-	// root.setCenter(center);
-	//
-	// center.viewportBoundsProperty().addListener(new ChangeListener<Bounds>()
-	// {
-	// @Override
-	// public void changed(final ObservableValue<? extends Bounds> ov, final
-	// Bounds ob, final Bounds nb) {
-	// adjustPagePosition(nb);
-	// }
-	// });
+
 
 	/**
 	 * Sets up a MenuBar to be used at the top of the window. It contains one

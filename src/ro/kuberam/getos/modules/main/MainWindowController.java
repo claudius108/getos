@@ -23,7 +23,6 @@ import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
-import ro.kuberam.getos.modules.editorTab.EditorTabController;
 import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
 import ro.kuberam.getos.utils.Utils;
@@ -94,7 +93,7 @@ public final class MainWindowController extends StageController {
 
 	public static void create(Application application, Stage stage) throws Exception {
 		try {
-			FXMLLoader.load(MainWindowController.class.getResource("/ro/kuberam/getos/modules/main/app.fxml"),
+			FXMLLoader.load(MainWindowController.class.getResource("/ro/kuberam/getos/modules/main/MainWindow.fxml"),
 					ResourceBundle.getBundle("ro.kuberam.getos.ui"), null, new ControllerFactory(application, stage));
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
