@@ -36,6 +36,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -207,7 +208,23 @@ public class PdfViewerController extends EditorController {
 			}
 		});
 
-		//stage.show();
+		backButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(final ActionEvent t) {
+				if (currentPage > 1) {
+					goToPage(currentPage - 1);
+				}
+			}
+		});
+
+		forwardButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(final ActionEvent t) {
+				if (currentPage < pdf.getPageCount()) {
+					goToPage(currentPage + 1);
+				}
+			}
+		});
 
 		Platform.runLater(new Runnable() {
 			@Override
@@ -234,33 +251,6 @@ public class PdfViewerController extends EditorController {
 	public BorderPane getRoot() {
 		return root;
 	}
-
-	/**
-	 * creates all the components and adds change listeners for auto-centering
-	 * for JavaFX PDF viewer
-	 *
-	 * @param w
-	 *            The width to use for the viewer
-	 * @param h
-	 *            The height to use for the viewer
-	 * @return scene
-	 */
-	// public Scene setupViewer(final int w, final int h) {
-	//
-	// // Setting up layout panes and assigning them to the appropiate
-	// // locations
-	// final BorderPane root = new BorderPane();
-	//
-	// top = new VBox();
-	//
-	// root.setTop(top);
-	//
-	// top.getChildren().add(setupToolBar());
-	//
-	// bottom = new HBox();
-	// bottom.setPadding(new Insets(0, 10, 0, 10));
-	// root.setBottom(bottom);
-
 
 	/**
 	 * Sets up a MenuBar to be used at the top of the window. It contains one
@@ -294,38 +284,6 @@ public class PdfViewerController extends EditorController {
 	// fitHeight.setId("fitHeight");
 	// fitPage.setId("fitPage");
 	//
-	// open.setOnAction(new EventHandler<ActionEvent>() {
-	// @Override
-	// public void handle(final ActionEvent t) {
-	// final FileChooser chooser = new FileChooser();
-	// chooser.setTitle("Open PDF file");
-	//
-	// // Open directory from existing directory
-	// if (pFile != null) {
-	// final File existDirectory = pFile.getParentFile();
-	// if (existDirectory.exists()) {
-	// chooser.setInitialDirectory(existDirectory);
-	// }
-	// }
-	//
-	// // Set extension filter
-	// final FileChooser.ExtensionFilter extFilter = new
-	// FileChooser.ExtensionFilter("PDF files (*.pdf)",
-	// "*.pdf");
-	// chooser.getExtensionFilters().add(extFilter);
-	//
-	// pFile = chooser.showOpenDialog(null);
-	//
-	// if (pFile != null) {
-	// Platform.runLater(new Runnable() {
-	// @Override
-	// public void run() {
-	// openFile(pFile);
-	// }
-	// });
-	// }
-	// }
-	// });
 	//
 	// pages.getSelectionModel().selectedIndexProperty().addListener(new
 	// ChangeListener<Number>() {
@@ -339,26 +297,6 @@ public class PdfViewerController extends EditorController {
 	// }
 	// });
 	//
-	// back.setOnAction(new EventHandler<ActionEvent>() {
-	//
-	// @Override
-	// public void handle(final ActionEvent t) {
-	// if (currentPage > 1) {
-	// goToPage(currentPage - 1);
-	// }
-	//
-	// }
-	// });
-	//
-	// forward.setOnAction(new EventHandler<ActionEvent>() {
-	// @Override
-	// public void handle(final ActionEvent t) {
-	// if (currentPage < pdf.getPageCount()) {
-	// goToPage(currentPage + 1);
-	// }
-	//
-	// }
-	// });
 	//
 	// zoomIn.setOnAction(new EventHandler<ActionEvent>() {
 	//
@@ -439,18 +377,6 @@ public class PdfViewerController extends EditorController {
 	//
 	// }
 	// });
-	//
-	// final Region spacerLeft = new Region();
-	// final Region spacerRight = new Region();
-	// HBox.setHgrow(spacerLeft, Priority.ALWAYS);
-	// HBox.setHgrow(spacerRight, Priority.ALWAYS);
-	//
-	// toolbar.getItems().addAll(open, spacerLeft, back, pages, pageCount,
-	// forward, zoomIn, zoomOut, spacerRight,
-	// fitWidth);
-	//
-	// return toolbar;
-	// }
 
 	private void openFile(final File input) {
 		try {
