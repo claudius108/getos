@@ -7,7 +7,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
-import ro.kuberam.getos.modules.viewers.ViewerFileType;
 
 public final class ControllerFactory implements Callback<Class<?>, Object> {
 
@@ -22,12 +21,6 @@ public final class ControllerFactory implements Callback<Class<?>, Object> {
 	}
 
 	public ControllerFactory(Application application, Stage stage) {
-		mApplication = application;
-		mStage = stage;
-		pFile = null;
-	}
-
-	public ControllerFactory(Application application, Stage stage, ViewerFileType type) {
 		mApplication = application;
 		mStage = stage;
 		pFile = null;
