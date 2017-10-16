@@ -68,6 +68,12 @@
 				</MenuBar>
 				<ToolBar prefHeight="17.0">
 					<items>
+						<Button fx:id="openFileButton" prefHeight="17.0"
+							style="-fx-background-color: transparent;">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" fontSize="22.0" icon="FILE_ALT" />
+							</graphic>
+						</Button>
 						<Button fx:id="saveEditorContentButton" prefHeight="17.0"
 							style="-fx-background-color: transparent;">
 							<graphic>

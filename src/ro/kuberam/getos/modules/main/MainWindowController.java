@@ -45,6 +45,9 @@ public final class MainWindowController extends StageController {
 	private Button closeAppButton;
 
 	@FXML
+	private Button openFileButton;
+
+	@FXML
 	private Button saveEditorContentButton;
 
 	@FXML
@@ -68,6 +71,16 @@ public final class MainWindowController extends StageController {
 
 		openFileMenuItem.setOnAction(event -> {
 			loadFile();
+			event.consume();
+		});
+
+		openFileButton.setOnAction(event -> {
+			File file = new File("/home/claudius/Downloads/comune.pdf");
+
+			ViewerFileType type = ViewerFileType.getTypeByExtension(file);
+
+			createNewEditorTab(type, file, true);
+
 			event.consume();
 		});
 
@@ -103,7 +116,8 @@ public final class MainWindowController extends StageController {
 	public static void create(Application application, Stage stage) throws Exception {
 		try {
 			FXMLLoader.load(MainWindowController.class.getResource("/ro/kuberam/getos/modules/main/MainWindow.fxml"),
-					ResourceBundle.getBundle("ro.kuberam.getos.modules.main.ui"), null, new ControllerFactory(application, stage));
+					ResourceBundle.getBundle("ro.kuberam.getos.modules.main.ui"), null,
+					new ControllerFactory(application, stage));
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 			if (ex.getCause() != null) {
