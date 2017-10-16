@@ -11,10 +11,13 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.glyphfont.Glyph?>
 
-<BorderPane fx:id="root" prefHeight="700.0" prefWidth="1000.0" stylesheets="@MainWindow.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.modules.main.MainWindowController">
+<BorderPane fx:id="root" prefHeight="700.0" prefWidth="1000.0"
+	stylesheets="@MainWindow.css" xmlns="http://javafx.com/javafx/8.0.111"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.modules.main.MainWindowController">
 	<top>
 		<VBox>
 			<children>
@@ -30,8 +33,6 @@
 								<MenuItem text="%save_file_as" />
 								<SeparatorMenuItem mnemonicParsing="false" />
 								<MenuItem text="%close_file" />
-								<SeparatorMenuItem mnemonicParsing="false" />
-								<MenuItem fx:id="mItemClose" text="%quit" />
 							</items>
 						</Menu>
 						<Menu text="%project">
@@ -65,12 +66,21 @@
 						</Menu>
 					</menus>
 				</MenuBar>
-				<ToolBar>
+				<ToolBar prefHeight="17.0">
 					<items>
-						<Region styleClass="spacer" />
-						<HBox styleClass="segmented-button-bar">
-							<Button styleClass="first" text="Tasks" />
-						</HBox>
+						<Button fx:id="saveEditorContentButton" prefHeight="17.0"
+							style="-fx-background-color: transparent;">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" fontSize="22.0" icon="SAVE" />
+							</graphic>
+						</Button>
+						<Pane HBox.hgrow="ALWAYS" />
+						<Button fx:id="closeAppButton" prefHeight="17.0"
+							style="-fx-background-color: transparent;">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" fontSize="22.0" icon="POWER_OFF" />
+							</graphic>
+						</Button>
 					</items>
 				</ToolBar>
 			</children>

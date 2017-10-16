@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
@@ -41,7 +42,10 @@ public final class MainWindowController extends StageController {
 	private MenuItem mItemAbout;
 
 	@FXML
-	private MenuItem mItemClose;
+	private Button closeAppButton;
+
+	@FXML
+	private Button saveEditorContentButton;
 
 	@FXML
 	private TabPane tabPane;
@@ -67,7 +71,12 @@ public final class MainWindowController extends StageController {
 			event.consume();
 		});
 
-		mItemClose.setOnAction(event -> {
+		saveEditorContentButton.setOnAction(event -> {
+			loadFile();
+			event.consume();
+		});
+
+		closeAppButton.setOnAction(event -> {
 			onStageClose();
 			event.consume();
 		});
@@ -94,7 +103,7 @@ public final class MainWindowController extends StageController {
 	public static void create(Application application, Stage stage) throws Exception {
 		try {
 			FXMLLoader.load(MainWindowController.class.getResource("/ro/kuberam/getos/modules/main/MainWindow.fxml"),
-					ResourceBundle.getBundle("ro.kuberam.getos.ui"), null, new ControllerFactory(application, stage));
+					ResourceBundle.getBundle("ro.kuberam.getos.modules.main.ui"), null, new ControllerFactory(application, stage));
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 			if (ex.getCause() != null) {
@@ -157,10 +166,11 @@ public final class MainWindowController extends StageController {
 			case "PDF":
 				try {
 					newTabController = PdfViewerController.create(getApplication(), getStage(), file);
-//					PdfViewerController viewerController = PdfViewerController.create(getApplication(), getStage(),
-//							getEditorTab().getFile());
+					// PdfViewerController viewerController =
+					// PdfViewerController.create(getApplication(), getStage(),
+					// getEditorTab().getFile());
 
-					//root.getChildren().add(viewerController.getRoot());
+					// root.getChildren().add(viewerController.getRoot());
 				} catch (Exception ex) {
 					Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 					if (ex.getCause() != null) {
@@ -171,7 +181,9 @@ public final class MainWindowController extends StageController {
 				}
 				break;
 			}
-//			EditorTabController newTabController = EditorTabController.create(getApplication(), getStage(), type, file);
+			// EditorTabController newTabController =
+			// EditorTabController.create(getApplication(), getStage(), type,
+			// file);
 
 			EditorTab newTab = new EditorTab(file);
 			newTab.setClosable(true);
@@ -196,12 +208,12 @@ public final class MainWindowController extends StageController {
 			});
 
 			newTabController.setEditorPane(newTab);
-			//newTabController.setStatusLabel(statusLabel);
+			// newTabController.setStatusLabel(statusLabel);
 			tabControllers.add(newTabController);
 			tabPane.getTabs().add(newTab);
-//			if (loadFile) {
-//				newTabController.loadContent();
-//			}
+			// if (loadFile) {
+			// newTabController.loadContent();
+			// }
 			tabPane.getSelectionModel().select(newTab);
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
