@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.Group?>
+
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.65"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.modules.pdfEditor.PdfEditorController">
+	<center>
+		<ScrollPane fx:id="center" pannable="true"
+			BorderPane.alignment="CENTER">
+			<content>
+				<AnchorPane>
+					<children>
+						<Group fx:id="contentPane" />
+					</children>
+				</AnchorPane>
+			</content>
+		</ScrollPane>
+	</center>
+</BorderPane>

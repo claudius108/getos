@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
 import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 
 public final class ControllerFactory implements Callback<Class<?>, Object> {
@@ -35,7 +36,9 @@ public final class ControllerFactory implements Callback<Class<?>, Object> {
 	@Override
 	public Object call(Class<?> type) {
 		try {
-			if (PdfViewerController.class.isAssignableFrom(type)) {
+			if (PdfEditorController.class.isAssignableFrom(type)) {
+				return new PdfViewerController(mApplication, mStage, pFile);
+			} else if (PdfViewerController.class.isAssignableFrom(type)) {
 				return new PdfViewerController(mApplication, mStage, pFile);
 			} else if (StageController.class.isAssignableFrom(type)) {
 				return type.getConstructors()[0].newInstance(mApplication, mStage);

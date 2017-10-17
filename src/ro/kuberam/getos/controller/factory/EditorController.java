@@ -29,7 +29,6 @@ public class EditorController extends Controller {
 
 		pStage = stage;
 		pFile = file;
-		
 		mExecutorService = Executors.newFixedThreadPool(2);
 	}
 

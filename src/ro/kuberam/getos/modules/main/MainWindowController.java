@@ -24,6 +24,7 @@ import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
+import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
 import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
 import ro.kuberam.getos.utils.Utils;
@@ -78,8 +79,32 @@ public final class MainWindowController extends StageController {
 			File file = new File("/home/claudius/Downloads/comune.pdf");
 
 			ViewerFileType type = ViewerFileType.getTypeByExtension(file);
-
-			createNewEditorTab(type, file, true);
+			
+			if (type == null) {
+				Utils.showAlert(AlertType.ERROR, file.getName(), getResources().getString("cant_handle_filetype"));
+				return;
+			}
+			String fileTypeName = type.getName();
+			
+			
+			try {
+				switch (fileTypeName) {
+				case "PDF":
+					try {
+						createNewEditorTab2(PdfEditorController.create(getApplication(), getStage(), file), file);
+					} catch (Exception ex) {
+						Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
+						if (ex.getCause() != null) {
+							Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
+						} else {
+							Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
+						}
+					}
+					break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			event.consume();
 		});
@@ -224,6 +249,48 @@ public final class MainWindowController extends StageController {
 			newTabController.setEditorPane(newTab);
 			// newTabController.setStatusLabel(statusLabel);
 			tabControllers.add(newTabController);
+			tabPane.getTabs().add(newTab);
+			// if (loadFile) {
+			// newTabController.loadContent();
+			// }
+			tabPane.getSelectionModel().select(newTab);
+		} catch (Exception ex) {
+			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
+			if (ex.getCause() != null) {
+				Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
+			} else {
+				Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
+			}
+		}
+	}
+	
+	private void createNewEditorTab2(EditorController controller, File file) {
+		try {
+			EditorTab newTab = new EditorTab(file);
+			newTab.setClosable(true);
+			newTab.setContent(controller.getRoot());
+
+			newTab.setOnCloseRequest(event -> {
+				// todo: show yes/no save dialog
+				if (controller.isEdited()) {
+					controller.saveContent();
+				}
+				tabControllers.remove(controller);
+				controller.shutDown();
+				if (tabPane.getTabs().size() == 1) {
+					statusLabel.setText("");
+				}
+			});
+			newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
+				if (newValue) {
+					EditorController tabController = tabControllers.get(tabPane.getTabs().indexOf(newTab));
+					tabController.onEditorTabSelected();
+				}
+			});
+
+			controller.setEditorPane(newTab);
+			// newTabController.setStatusLabel(statusLabel);
+			tabControllers.add(controller);
 			tabPane.getTabs().add(newTab);
 			// if (loadFile) {
 			// newTabController.loadContent();
