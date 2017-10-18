@@ -12,11 +12,10 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
-import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 
 public class EditorController extends Controller {
 
-	private final static String TAG = PdfViewerController.class.getSimpleName();
+	private final static String TAG = EditorController.class.getSimpleName();
 
 	private final Stage pStage;
 	private final File pFile;

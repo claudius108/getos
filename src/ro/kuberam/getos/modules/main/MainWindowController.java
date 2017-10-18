@@ -292,9 +292,6 @@ public final class MainWindowController extends StageController {
 			// newTabController.setStatusLabel(statusLabel);
 			tabControllers.add(controller);
 			tabPane.getTabs().add(newTab);
-			// if (loadFile) {
-			// newTabController.loadContent();
-			// }
 			tabPane.getSelectionModel().select(newTab);
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
