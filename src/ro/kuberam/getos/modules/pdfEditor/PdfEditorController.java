@@ -8,6 +8,9 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -17,7 +20,16 @@ import ro.kuberam.getos.controller.factory.EditorController;
 public final class PdfEditorController extends EditorController {
 
 	@FXML
-	private BorderPane root;
+	private ComboBox<String> selectEditorCombobox;
+	
+	@FXML
+	private Button backButton;
+
+	@FXML
+	private Button forwardButton;
+
+	@FXML
+	private Label pgCountLabel;
 
 	@FXML
 	private ScrollPane center;
@@ -26,10 +38,7 @@ public final class PdfEditorController extends EditorController {
 	private Group contentPane;
 
 	@FXML
-	private BorderPane sourcePane;
-
-	@FXML
-	private BorderPane targetPane;
+	private Label testLabel;
 
 	static File pFile;
 
@@ -40,6 +49,12 @@ public final class PdfEditorController extends EditorController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
+		
+		selectEditorCombobox.setValue("jpedal");
+		
+//		contentPane.getChildren().add(new Label(selectEditorCombobox.getValue()));
+		
+		testLabel.textProperty().bind(selectEditorCombobox.valueProperty().asString());
 	}
 
 	public static PdfEditorController create(Application application, Stage stage, File file) throws Exception {

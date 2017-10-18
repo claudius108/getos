@@ -79,14 +79,13 @@ public final class MainWindowController extends StageController {
 			File file = new File("/home/claudius/Downloads/comune.pdf");
 
 			ViewerFileType type = ViewerFileType.getTypeByExtension(file);
-			
+
 			if (type == null) {
 				Utils.showAlert(AlertType.ERROR, file.getName(), getResources().getString("cant_handle_filetype"));
 				return;
 			}
 			String fileTypeName = type.getName();
-			
-			
+
 			try {
 				switch (fileTypeName) {
 				case "PDF":
@@ -108,6 +107,7 @@ public final class MainWindowController extends StageController {
 
 			event.consume();
 		});
+
 
 		saveEditorContentButton.setOnAction(event -> {
 			loadFile();
@@ -263,7 +263,7 @@ public final class MainWindowController extends StageController {
 			}
 		}
 	}
-	
+
 	private void createNewEditorTab2(EditorController controller, File file) {
 		try {
 			EditorTab newTab = new EditorTab(file);

@@ -1,21 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.Group?>
+<?import javafx.collections.*?>
+<?import java.lang.*?>
 
-<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.65"
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.111"
 	xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.modules.pdfEditor.PdfEditorController">
+	<top>
+		<ToolBar prefHeight="40.0" prefWidth="200.0"
+			BorderPane.alignment="CENTER">
+			<items>
+				<ComboBox fx:id="selectEditorCombobox" minWidth="70.0"
+					prefWidth="90.0">
+					<items>
+						<FXCollections fx:factory="observableArrayList">
+							<String fx:value="jpedal" />
+							<String fx:value="pdfbox" />
+						</FXCollections>
+					</items>
+					<tooltip>
+						<Tooltip text="%select_viewer_tooltip" />
+					</tooltip>
+				</ComboBox>
+				<Button fx:id="backButton" mnemonicParsing="false"
+					text="%back_button_text">
+					<tooltip>
+						<Tooltip text="%back_button_tooltip" />
+					</tooltip>
+				</Button>
+				<Button fx:id="forwardButton" mnemonicParsing="false"
+					text="%forward_button_text">
+					<tooltip>
+						<Tooltip text="%forward_button_tooltip" />
+					</tooltip>
+				</Button>
+				<TextField prefHeight="26.0" prefWidth="46.0"
+					style="-fx-border-radius: 5 0 0 5; -fx-background-radius: 5 0 0 5;" />
+				<Label fx:id="pgCountLabel"
+					style="-fx-border-radius: 0 5 5 0; -fx-background-radius: 0 5 5 0;" />
+				<Pane HBox.hgrow="ALWAYS" />
+				<ComboBox editable="true" value="$defaultSelection"
+					style="-fx-border-radius: 5 0 0 5; -fx-background-radius: 5 0 0 5;"
+					minWidth="80.0" prefWidth="90.0">
+					<items>
+						<FXCollections fx:factory="observableArrayList">
+							<String fx:id="defaultSelection" fx:value="NVT" />
+							<String fx:value="Bezig" />
+							<String fx:value="Positief" />
+							<String fx:value="Negatief" />
+						</FXCollections>
+					</items>
+				</ComboBox>
+			</items>
+		</ToolBar>
+	</top>
 	<center>
 		<ScrollPane fx:id="center" pannable="true"
 			BorderPane.alignment="CENTER">
 			<content>
 				<AnchorPane>
 					<children>
-						<Group fx:id="contentPane" />
+						<Group fx:id="contentPane">
+							<Label fx:id="testLabel" />
+						</Group>
 					</children>
 				</AnchorPane>
 			</content>
 		</ScrollPane>
 	</center>
+
 </BorderPane>

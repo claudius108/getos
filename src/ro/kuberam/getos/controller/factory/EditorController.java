@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -17,9 +18,11 @@ public class EditorController extends Controller {
 
 	private final static String TAG = EditorController.class.getSimpleName();
 
+	@FXML
+	private BorderPane root;
+	
 	private final Stage pStage;
 	private final File pFile;
-	private BorderPane root;
 	protected ExecutorService mExecutorService = null;
 	private static EditorTab mEditorTab;
 
