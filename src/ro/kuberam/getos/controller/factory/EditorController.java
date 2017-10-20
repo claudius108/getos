@@ -20,8 +20,8 @@ public class EditorController extends Controller {
 
 	@FXML
 	private BorderPane root;
-	
-	private final Stage pStage;
+
+	private static Stage pStage;
 	private final File pFile;
 	protected ExecutorService mExecutorService = null;
 	private static EditorTab mEditorTab;
@@ -34,7 +34,7 @@ public class EditorController extends Controller {
 		mExecutorService = Executors.newFixedThreadPool(2);
 	}
 
-	public Stage getStage() {
+	public static Stage getStage() {
 		return pStage;
 	}
 

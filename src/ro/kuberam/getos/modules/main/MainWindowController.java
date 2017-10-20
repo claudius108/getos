@@ -24,6 +24,8 @@ import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
+import ro.kuberam.getos.modules.eventBus.EventBus;
+import ro.kuberam.getos.modules.eventBus.FXEventBus;
 import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
 import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
@@ -56,6 +58,12 @@ public final class MainWindowController extends StageController {
 
 	@FXML
 	private Label statusLabel;
+
+	public static EventBus mainEventBus;
+
+	static {
+		mainEventBus = new FXEventBus();
+	}
 
 	EditorController newTabController = null;
 	private final ArrayList<EditorController> tabControllers;
@@ -90,7 +98,7 @@ public final class MainWindowController extends StageController {
 				switch (fileTypeName) {
 				case "PDF":
 					try {
-						createNewEditorTab2(PdfEditorController.create(getApplication(), getStage(), file), file);
+						createNewEditorTab2(PdfEditorController.create(file), file);
 					} catch (Exception ex) {
 						Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 						if (ex.getCause() != null) {
@@ -105,9 +113,10 @@ public final class MainWindowController extends StageController {
 				e.printStackTrace();
 			}
 
+			mainEventBus.fireEvent(event);
+
 			event.consume();
 		});
-
 
 		saveEditorContentButton.setOnAction(event -> {
 			loadFile();

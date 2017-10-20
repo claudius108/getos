@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-	private final Application mApplication;
+	private static Application mApplication;
 	private ResourceBundle mResources;
 
 	public Controller(Application application) {
@@ -20,7 +20,7 @@ public class Controller implements Initializable {
 		mResources = resources;
 	}
 
-	public Application getApplication() {
+	public static Application getApplication() {
 		return mApplication;
 	}
 
