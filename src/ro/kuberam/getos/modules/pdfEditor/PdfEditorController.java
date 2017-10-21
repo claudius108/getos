@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
+import ro.kuberam.getos.modules.main.MainWindowController;
 
 public final class PdfEditorController extends EditorController {
 
@@ -45,7 +46,7 @@ public final class PdfEditorController extends EditorController {
 	private Label testLabel;
 
 	static File pFile;
-	
+
 	static {
 		Getos.mainEvents.put("PDF", new OpenPdfEvent(OpenPdfEvent.OPEN_FILE));
 	}
@@ -65,25 +66,23 @@ public final class PdfEditorController extends EditorController {
 
 		testLabel.textProperty().bind(selectEditorCombobox.valueProperty().asString());
 
-		Logger.getLogger(TAG).log(Level.INFO, "mainEventBus = " + Getos.mainEventBus);
-		
 		Getos.mainEventBus.addEventHandler(OpenPdfEvent.OPEN_FILE, event -> {
-			Logger.getLogger(TAG).log(Level.INFO, "target = " + event.getTarget());
-			Logger.getLogger(TAG).log(Level.INFO, "getData = " + event.getData());
+//			Logger.getLogger(TAG).log(Level.INFO, "target = " + event.getTarget());
+//			Logger.getLogger(TAG).log(Level.INFO, "getData = " + event.getData());
 		});
 	}
 
-	public static PdfEditorController create(File file) throws Exception {
+	public static void create(File file) throws Exception {
 		pFile = file;
-
+		
 		FXMLLoader loader = new FXMLLoader(
 				PdfEditorController.class.getResource("/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml"),
 				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfEditor.ui"), null,
 				new ControllerFactory(getApplication(), getStage()));
 
 		loader.load();
-
-		return loader.getController();
+		
+		MainWindowController.createNewEditorTab2(loader.getController(), file);
 	}
 
 }

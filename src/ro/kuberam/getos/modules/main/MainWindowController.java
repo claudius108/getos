@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -27,7 +26,6 @@ import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
 import ro.kuberam.getos.modules.eventBus.GetosEvent;
-import ro.kuberam.getos.modules.pdfEditor.OpenPdfEvent;
 import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
 import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
@@ -56,13 +54,13 @@ public final class MainWindowController extends StageController {
 	private Button saveEditorContentButton;
 
 	@FXML
-	private TabPane tabPane;
+	private static TabPane tabPane;
 
 	@FXML
-	private Label statusLabel;
+	private static Label statusLabel;
 
 	EditorController newTabController = null;
-	private final ArrayList<EditorController> tabControllers;
+	private static ArrayList<EditorController> tabControllers;
 	private FileChooser fileChooser;
 
 	public MainWindowController(Application application, Stage stage) {
@@ -94,7 +92,7 @@ public final class MainWindowController extends StageController {
 				switch (documentType) {
 				case "PDF":
 					try {
-						createNewEditorTab2(PdfEditorController.create(file), file);
+						PdfEditorController.create(file);
 
 						GetosEvent ev = Getos.mainEvents.get(documentType);
 						ev.setData(file);
@@ -271,7 +269,7 @@ public final class MainWindowController extends StageController {
 		}
 	}
 
-	private void createNewEditorTab2(EditorController controller, File file) {
+	public static void createNewEditorTab2(EditorController controller, File file) {
 		try {
 			EditorTab newTab = new EditorTab(file);
 			newTab.setClosable(true);
@@ -298,6 +296,7 @@ public final class MainWindowController extends StageController {
 			controller.setEditorPane(newTab);
 			// newTabController.setStatusLabel(statusLabel);
 			tabControllers.add(controller);
+			Logger.getLogger(TAG).log(Level.INFO, "tabPane = " + tabPane);
 			tabPane.getTabs().add(newTab);
 			tabPane.getSelectionModel().select(newTab);
 		} catch (Exception ex) {
