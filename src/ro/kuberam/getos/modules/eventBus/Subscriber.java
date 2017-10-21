@@ -1,20 +1,16 @@
 package ro.kuberam.getos.modules.eventBus;
 
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 
-/**
- * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
- */
 public final class Subscriber {
 
     private EventBus bus;
 
-    private EventType<? extends Event> eventType;
-    private EventHandler<? super Event> eventHandler;
+    private EventType<? extends GetosEvent> eventType;
+    private EventHandler<? super GetosEvent> eventHandler;
 
-    Subscriber(EventBus bus, EventType<? extends Event> eventType, EventHandler<? super Event> eventHandler) {
+    Subscriber(EventBus bus, EventType<? extends GetosEvent> eventType, EventHandler<? super GetosEvent> eventHandler) {
         this.bus = bus;
         this.eventType = eventType;
         this.eventHandler = eventHandler;

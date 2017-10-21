@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -25,6 +26,8 @@ import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
+import ro.kuberam.getos.modules.eventBus.GetosEvent;
+import ro.kuberam.getos.modules.pdfEditor.OpenPdfEvent;
 import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
 import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
@@ -85,13 +88,17 @@ public final class MainWindowController extends StageController {
 				Utils.showAlert(AlertType.ERROR, file.getName(), getResources().getString("cant_handle_filetype"));
 				return;
 			}
-			String fileTypeName = type.getName();
+			String documentType = type.getName();
 
 			try {
-				switch (fileTypeName) {
+				switch (documentType) {
 				case "PDF":
 					try {
 						createNewEditorTab2(PdfEditorController.create(file), file);
+
+						GetosEvent ev = Getos.mainEvents.get(documentType);
+						ev.setData(file);
+						Getos.mainEventBus.fireEvent(ev);
 					} catch (Exception ex) {
 						Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 						if (ex.getCause() != null) {
@@ -105,8 +112,6 @@ public final class MainWindowController extends StageController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
-			Getos.mainEventBus.fireEvent(event);
 
 			event.consume();
 		});
