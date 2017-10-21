@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ro.kuberam.apps</groupId>
 	<artifactId>getos</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,7 +45,7 @@
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>8.8.3</version>
 				<configuration>
-					<mainClass>ro.kuberam.getos.App</mainClass>
+					<mainClass>ro.kuberam.getos.Getos</mainClass>
 					<jfxMainAppJarName>getos.jar</jfxMainAppJarName>
 				</configuration>
 			</plugin>

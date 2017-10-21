@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -17,10 +16,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
+import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
-import ro.kuberam.getos.modules.eventBus.Subscriber;
-import ro.kuberam.getos.modules.main.MainWindowController;
 
 public final class PdfEditorController extends EditorController {
 
@@ -64,9 +62,9 @@ public final class PdfEditorController extends EditorController {
 
 		testLabel.textProperty().bind(selectEditorCombobox.valueProperty().asString());
 
-		Logger.getLogger(TAG).log(Level.INFO, "mainEventBus = " + MainWindowController.mainEventBus);
+		Logger.getLogger(TAG).log(Level.INFO, "mainEventBus = " + Getos.mainEventBus);
 		
-		MainWindowController.mainEventBus.addEventHandler(ActionEvent.ACTION, event -> {
+		Getos.mainEventBus.addEventHandler(ActionEvent.ACTION, event -> {
 			Logger.getLogger(TAG).log(Level.INFO, "target = " + event.getTarget());
 			Logger.getLogger(TAG).log(Level.INFO, "getEventType = " + event.getEventType());
 		});
