@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.scene.control.Alert.AlertType;
+import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.utils.Utils;
 
@@ -23,25 +24,24 @@ public class EditorUtils {
 				if (controller.isEdited()) {
 					controller.saveContent();
 				}
-				tabControllers.remove(controller);
+				Getos.tabControllers.remove(controller);
 				controller.shutDown();
-				if (tabPane.getTabs().size() == 1) {
-					statusLabel.setText("");
+				if (Getos.tabPane.getTabs().size() == 1) {
+					Getos.statusLabel.setText("");
 				}
 			});
 			newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue) {
-					EditorController tabController = tabControllers.get(tabPane.getTabs().indexOf(newTab));
+					EditorController tabController = Getos.tabControllers.get(Getos.tabPane.getTabs().indexOf(newTab));
 					tabController.onEditorTabSelected();
 				}
 			});
 
 			controller.setEditorPane(newTab);
 			// newTabController.setStatusLabel(statusLabel);
-			tabControllers.add(controller);
-			Logger.getLogger(TAG).log(Level.INFO, "tabPane = " + tabPane);
-			tabPane.getTabs().add(newTab);
-			tabPane.getSelectionModel().select(newTab);
+			Getos.tabControllers.add(controller);
+			Getos.tabPane.getTabs().add(newTab);
+			Getos.tabPane.getSelectionModel().select(newTab);
 		} catch (Exception ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 			if (ex.getCause() != null) {

@@ -3,8 +3,6 @@ package ro.kuberam.getos.modules.pdfEditor;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -18,7 +16,7 @@ import javafx.stage.Stage;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
-import ro.kuberam.getos.modules.main.MainWindowController;
+import ro.kuberam.getos.modules.editorTab.EditorUtils;
 
 public final class PdfEditorController extends EditorController {
 
@@ -82,7 +80,7 @@ public final class PdfEditorController extends EditorController {
 
 		loader.load();
 		
-		MainWindowController.createNewEditorTab2(loader.getController(), file);
+		EditorUtils.createNewEditorTab2(loader.getController(), file);
 	}
 
 }
