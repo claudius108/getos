@@ -23,9 +23,9 @@ import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
+import ro.kuberam.getos.eventBus.GetosEvent;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
-import ro.kuberam.getos.modules.eventBus.GetosEvent;
 import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
 import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
@@ -74,6 +74,7 @@ public final class MainWindowController extends StageController {
 		
 		Getos.tabPane = tabPane;
 		Getos.statusLabel = statusLabel;
+		Logger.getLogger(TAG).log(Level.INFO, "tabPane = " + tabPane + "\n");
 
 		openFileMenuItem.setOnAction(event -> {
 			loadFile();
@@ -95,11 +96,13 @@ public final class MainWindowController extends StageController {
 				switch (documentType) {
 				case "PDF":
 					try {
-						PdfEditorController.create(file);
+						Logger.getLogger(TAG).log(Level.INFO, "Getos.tabPane = " + Getos.tabPane);
+						//PdfEditorController.create(file);
 
 						GetosEvent ev = Getos.mainEvents.get(documentType);
-						ev.setData(file);
-						Getos.mainEventBus.fireEvent(ev);
+						Logger.getLogger(TAG).log(Level.INFO, "ev = " + ev);
+//						ev.setData(file);
+//						Getos.mainEventBus.fireEvent(ev);
 					} catch (Exception ex) {
 						Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 						if (ex.getCause() != null) {

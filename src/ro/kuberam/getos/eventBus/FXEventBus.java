@@ -1,4 +1,4 @@
-package ro.kuberam.getos.modules.eventBus;
+package ro.kuberam.getos.eventBus;
 
 import javafx.event.EventHandler;
 import javafx.event.EventType;

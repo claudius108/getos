@@ -1,4 +1,4 @@
-package ro.kuberam.getos.modules.eventBus;
+package ro.kuberam.getos.eventBus;
 
 import javafx.beans.NamedArg;
 import javafx.event.Event;

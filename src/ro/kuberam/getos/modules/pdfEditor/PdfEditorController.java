@@ -3,6 +3,8 @@ package ro.kuberam.getos.modules.pdfEditor;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -45,10 +47,6 @@ public final class PdfEditorController extends EditorController {
 
 	static File pFile;
 
-	static {
-		Getos.mainEvents.put("PDF", new OpenPdfEvent(OpenPdfEvent.OPEN_FILE));
-	}
-
 	public PdfEditorController(Application application, Stage stage, File file) {
 		super(application, stage, file);
 	}
@@ -65,7 +63,7 @@ public final class PdfEditorController extends EditorController {
 		testLabel.textProperty().bind(selectEditorCombobox.valueProperty().asString());
 
 		Getos.mainEventBus.addEventHandler(OpenPdfEvent.OPEN_FILE, event -> {
-//			Logger.getLogger(TAG).log(Level.INFO, "target = " + event.getTarget());
+			Logger.getLogger(TAG).log(Level.INFO, "target = " + event.getTarget());
 //			Logger.getLogger(TAG).log(Level.INFO, "getData = " + event.getData());
 		});
 	}

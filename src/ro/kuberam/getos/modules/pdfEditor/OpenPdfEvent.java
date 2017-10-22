@@ -3,7 +3,7 @@ package ro.kuberam.getos.modules.pdfEditor;
 import javafx.beans.NamedArg;
 import javafx.event.Event;
 import javafx.event.EventType;
-import ro.kuberam.getos.modules.eventBus.GetosEvent;
+import ro.kuberam.getos.eventBus.GetosEvent;
 
 public class OpenPdfEvent extends GetosEvent {
 

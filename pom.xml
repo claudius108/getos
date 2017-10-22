@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ro.kuberam.apps</groupId>
 	<artifactId>getos</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.3</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,13 +43,52 @@
 			<plugin>
 				<groupId>com.zenjava</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
-				<version>8.8.3</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<configuration>
 					<mainClass>ro.kuberam.getos.Getos</mainClass>
 					<jfxMainAppJarName>getos.jar</jfxMainAppJarName>
 				</configuration>
+				<executions>
+					<execution>
+						<id>create-jfxjar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build-jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
+			<!-- <plugin> -->
+			<!-- <groupId>org.codehaus.mojo</groupId> -->
+			<!-- <artifactId>exec-maven-plugin</artifactId> -->
+			<!-- <version>1.6.0</version> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <id>run application</id> -->
+			<!-- <phase>package</phase> -->
+			<!-- <goals> -->
+			<!-- <goal>java</goal> -->
+			<!-- </goals> -->
+			<!-- <configuration> -->
+			<!-- <mainClass>ro.kuberam.getos.Getos</mainClass> -->
+			<!-- <arguments> -->
+			<!-- <argument>-Dsun.java2d.opengl=true</argument> -->
+			<!-- </arguments> -->
+			<!-- </configuration> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
 		</plugins>
 	</build>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>oss-sonatype-snapshots</id>
+			<url>https://oss.sonatype.org/content/groups/public/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 
 </project>
