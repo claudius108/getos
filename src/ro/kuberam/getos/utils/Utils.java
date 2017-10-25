@@ -1,12 +1,14 @@
 package ro.kuberam.getos.utils;
 
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
-import java.io.File;
-
 public final class Utils {
-
+	
 	private final static String TAG = Utils.class.getSimpleName();
 
 	public static void showAlert(AlertType type, String header, String content) {
@@ -16,6 +18,19 @@ public final class Utils {
 		alert.setContentText(content);
 
 		alert.showAndWait();
+	}
+	
+	public static void showAlert(AlertType type, Exception ex) {
+		String content;
+		
+		if (ex.getCause() != null) {
+			content = ex.getCause().getLocalizedMessage();
+		} else {
+			content = ex.getLocalizedMessage();
+		}
+		
+		Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
+		showAlert(AlertType.ERROR, null, content);
 	}
 
 	public static String getExtension(File file) {

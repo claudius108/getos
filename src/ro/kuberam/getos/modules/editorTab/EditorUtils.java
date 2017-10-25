@@ -1,8 +1,6 @@
 package ro.kuberam.getos.modules.editorTab;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.scene.control.Alert.AlertType;
 import ro.kuberam.getos.Getos;
@@ -10,8 +8,6 @@ import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.utils.Utils;
 
 public class EditorUtils {
-	
-	private final static String TAG = EditorUtils.class.getSimpleName();
 	
 	public static void createNewEditorTab2(EditorController controller, File file) {
 		try {
@@ -43,12 +39,7 @@ public class EditorUtils {
 			Getos.tabPane.getTabs().add(newTab);
 			Getos.tabPane.getSelectionModel().select(newTab);
 		} catch (Exception ex) {
-			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
-			if (ex.getCause() != null) {
-				Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
-			} else {
-				Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
-			}
+			Utils.showAlert(AlertType.ERROR, ex);
 		}
 	}
 

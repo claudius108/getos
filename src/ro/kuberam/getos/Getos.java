@@ -33,7 +33,7 @@ public class Getos extends Application {
 		try {
 			Class.forName("ro.kuberam.getos.modules.pdfEditor.Module").getClass();
 		} catch (ClassNotFoundException ex) {
-			Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
+			Utils.showAlert(AlertType.ERROR, ex);
 		}
 	}
 

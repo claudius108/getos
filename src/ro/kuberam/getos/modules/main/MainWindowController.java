@@ -148,12 +148,7 @@ public final class MainWindowController extends StageController {
 					ResourceBundle.getBundle("ro.kuberam.getos.modules.main.ui"), null,
 					new ControllerFactory(application, stage));
 		} catch (Exception ex) {
-			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
-			if (ex.getCause() != null) {
-				Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
-			} else {
-				Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
-			}
+			Utils.showAlert(AlertType.ERROR, ex);
 		}
 	}
 
@@ -188,12 +183,7 @@ public final class MainWindowController extends StageController {
 		try {
 			AboutDialogController.create(getApplication(), getStage());
 		} catch (Exception ex) {
-			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
-			if (ex.getCause() != null) {
-				Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
-			} else {
-				Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
-			}
+			Utils.showAlert(AlertType.ERROR, ex);
 		}
 	}
 
@@ -215,12 +205,7 @@ public final class MainWindowController extends StageController {
 
 					// root.getChildren().add(viewerController.getRoot());
 				} catch (Exception ex) {
-					Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
-					if (ex.getCause() != null) {
-						Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
-					} else {
-						Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
-					}
+					Utils.showAlert(AlertType.ERROR, ex);
 				}
 				break;
 			}
