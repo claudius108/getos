@@ -62,10 +62,6 @@ public final class PdfEditorController extends EditorController {
 
 		testLabel.textProperty().bind(selectEditorCombobox.valueProperty().asString());
 
-		Getos.mainEventBus.addEventHandler(OpenPdfEvent.OPEN_FILE, event -> {
-			Logger.getLogger(TAG).log(Level.INFO, "target = " + event.getTarget());
-//			Logger.getLogger(TAG).log(Level.INFO, "getData = " + event.getData());
-		});
 	}
 
 	public static void create(File file) throws Exception {
