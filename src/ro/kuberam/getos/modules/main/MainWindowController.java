@@ -23,6 +23,7 @@ import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.events.FileEvent;
+import ro.kuberam.getos.events.UserInterfaceEvent;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
 import ro.kuberam.getos.modules.viewers.ViewerFileType;
@@ -51,7 +52,7 @@ public final class MainWindowController extends StageController {
 	private TabPane tabPane;
 
 	@FXML
-	private static Label statusLabel;
+	private Label statusLabel;
 
 	EditorController newTabController = null;
 	private FileChooser fileChooser;
@@ -65,6 +66,7 @@ public final class MainWindowController extends StageController {
 		super.initialize(location, resources);
 
 		Getos.eventsRegistry.put("open-file", new FileEvent(FileEvent.OPEN_FILE));
+		Getos.eventsRegistry.put("update-status-label", new UserInterfaceEvent(UserInterfaceEvent.UPDATE_STATUS_LABEL));
 
 		Getos.eventBus.addEventHandler(FileEvent.OPEN_FILE, event -> {
 			try {
@@ -75,6 +77,12 @@ public final class MainWindowController extends StageController {
 
 			event.consume();
 		});
+		Getos.eventBus.addEventHandler(UserInterfaceEvent.UPDATE_STATUS_LABEL, event -> {
+			statusLabel.setText((String) event.getData());
+
+			event.consume();
+		});		
+		
 
 		openFileButton.setOnAction(event -> {
 
@@ -207,9 +215,4 @@ public final class MainWindowController extends StageController {
 		tabPane.getTabs().add(newTab);
 		tabPane.getSelectionModel().select(newTab);
 	}
-
-	public static Label getStatusLabel() {
-		return statusLabel;
-	}
-
 }

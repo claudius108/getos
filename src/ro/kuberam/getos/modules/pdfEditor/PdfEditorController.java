@@ -13,6 +13,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
+import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 
@@ -50,6 +51,9 @@ public final class PdfEditorController extends EditorController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
+		
+		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label")
+				.setData(pFile.getAbsolutePath()));
 
 		 selectEditorCombobox.setValue("jpedal");
 
