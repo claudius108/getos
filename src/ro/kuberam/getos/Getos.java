@@ -5,8 +5,6 @@ import java.util.HashMap;
 
 import javafx.application.Application;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.eventBus.EventBus;
@@ -17,17 +15,13 @@ import ro.kuberam.getos.utils.Utils;
 
 public class Getos extends Application {
 
-	private final static String TAG = Getos.class.getSimpleName();
-
-	public static EventBus mainEventBus;
-	public static HashMap<String, GetosEvent> mainEvents = new HashMap<String, GetosEvent>();
+	public static EventBus eventBus;
+	public static HashMap<String, GetosEvent> eventsRegistry = new HashMap<String, GetosEvent>();
 
 	public static ArrayList<EditorController> tabControllers;
-	public static TabPane tabPane;
-	public static Label statusLabel;
 
 	static {
-		mainEventBus = new FXEventBus();
+		eventBus = new FXEventBus();
 		tabControllers = new ArrayList<>();
 
 		try {

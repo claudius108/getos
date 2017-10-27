@@ -3,8 +3,6 @@ package ro.kuberam.getos.modules.pdfEditor;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -15,10 +13,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
-import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
-import ro.kuberam.getos.modules.editorTab.EditorUtils;
 
 public final class PdfEditorController extends EditorController {
 
@@ -45,7 +41,7 @@ public final class PdfEditorController extends EditorController {
 	@FXML
 	private Label testLabel;
 
-	static File pFile;
+	private static File pFile;
 
 	public PdfEditorController(Application application, Stage stage, File file) {
 		super(application, stage, file);
@@ -55,18 +51,18 @@ public final class PdfEditorController extends EditorController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		selectEditorCombobox.setValue("jpedal");
+		// selectEditorCombobox.setValue("jpedal");
 
 		// contentPane.getChildren().add(new
 		// Label(selectEditorCombobox.getValue()));
 
-		testLabel.textProperty().bind(selectEditorCombobox.valueProperty().asString());
+		// testLabel.textProperty().bind(selectEditorCombobox.valueProperty().asString());
 
 	}
 
-	public static void create(File file) throws Exception {
-		pFile = file;
-		
+	public static PdfEditorController create(File file) throws Exception {
+		setFile(file);
+
 		FXMLLoader loader = new FXMLLoader(
 				PdfEditorController.class.getResource("/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml"),
 				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfEditor.ui"), null,
@@ -74,7 +70,18 @@ public final class PdfEditorController extends EditorController {
 
 		loader.load();
 		
-		EditorUtils.createNewEditorTab2(loader.getController(), file);
+		return loader.getController();
+
+		// EditorUtils.createNewEditorTab2(loader.getController(), file);
+		// MainWindowController.createNewEditorTab2(loader.getController(), file);
+	}
+
+	public File getFile() {
+		return pFile;
+	}
+
+	public static void setFile(File pFile) {
+		PdfEditorController.pFile = pFile;
 	}
 
 }

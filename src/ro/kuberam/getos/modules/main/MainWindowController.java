@@ -2,10 +2,7 @@ package ro.kuberam.getos.modules.main;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -23,6 +20,7 @@ import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
+import ro.kuberam.getos.eventBus.FileEvent;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
 import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
@@ -58,24 +56,34 @@ public final class MainWindowController extends StageController {
 	private static Label statusLabel;
 
 	EditorController newTabController = null;
-	private static ArrayList<EditorController> tabControllers;
 	private FileChooser fileChooser;
+	
+	static {
+		Getos.eventsRegistry.put("open-file", new FileEvent(FileEvent.OPEN_FILE));
+		
+		Getos.eventBus.addEventHandler(FileEvent.OPEN_FILE, event -> {
+			try {
+				createNewEditorTab2((EditorController) event.getData());
+			} catch (Exception ex) {
+				Utils.showAlert(AlertType.ERROR, ex);
+			}
+			
+			event.consume();
+		});
+	}
 
 	public MainWindowController(Application application, Stage stage) {
 		super(application, stage);
-		tabControllers = new ArrayList<>();
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
-		
-		Getos.tabPane = tabPane;
-		Getos.statusLabel = statusLabel;
-		Logger.getLogger(TAG).log(Level.INFO, "tabPane = " + tabPane + "\n");
+
+		// tabPane = new TabPane();
 
 		openFileMenuItem.setOnAction(event -> {
-			loadFile();
+			openFile();
 			event.consume();
 		});
 
@@ -94,15 +102,9 @@ public final class MainWindowController extends StageController {
 				switch (documentType) {
 				case "PDF":
 					try {
-						Logger.getLogger(TAG).log(Level.INFO, "Getos.tabPane = " + Getos.tabPane);
-
-						Getos.mainEventBus.fireEvent(Getos.mainEvents.get(documentType).setData(file));
+						Getos.eventBus.fireEvent(Getos.eventsRegistry.get(documentType).setData(file));
 					} catch (Exception ex) {
-						if (ex.getCause() != null) {
-							Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
-						} else {
-							Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
-						}
+						Utils.showAlert(AlertType.ERROR, ex);
 					}
 					break;
 				}
@@ -114,7 +116,7 @@ public final class MainWindowController extends StageController {
 		});
 
 		saveEditorContentButton.setOnAction(event -> {
-			loadFile();
+			openFile();
 			event.consume();
 		});
 
@@ -152,7 +154,7 @@ public final class MainWindowController extends StageController {
 		}
 	}
 
-	private void loadFile() {
+	private void openFile() {
 		ResourceBundle resourceBundle = getResources();
 
 		fileChooser.setTitle(resourceBundle.getString("open_file_dialog_title"));
@@ -168,7 +170,7 @@ public final class MainWindowController extends StageController {
 	}
 
 	private void onStageClose() {
-		tabControllers.forEach(tabController -> {
+		Getos.tabControllers.forEach(tabController -> {
 			if (tabController.isEdited()) {
 				// todo: show yes/no save dialog
 				tabController.saveContent();
@@ -209,9 +211,6 @@ public final class MainWindowController extends StageController {
 				}
 				break;
 			}
-			// EditorTabController newTabController =
-			// EditorTabController.create(getApplication(), getStage(), type,
-			// file);
 
 			EditorTab newTab = new EditorTab(file);
 			newTab.setClosable(true);
@@ -222,7 +221,7 @@ public final class MainWindowController extends StageController {
 				if (newTabController.isEdited()) {
 					newTabController.saveContent();
 				}
-				tabControllers.remove(newTabController);
+				Getos.tabControllers.remove(newTabController);
 				newTabController.shutDown();
 				if (tabPane.getTabs().size() == 1) {
 					statusLabel.setText("");
@@ -230,27 +229,63 @@ public final class MainWindowController extends StageController {
 			});
 			newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue) {
-					EditorController tabController = tabControllers.get(tabPane.getTabs().indexOf(newTab));
+					EditorController tabController = Getos.tabControllers.get(tabPane.getTabs().indexOf(newTab));
 					tabController.onEditorTabSelected();
 				}
 			});
 
 			newTabController.setEditorPane(newTab);
 			// newTabController.setStatusLabel(statusLabel);
-			tabControllers.add(newTabController);
+			Getos.tabControllers.add(newTabController);
 			tabPane.getTabs().add(newTab);
 			// if (loadFile) {
 			// newTabController.loadContent();
 			// }
 			tabPane.getSelectionModel().select(newTab);
 		} catch (Exception ex) {
-			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
-			if (ex.getCause() != null) {
-				Utils.showAlert(AlertType.ERROR, null, ex.getCause().getLocalizedMessage());
-			} else {
-				Utils.showAlert(AlertType.ERROR, null, ex.getLocalizedMessage());
-			}
+			Utils.showAlert(AlertType.ERROR, ex);
 		}
+	}
+
+	public static void createNewEditorTab2(EditorController newTabController) {
+
+		File file = newTabController.getFile();
+		
+		EditorTab newTab = new EditorTab(file);
+		newTab.setClosable(true);
+		newTab.setContent(newTabController.getRoot());
+
+		newTab.setOnCloseRequest(event -> {
+			// todo: show yes/no save dialog
+			if (newTabController.isEdited()) {
+				newTabController.saveContent();
+			}
+			Getos.tabControllers.remove(newTabController);
+			newTabController.shutDown();
+			if (tabPane.getTabs().size() == 1) {
+				statusLabel.setText("");
+			}
+		});
+		newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue) {
+				EditorController tabController = Getos.tabControllers.get(tabPane.getTabs().indexOf(newTab));
+				tabController.onEditorTabSelected();
+			}
+		});
+
+		newTabController.setEditorPane(newTab);
+		// newTabController.setStatusLabel(statusLabel);
+		Getos.tabControllers.add(newTabController);
+		tabPane.getTabs().add(newTab);
+		tabPane.getSelectionModel().select(newTab);
+	}
+
+	public static TabPane getTabPane() {
+		return tabPane;
+	}
+
+	public static Label getStatusLabel() {
+		return statusLabel;
 	}
 
 }
