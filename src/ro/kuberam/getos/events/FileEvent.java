@@ -1,9 +1,8 @@
-package ro.kuberam.getos.eventBus;
+package ro.kuberam.getos.events;
 
 import javafx.beans.NamedArg;
 import javafx.event.Event;
 import javafx.event.EventType;
-import ro.kuberam.getos.eventBus.GetosEvent;
 
 public class FileEvent extends GetosEvent {
 

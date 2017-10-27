@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.eventBus.EventBus;
 import ro.kuberam.getos.eventBus.FXEventBus;
-import ro.kuberam.getos.eventBus.GetosEvent;
+import ro.kuberam.getos.events.GetosEvent;
 import ro.kuberam.getos.modules.main.MainWindowController;
 import ro.kuberam.getos.utils.Utils;
 

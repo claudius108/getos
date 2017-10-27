@@ -2,6 +2,7 @@ package ro.kuberam.getos.eventBus;
 
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import ro.kuberam.getos.events.GetosEvent;
 
 public final class Subscriber {
 
