@@ -26,7 +26,6 @@
 						<Menu text="%file">
 							<items>
 								<MenuItem text="%new_file" />
-								<MenuItem fx:id="openFileMenuItem" text="%open_file" />
 								<Menu text="%open_recent_files" />
 								<SeparatorMenuItem mnemonicParsing="false" />
 								<MenuItem text="%save_file" />

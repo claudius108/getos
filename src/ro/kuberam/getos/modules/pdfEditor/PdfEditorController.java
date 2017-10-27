@@ -51,7 +51,7 @@ public final class PdfEditorController extends EditorController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		// selectEditorCombobox.setValue("jpedal");
+		 selectEditorCombobox.setValue("jpedal");
 
 		// contentPane.getChildren().add(new
 		// Label(selectEditorCombobox.getValue()));
@@ -71,9 +71,6 @@ public final class PdfEditorController extends EditorController {
 		loader.load();
 		
 		return loader.getController();
-
-		// EditorUtils.createNewEditorTab2(loader.getController(), file);
-		// MainWindowController.createNewEditorTab2(loader.getController(), file);
 	}
 
 	public File getFile() {

@@ -3,6 +3,8 @@ package ro.kuberam.getos.modules.main;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -35,9 +37,6 @@ public final class MainWindowController extends StageController {
 	private BorderPane root;
 
 	@FXML
-	private MenuItem openFileMenuItem;
-
-	@FXML
 	private MenuItem mItemAbout;
 
 	@FXML
@@ -50,27 +49,13 @@ public final class MainWindowController extends StageController {
 	private Button saveEditorContentButton;
 
 	@FXML
-	private static TabPane tabPane;
+	private TabPane tabPane;
 
 	@FXML
 	private static Label statusLabel;
 
 	EditorController newTabController = null;
 	private FileChooser fileChooser;
-	
-	static {
-		Getos.eventsRegistry.put("open-file", new FileEvent(FileEvent.OPEN_FILE));
-		
-		Getos.eventBus.addEventHandler(FileEvent.OPEN_FILE, event -> {
-			try {
-				createNewEditorTab2((EditorController) event.getData());
-			} catch (Exception ex) {
-				Utils.showAlert(AlertType.ERROR, ex);
-			}
-			
-			event.consume();
-		});
-	}
 
 	public MainWindowController(Application application, Stage stage) {
 		super(application, stage);
@@ -80,14 +65,31 @@ public final class MainWindowController extends StageController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		// tabPane = new TabPane();
+		Getos.eventsRegistry.put("open-file", new FileEvent(FileEvent.OPEN_FILE));
 
-		openFileMenuItem.setOnAction(event -> {
-			openFile();
+		Getos.eventBus.addEventHandler(FileEvent.OPEN_FILE, event -> {
+			try {
+				createNewEditorTab((EditorController) event.getData());
+			} catch (Exception ex) {
+				Utils.showAlert(AlertType.ERROR, ex);
+			}
+
 			event.consume();
 		});
 
 		openFileButton.setOnAction(event -> {
+
+			// ResourceBundle resourceBundle = getResources();
+			//
+			// fileChooser.setTitle(resourceBundle.getString("open_file_dialog_title"));
+			//
+			// File file = fileChooser.showOpenDialog(getStage());
+			// if (file != null) {
+			// fileChooser.setInitialDirectory(file.getParentFile());
+			//
+			// ViewerFileType type = ViewerFileType.getTypeByExtension(file);
+			// }
+
 			File file = new File("/home/claudius/Downloads/comune.pdf");
 
 			ViewerFileType type = ViewerFileType.getTypeByExtension(file);
@@ -116,7 +118,6 @@ public final class MainWindowController extends StageController {
 		});
 
 		saveEditorContentButton.setOnAction(event -> {
-			openFile();
 			event.consume();
 		});
 
@@ -154,21 +155,6 @@ public final class MainWindowController extends StageController {
 		}
 	}
 
-	private void openFile() {
-		ResourceBundle resourceBundle = getResources();
-
-		fileChooser.setTitle(resourceBundle.getString("open_file_dialog_title"));
-
-		File file = fileChooser.showOpenDialog(getStage());
-		if (file != null) {
-			fileChooser.setInitialDirectory(file.getParentFile());
-
-			ViewerFileType type = ViewerFileType.getTypeByExtension(file);
-
-			createNewEditorTab(type, file, true);
-		}
-	}
-
 	private void onStageClose() {
 		Getos.tabControllers.forEach(tabController -> {
 			if (tabController.isEdited()) {
@@ -189,68 +175,11 @@ public final class MainWindowController extends StageController {
 		}
 	}
 
-	private void createNewEditorTab(ViewerFileType type, File file, boolean loadFile) {
-		if (type == null) {
-			Utils.showAlert(AlertType.ERROR, file.getName(), getResources().getString("cant_handle_filetype"));
-			return;
-		}
-		String fileTypeName = type.getName();
-
-		try {
-			switch (fileTypeName) {
-			case "PDF":
-				try {
-					newTabController = PdfViewerController.create(getApplication(), getStage(), file);
-					// PdfViewerController viewerController =
-					// PdfViewerController.create(getApplication(), getStage(),
-					// getEditorTab().getFile());
-
-					// root.getChildren().add(viewerController.getRoot());
-				} catch (Exception ex) {
-					Utils.showAlert(AlertType.ERROR, ex);
-				}
-				break;
-			}
-
-			EditorTab newTab = new EditorTab(file);
-			newTab.setClosable(true);
-			newTab.setContent(newTabController.getRoot());
-
-			newTab.setOnCloseRequest(event -> {
-				// todo: show yes/no save dialog
-				if (newTabController.isEdited()) {
-					newTabController.saveContent();
-				}
-				Getos.tabControllers.remove(newTabController);
-				newTabController.shutDown();
-				if (tabPane.getTabs().size() == 1) {
-					statusLabel.setText("");
-				}
-			});
-			newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
-				if (newValue) {
-					EditorController tabController = Getos.tabControllers.get(tabPane.getTabs().indexOf(newTab));
-					tabController.onEditorTabSelected();
-				}
-			});
-
-			newTabController.setEditorPane(newTab);
-			// newTabController.setStatusLabel(statusLabel);
-			Getos.tabControllers.add(newTabController);
-			tabPane.getTabs().add(newTab);
-			// if (loadFile) {
-			// newTabController.loadContent();
-			// }
-			tabPane.getSelectionModel().select(newTab);
-		} catch (Exception ex) {
-			Utils.showAlert(AlertType.ERROR, ex);
-		}
-	}
-
-	public static void createNewEditorTab2(EditorController newTabController) {
+	public void createNewEditorTab(EditorController newTabController) {
 
 		File file = newTabController.getFile();
-		
+		Logger.getLogger(TAG).log(Level.INFO, "file = " + file);
+
 		EditorTab newTab = new EditorTab(file);
 		newTab.setClosable(true);
 		newTab.setContent(newTabController.getRoot());
@@ -278,10 +207,6 @@ public final class MainWindowController extends StageController {
 		Getos.tabControllers.add(newTabController);
 		tabPane.getTabs().add(newTab);
 		tabPane.getSelectionModel().select(newTab);
-	}
-
-	public static TabPane getTabPane() {
-		return tabPane;
 	}
 
 	public static Label getStatusLabel() {
