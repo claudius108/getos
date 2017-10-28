@@ -7,19 +7,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -97,33 +96,11 @@ public final class MainWindowController extends StageController {
 			// File file = fileChooser.showOpenDialog(getStage());
 			// if (file != null) {
 			// fileChooser.setInitialDirectory(file.getParentFile());
-			//
-			// ViewerFileType type = ViewerFileType.getTypeByExtension(file);
 			// }
 
 			File file = new File("/home/claudius/Downloads/comune.pdf");
 
-			ViewerFileType type = ViewerFileType.getTypeByExtension(file);
-
-			if (type == null) {
-				Utils.showAlert(AlertType.ERROR, file.getName(), getResources().getString("cant_handle_filetype"));
-				return;
-			}
-			String documentType = type.getName();
-
-			try {
-				switch (documentType) {
-				case "PDF":
-					try {
-						Getos.eventBus.fireEvent(Getos.eventsRegistry.get(documentType).setData(file));
-					} catch (Exception ex) {
-						Utils.showAlert(AlertType.ERROR, ex);
-					}
-					break;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			openFile(file);
 
 			event.consume();
 		});
@@ -142,12 +119,19 @@ public final class MainWindowController extends StageController {
 			event.consume();
 		});
 
-		/*
-		 * Controls for dragging a PDF into the scene Using the dragboard, which extends
-		 * the clipboard class, detect a file being dragged onto the scene and if the
-		 * user drops the file we load it.
-		 */
-		getStage().getScene().setOnDragOver(new EventHandler<DragEvent>() {
+		fileChooser = new FileChooser();
+		fileChooser.setInitialFileName("");
+		fileChooser.getExtensionFilters().addAll(ViewerFileType.getExtensionFilters());
+
+		Stage stage = getStage();
+		stage.setTitle(resources.getString("appname") + " v. " + resources.getString("appversion"));
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.centerOnScreen();
+		stage.setResizable(true);
+		stage.setMaximized(true);
+
+		scene.setOnDragOver(new EventHandler<DragEvent>() {
 			@Override
 			public void handle(final DragEvent event) {
 				final Dragboard db = event.getDragboard();
@@ -159,37 +143,21 @@ public final class MainWindowController extends StageController {
 			}
 		});
 
-		getStage().getScene().setOnDragDropped(new EventHandler<DragEvent>() {
+		scene.setOnDragDropped(new EventHandler<DragEvent>() {
 			@Override
 			public void handle(final DragEvent event) {
 				final Dragboard db = event.getDragboard();
 				boolean success = false;
 				if (db.hasFiles()) {
 					success = true;
-					// Only get the first file from the list
-					pFile = db.getFiles().get(0);
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							openFile(pFile);
-						}
-					});
+					for (File file : db.getFiles()) {
+						openFile(file);
+					}
 				}
 				event.setDropCompleted(success);
 				event.consume();
 			}
 		});
-
-		fileChooser = new FileChooser();
-		fileChooser.setInitialFileName("");
-		fileChooser.getExtensionFilters().addAll(ViewerFileType.getExtensionFilters());
-
-		Stage stage = getStage();
-		stage.setTitle(resources.getString("appname") + " v. " + resources.getString("appversion"));
-		stage.setScene(new Scene(root));
-		stage.centerOnScreen();
-		stage.setResizable(true);
-		stage.setMaximized(true);
 
 		stage.show();
 	}
@@ -256,5 +224,28 @@ public final class MainWindowController extends StageController {
 		Getos.tabControllers.add(newTabController);
 		tabPane.getTabs().add(newTab);
 		tabPane.getSelectionModel().select(newTab);
+	}
+
+	private void openFile(File file) {
+		String documentType = detectDocumentType(file);
+
+		if (documentType == null) {
+			Utils.showAlert(AlertType.ERROR, file.getName(), getResources().getString("cant_handle_filetype"));
+			return;
+		}
+
+		Getos.eventBus.fireEvent(Getos.eventsRegistry.get(documentType).setData(file));
+	}
+
+	private String detectDocumentType(File file) {
+		String documentType = null;
+
+		ViewerFileType type = ViewerFileType.getTypeByExtension(file);
+
+		if (type != null) {
+			documentType = type.getName();
+		}
+
+		return documentType;
 	}
 }
