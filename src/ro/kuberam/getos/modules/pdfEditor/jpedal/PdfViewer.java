@@ -165,27 +165,11 @@ public class PdfViewer extends EditorController {
 	 *
 	 * @return ToolBar object used at the top of the user interface
 	 */
-	// final Button open = new Button("Open");
-	// final Button back = new Button("▲");
 	// final ComboBox<String> pages = new ComboBox<String>();
 	// final Label pageCount = new Label();
-	// final Button forward = new Button("▼");
-	// final Button zoomIn = new Button("Zoom in");
-	// final Button zoomOut = new Button("Zoom out");
-	// final Button fitWidth = new Button("Fit to Width");
-	// final Button fitHeight = new Button("Fit to Height");
-	// final Button fitPage = new Button("Fit to Page");
 	//
-	// open.setId("open");
-	// back.setId("back");
 	// pageCount.setId("pgCount");
 	// pages.setId("pages");
-	// forward.setId("forward");
-	// zoomIn.setId("zoomIn");
-	// zoomOut.setId("zoomOut");
-	// fitWidth.setId("fitWidth");
-	// fitHeight.setId("fitHeight");
-	// fitPage.setId("fitPage");
 	//
 	//
 	// pages.getSelectionModel().selectedIndexProperty().addListener(new
