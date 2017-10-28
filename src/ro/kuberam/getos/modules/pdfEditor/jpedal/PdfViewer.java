@@ -165,10 +165,6 @@ public class PdfViewer extends EditorController {
 	 *
 	 * @return ToolBar object used at the top of the user interface
 	 */
-	// private ToolBar setupToolBar() {
-	//
-	// final ToolBar toolbar = new ToolBar();
-	//
 	// final Button open = new Button("Open");
 	// final Button back = new Button("▲");
 	// final ComboBox<String> pages = new ComboBox<String>();

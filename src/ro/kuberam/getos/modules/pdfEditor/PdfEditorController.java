@@ -35,6 +35,21 @@ public final class PdfEditorController extends EditorController {
 
 	@FXML
 	private Button forwardButton;
+	
+	@FXML
+	private Button zoomInButton;
+	
+	@FXML
+	private Button zoomOutButton;
+	
+	@FXML
+	private Button fitToWidthButton;
+	
+	@FXML
+	private Button fitToHeightButton;
+	
+	@FXML
+	private Button fitToPageButton;
 
 	@FXML
 	private Label pgCountLabel;
@@ -77,6 +92,47 @@ public final class PdfEditorController extends EditorController {
 				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.forward"));
 			}
 		});
+		
+		
+		
+		
+		zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(final ActionEvent t) {
+				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.zoom-in"));
+			}
+		});
+		
+		zoomOutButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(final ActionEvent t) {
+				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.zoom-out"));
+			}
+		});
+		
+		fitToWidthButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(final ActionEvent t) {
+				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-width"));
+			}
+		});
+		
+		fitToHeightButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(final ActionEvent t) {
+				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-height"));
+			}
+		});
+		
+		fitToPageButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(final ActionEvent t) {
+				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-page"));
+			}
+		});
+		
+		
+		
 
 		// contentPane.getChildren().add(new
 		// Label(selectEditorCombobox.getValue()));
