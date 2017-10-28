@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -12,6 +14,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
@@ -51,11 +56,11 @@ public final class PdfEditorController extends EditorController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
-		
-		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label")
-				.setData(pFile.getAbsolutePath()));
 
-		 selectEditorCombobox.setValue("jpedal");
+		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(pFile.getAbsolutePath()));
+
+		selectEditorCombobox.setValue("jpedal");
+
 
 		// contentPane.getChildren().add(new
 		// Label(selectEditorCombobox.getValue()));
@@ -73,7 +78,7 @@ public final class PdfEditorController extends EditorController {
 				new ControllerFactory(getApplication(), getStage()));
 
 		loader.load();
-		
+
 		return loader.getController();
 	}
 

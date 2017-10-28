@@ -7,10 +7,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -22,11 +27,11 @@ import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
+import ro.kuberam.getos.documentTypeDetection.ViewerFileType;
 import ro.kuberam.getos.events.FileEvent;
 import ro.kuberam.getos.events.UserInterfaceEvent;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
-import ro.kuberam.getos.modules.viewers.ViewerFileType;
 import ro.kuberam.getos.utils.Utils;
 
 public final class MainWindowController extends StageController {
@@ -81,8 +86,7 @@ public final class MainWindowController extends StageController {
 			statusLabel.setText((String) event.getData());
 
 			event.consume();
-		});		
-		
+		});
 
 		openFileButton.setOnAction(event -> {
 
@@ -136,6 +140,44 @@ public final class MainWindowController extends StageController {
 		mItemAbout.setOnAction(event -> {
 			showAboutDialog();
 			event.consume();
+		});
+
+		/*
+		 * Controls for dragging a PDF into the scene Using the dragboard, which extends
+		 * the clipboard class, detect a file being dragged onto the scene and if the
+		 * user drops the file we load it.
+		 */
+		getStage().getScene().setOnDragOver(new EventHandler<DragEvent>() {
+			@Override
+			public void handle(final DragEvent event) {
+				final Dragboard db = event.getDragboard();
+				if (db.hasFiles()) {
+					event.acceptTransferModes(TransferMode.COPY);
+				} else {
+					event.consume();
+				}
+			}
+		});
+
+		getStage().getScene().setOnDragDropped(new EventHandler<DragEvent>() {
+			@Override
+			public void handle(final DragEvent event) {
+				final Dragboard db = event.getDragboard();
+				boolean success = false;
+				if (db.hasFiles()) {
+					success = true;
+					// Only get the first file from the list
+					pFile = db.getFiles().get(0);
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							openFile(pFile);
+						}
+					});
+				}
+				event.setDropCompleted(success);
+				event.consume();
+			}
 		});
 
 		fileChooser = new FileChooser();
