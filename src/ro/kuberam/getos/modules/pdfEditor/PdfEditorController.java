@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -61,6 +62,21 @@ public final class PdfEditorController extends EditorController {
 
 		selectEditorCombobox.setValue("jpedal");
 
+		// initialize the PDF viewer
+
+		backButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(final ActionEvent t) {
+				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.back"));
+			}
+		});
+
+		forwardButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(final ActionEvent t) {
+				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.forward"));
+			}
+		});
 
 		// contentPane.getChildren().add(new
 		// Label(selectEditorCombobox.getValue()));
