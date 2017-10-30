@@ -16,14 +16,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -39,22 +36,10 @@ public class JavaFXViewer extends EditorController {
 	private BorderPane root;
 
 	@FXML
-	private VBox top;
-
-	@FXML
-	private Button forwardButton;
-
-	@FXML
-	private Label pgCountLabel;
-
-	@FXML
 	private ScrollPane center;
 
 	@FXML
 	private Group contentPane;
-
-	@FXML
-	private HBox bottom;
 
 	private final org.jpedal.PdfDecoderFX pdf = new org.jpedal.PdfDecoderFX();
 
@@ -206,8 +191,8 @@ public class JavaFXViewer extends EditorController {
 	}
 
 	/**
-	 * Sets up a MenuBar to be used at the top of the window. It contains one
-	 * Menu - navMenu - which allows the user to open and navigate pdf files
+	 * Sets up a MenuBar to be used at the top of the window. It contains one Menu -
+	 * navMenu - which allows the user to open and navigate pdf files
 	 *
 	 * @return ToolBar object used at the top of the user interface
 	 */
@@ -328,8 +313,7 @@ public class JavaFXViewer extends EditorController {
 
 			}
 
-			// Set up top bar values
-			pgCountLabel.setText(getResources().getString("pages_number_prefix") + " " + pdf.getPageCount());
+			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.update-page-count").setData(pdf.getPageCount()));
 
 			// Goes to the first page and starts the decoding process
 			goToPage(currentPage);
@@ -402,8 +386,7 @@ public class JavaFXViewer extends EditorController {
 				scale = (width - insetX - insetX) / pageW;
 			}
 		} else if (fitToPage == FitToPage.HEIGHT) {
-			final float height = (float) (getStage().getScene().getHeight() - top.getBoundsInLocal().getHeight()
-					- bottom.getHeight());
+			final float height = (float) getStage().getScene().getHeight();
 
 			if (rotation == 90 || rotation == 270) {
 				scale = (height - insetY - insetY) / pageW;
@@ -476,9 +459,9 @@ public class JavaFXViewer extends EditorController {
 		}
 
 		if (currentPage < pdf.getPageCount()) {
-			forwardButton.setDisable(false);
+			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.enable-button").setData("forwardButton"));
 		} else {
-			forwardButton.setDisable(true);
+			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.disable-button").setData("forwardButton"));
 		}
 
 		// ((ComboBox)

@@ -15,13 +15,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
-import ro.kuberam.getos.utils.Utils;
 
 public final class PdfEditorController extends EditorController {
 
@@ -29,7 +27,7 @@ public final class PdfEditorController extends EditorController {
 
 	@FXML
 	private BorderPane root;
-	
+
 	@FXML
 	private ComboBox<String> selectEditorCombobox;
 
@@ -38,19 +36,19 @@ public final class PdfEditorController extends EditorController {
 
 	@FXML
 	private Button forwardButton;
-	
+
 	@FXML
 	private Button zoomInButton;
-	
+
 	@FXML
 	private Button zoomOutButton;
-	
+
 	@FXML
 	private Button fitToWidthButton;
-	
+
 	@FXML
 	private Button fitToHeightButton;
-	
+
 	@FXML
 	private Button fitToPageButton;
 
@@ -59,16 +57,16 @@ public final class PdfEditorController extends EditorController {
 
 	@FXML
 	private SplitPane contentPane;
-	
+
 	@FXML
 	private BorderPane sourcePane;
-	
+
 	@FXML
 	private ScrollPane centerSourcePane;
-	
+
 	@FXML
 	private Group contentSourcePane;
-	
+
 	@FXML
 	private BorderPane targetPane;
 
@@ -86,8 +84,19 @@ public final class PdfEditorController extends EditorController {
 		super.initialize(location, resources);
 
 		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(pFile.getAbsolutePath()));
-		
+
+		Getos.eventBus.addEventHandler(PdfEvent.PDF_ENABLE_BUTTON, event -> {
+
+			event.consume();
+		});
+
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_DISABLE_BUTTON, event -> {
+			pgCountLabel.setText(getResources().getString("pages_number_prefix") + " " + event.getData());
+
+			event.consume();
+		});
+
+		Getos.eventBus.addEventHandler(PdfEvent.PDF_UPDATE_PAGE_COUNT, event -> {
 
 			event.consume();
 		});
@@ -109,35 +118,35 @@ public final class PdfEditorController extends EditorController {
 				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.forward"));
 			}
 		});
-		
+
 		zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
 				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.zoom-in"));
 			}
 		});
-		
+
 		zoomOutButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
 				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.zoom-out"));
 			}
 		});
-		
+
 		fitToWidthButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
 				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-width"));
 			}
 		});
-		
+
 		fitToHeightButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
 				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-height"));
 			}
 		});
-		
+
 		fitToPageButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
@@ -145,7 +154,7 @@ public final class PdfEditorController extends EditorController {
 			}
 		});
 
-		 testLabel.textProperty().bind(selectEditorCombobox.valueProperty().asString());
+		testLabel.textProperty().bind(selectEditorCombobox.valueProperty().asString());
 
 	}
 
