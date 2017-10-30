@@ -106,6 +106,17 @@ public final class MainWindowController extends StageController {
 		});
 
 		saveEditorContentButton.setOnAction(event -> {
+			ResourceBundle resourceBundle = getResources();
+
+			fileChooser.setTitle(resourceBundle.getString("open_file_dialog_title"));
+
+			File file = fileChooser.showOpenDialog(getStage());
+			if (file != null) {
+				fileChooser.setInitialDirectory(file.getParentFile());
+			}
+
+			openFile(file);
+
 			event.consume();
 		});
 

@@ -42,9 +42,6 @@ public class JavaFXViewer extends EditorController {
 	private VBox top;
 
 	@FXML
-	private Button backButton;
-
-	@FXML
 	private Button forwardButton;
 
 	@FXML
@@ -473,9 +470,9 @@ public class JavaFXViewer extends EditorController {
 
 	private void updateNavButtons() {
 		if (currentPage > 1) {
-			backButton.setDisable(false);
+			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.enable-button").setData("backButton"));
 		} else {
-			backButton.setDisable(true);
+			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.disable-button").setData("backButton"));
 		}
 
 		if (currentPage < pdf.getPageCount()) {

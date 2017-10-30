@@ -15,16 +15,21 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
+import ro.kuberam.getos.utils.Utils;
 
 public final class PdfEditorController extends EditorController {
 
 	private final static String TAG = PdfEditorController.class.getSimpleName();
 
+	@FXML
+	private BorderPane root;
+	
 	@FXML
 	private ComboBox<String> selectEditorCombobox;
 
@@ -81,6 +86,11 @@ public final class PdfEditorController extends EditorController {
 		super.initialize(location, resources);
 
 		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(pFile.getAbsolutePath()));
+		
+		Getos.eventBus.addEventHandler(PdfEvent.PDF_DISABLE_BUTTON, event -> {
+
+			event.consume();
+		});
 
 		selectEditorCombobox.setValue("jpedal");
 
@@ -99,9 +109,6 @@ public final class PdfEditorController extends EditorController {
 				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.forward"));
 			}
 		});
-		
-		
-		
 		
 		zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override

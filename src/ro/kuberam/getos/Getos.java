@@ -41,3 +41,22 @@ public class Getos extends Application {
 	}
 
 }
+
+// Java library for reading, writing, converting and manipulating images and
+// metadata https://github.com/dragon66/icafe
+
+//Create PDF documents
+//Assemble documents (split, merge, combine, remove pages)
+//Encrypt documents using RC4 or AES encryption, set passwords and permissions
+//Apply and verify digital signatures
+//Import, export and fill interactive form data
+//Convert documents to TIFF, JPEG, PNG images
+//Extract text content
+//Print PDF documents
+//Convert PDFs to images
+//Permanently Redact PDFs
+//Optional OCR module
+//Add file attachments, header & footers, watermarks, bookmarks
+//Edit document properties such as title, keywords, subject
+//Linearize PDF documents for fast web viewing
+//Create PDF layers and draw onto them
