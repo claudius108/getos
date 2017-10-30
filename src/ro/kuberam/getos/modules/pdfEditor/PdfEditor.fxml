@@ -9,75 +9,86 @@
 
 <BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.111"
 	xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.modules.pdfEditor.PdfEditorController">
-	<top>
-		<ToolBar prefHeight="40.0" prefWidth="200.0"
-			BorderPane.alignment="CENTER">
-			<items>
-				<ComboBox fx:id="selectEditorCombobox" minWidth="70.0"
-					prefWidth="90.0">
-					<items>
-						<FXCollections fx:factory="observableArrayList">
-							<String fx:value="jpedal" />
-							<String fx:value="pdfbox" />
-						</FXCollections>
-					</items>
-					<tooltip>
-						<Tooltip text="%select_viewer_tooltip" />
-					</tooltip>
-				</ComboBox>
-				<Button fx:id="backButton" mnemonicParsing="false"
-					text="%back_button_text">
-					<tooltip>
-						<Tooltip text="%back_button_tooltip" />
-					</tooltip>
-				</Button>
-				<Button fx:id="forwardButton" mnemonicParsing="false"
-					text="%forward_button_text">
-					<tooltip>
-						<Tooltip text="%forward_button_tooltip" />
-					</tooltip>
-				</Button>
-
-				<Button fx:id="zoomInButton" mnemonicParsing="false" text="Zoom in" />
-				<Button fx:id="zoomOutButton" mnemonicParsing="false" text="Zoom out" />
-				<Button fx:id="fitToWidthButton" mnemonicParsing="false" text="Fit to Width" />
-				<Button fx:id="fitToHeightButton" mnemonicParsing="false" text="Fit to Height" />
-				<Button fx:id="fitToPageButton" mnemonicParsing="false" text="Fit to Page" />
-
-
-				<TextField prefHeight="26.0" prefWidth="46.0"
-					style="-fx-border-radius: 5 0 0 5; -fx-background-radius: 5 0 0 5;" />
-				<Label fx:id="pgCountLabel"
-					style="-fx-border-radius: 0 5 5 0; -fx-background-radius: 0 5 5 0;" />
-				<Pane HBox.hgrow="ALWAYS" />
-				<ComboBox editable="true" value="$defaultSelection"
-					style="-fx-border-radius: 5 0 0 5; -fx-background-radius: 5 0 0 5;"
-					minWidth="80.0" prefWidth="90.0">
-					<items>
-						<FXCollections fx:factory="observableArrayList">
-							<String fx:value="NVT" />
-							<String fx:value="Bezig" />
-							<String fx:value="Positief" />
-							<String fx:value="Negatief" />
-						</FXCollections>
-					</items>
-				</ComboBox>
-			</items>
-		</ToolBar>
-	</top>
 	<center>
-		<ScrollPane fx:id="center" pannable="true"
-			BorderPane.alignment="CENTER">
-			<content>
-				<AnchorPane>
-					<children>
-						<Group fx:id="contentPane">
-							<Label fx:id="testLabel" />
-						</Group>
-					</children>
-				</AnchorPane>
-			</content>
-		</ScrollPane>
+		<SplitPane fx:id="contentPane" orientation="HORIZONTAL">
+			<items>
+				<BorderPane fx:id="sourcePane">
+					<top>
+						<ToolBar prefHeight="40.0" prefWidth="200.0"
+							BorderPane.alignment="CENTER">
+							<items>
+								<ComboBox fx:id="selectEditorCombobox" minWidth="70.0"
+									prefWidth="90.0">
+									<items>
+										<FXCollections fx:factory="observableArrayList">
+											<String fx:value="jpedal" />
+											<String fx:value="pdfbox" />
+										</FXCollections>
+									</items>
+									<tooltip>
+										<Tooltip text="%select_viewer_tooltip" />
+									</tooltip>
+								</ComboBox>
+								<Button fx:id="backButton" mnemonicParsing="false"
+									text="%back_button_text">
+									<tooltip>
+										<Tooltip text="%back_button_tooltip" />
+									</tooltip>
+								</Button>
+								<Button fx:id="forwardButton" mnemonicParsing="false"
+									text="%forward_button_text">
+									<tooltip>
+										<Tooltip text="%forward_button_tooltip" />
+									</tooltip>
+								</Button>
+								<Button fx:id="zoomInButton" mnemonicParsing="false"
+									text="Zoom in" />
+								<Button fx:id="zoomOutButton" mnemonicParsing="false"
+									text="Zoom out" />
+								<Button fx:id="fitToWidthButton" mnemonicParsing="false"
+									text="Fit to Width" />
+								<Button fx:id="fitToHeightButton" mnemonicParsing="false"
+									text="Fit to Height" />
+								<Button fx:id="fitToPageButton" mnemonicParsing="false"
+									text="Fit to Page" />
+								<TextField prefHeight="26.0" prefWidth="46.0"
+									style="-fx-border-radius: 5 0 0 5; -fx-background-radius: 5 0 0 5;" />
+								<Label fx:id="pgCountLabel"
+									style="-fx-border-radius: 0 5 5 0; -fx-background-radius: 0 5 5 0;" />
+								<Pane HBox.hgrow="ALWAYS" />
+								<ComboBox editable="true" value="$defaultSelection"
+									style="-fx-border-radius: 5 0 0 5; -fx-background-radius: 5 0 0 5;"
+									minWidth="80.0" prefWidth="90.0">
+									<items>
+										<FXCollections fx:factory="observableArrayList">
+											<String fx:value="NVT" />
+											<String fx:value="Bezig" />
+											<String fx:value="Positief" />
+											<String fx:value="Negatief" />
+										</FXCollections>
+									</items>
+								</ComboBox>
+							</items>
+						</ToolBar>
+					</top>
+					<center>
+						<ScrollPane fx:id="centerSourcePane" pannable="true"
+							BorderPane.alignment="CENTER">
+							<content>
+								<AnchorPane>
+									<children>
+										<Group fx:id="contentSourcePane">
+											<Label fx:id="testLabel" />
+										</Group>
+									</children>
+								</AnchorPane>
+							</content>
+						</ScrollPane>
+					</center>
+				</BorderPane>
+				<BorderPane fx:id="targetPane" />
+			</items>
+		</SplitPane>
 	</center>
 
 </BorderPane>

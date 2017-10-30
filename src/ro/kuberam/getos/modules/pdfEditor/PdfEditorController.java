@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,9 +14,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
@@ -55,10 +53,19 @@ public final class PdfEditorController extends EditorController {
 	private Label pgCountLabel;
 
 	@FXML
-	private ScrollPane center;
-
+	private SplitPane contentPane;
+	
 	@FXML
-	private Group contentPane;
+	private BorderPane sourcePane;
+	
+	@FXML
+	private ScrollPane centerSourcePane;
+	
+	@FXML
+	private Group contentSourcePane;
+	
+	@FXML
+	private BorderPane targetPane;
 
 	@FXML
 	private Label testLabel;
@@ -130,14 +137,8 @@ public final class PdfEditorController extends EditorController {
 				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-page"));
 			}
 		});
-		
-		
-		
 
-		// contentPane.getChildren().add(new
-		// Label(selectEditorCombobox.getValue()));
-
-		// testLabel.textProperty().bind(selectEditorCombobox.valueProperty().asString());
+		 testLabel.textProperty().bind(selectEditorCombobox.valueProperty().asString());
 
 	}
 

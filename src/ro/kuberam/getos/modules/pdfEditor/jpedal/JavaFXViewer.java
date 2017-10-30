@@ -31,9 +31,9 @@ import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.modules.pdfEditor.PdfEvent;
 
-public class PdfViewer extends EditorController {
+public class JavaFXViewer extends EditorController {
 
-	private final static String TAG = PdfViewer.class.getSimpleName();
+	private final static String TAG = JavaFXViewer.class.getSimpleName();
 
 	@FXML
 	private BorderPane root;
@@ -96,22 +96,71 @@ public class PdfViewer extends EditorController {
 
 	/*
 	 * Controls size of the stage, in theory setting this to a higher value will
-	 * increase image quality as there's more pixels due to higher image
-	 * resolutions
+	 * increase image quality as there's more pixels due to higher image resolutions
 	 */
 	FitToPage zoomMode = FitToPage.AUTO;
 
-	public PdfViewer(Application application, Stage stage, File file) {
+	public JavaFXViewer(Application application, Stage stage, File file) {
 		super(application, stage, file);
-		
+
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_BACK, event -> {
 			if (currentPage > 1) {
 				goToPage(currentPage - 1);
 			}
 			event.consume();
 		});
-		
+
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_FORWARD, event -> {
+			if (currentPage < pdf.getPageCount()) {
+				goToPage(currentPage + 1);
+			}
+			event.consume();
+		});
+
+		Getos.eventBus.addEventHandler(PdfEvent.PDF_ZOOM_IN, event -> {
+			zoomMode = FitToPage.NONE;
+
+			if (currentScaling < scalings.length - 1) {
+
+				currentScaling = findClosestIndex(scale, scalings);
+
+				if (scale >= scalings[findClosestIndex(scale, scalings)]) {
+
+					currentScaling++;
+
+				}
+
+				scale = scalings[currentScaling];
+
+			}
+
+			pdf.setPageParameters(scale, currentPage);
+			adjustPagePosition(center.getViewportBounds());
+			event.consume();
+		});
+
+		Getos.eventBus.addEventHandler(PdfEvent.PDF_ZOOM_OUT, event -> {
+			if (currentPage < pdf.getPageCount()) {
+				goToPage(currentPage + 1);
+			}
+			event.consume();
+		});
+
+		Getos.eventBus.addEventHandler(PdfEvent.PDF_FIT_TO_WIDTH, event -> {
+			if (currentPage < pdf.getPageCount()) {
+				goToPage(currentPage + 1);
+			}
+			event.consume();
+		});
+
+		Getos.eventBus.addEventHandler(PdfEvent.PDF_FIT_TO_HEIGHT, event -> {
+			if (currentPage < pdf.getPageCount()) {
+				goToPage(currentPage + 1);
+			}
+			event.consume();
+		});
+
+		Getos.eventBus.addEventHandler(PdfEvent.PDF_FIT_TO_PAGE, event -> {
 			if (currentPage < pdf.getPageCount()) {
 				goToPage(currentPage + 1);
 			}
@@ -184,31 +233,6 @@ public class PdfViewer extends EditorController {
 	// }
 	// });
 	//
-	//
-	// zoomIn.setOnAction(new EventHandler<ActionEvent>() {
-	//
-	// @Override
-	// public void handle(final ActionEvent t) {
-	// zoomMode = FitToPage.NONE;
-	//
-	// if (currentScaling < scalings.length - 1) {
-	//
-	// currentScaling = findClosestIndex(scale, scalings);
-	//
-	// if (scale >= scalings[findClosestIndex(scale, scalings)]) {
-	//
-	// currentScaling++;
-	//
-	// }
-	//
-	// scale = scalings[currentScaling];
-	//
-	// }
-	//
-	// pdf.setPageParameters(scale, currentPage);
-	// adjustPagePosition(centerPane.getViewportBounds());
-	// }
-	// });
 	//
 	// zoomOut.setOnAction(new EventHandler<ActionEvent>() {
 	//
@@ -287,8 +311,8 @@ public class PdfViewer extends EditorController {
 				while (!pdf.isFileViewable() && !closePasswordPrompt) {
 
 					/*
-					 * See if there's a JVM flag for the password & Use it if
-					 * there is Otherwise prompt the user to enter a password
+					 * See if there's a JVM flag for the password & Use it if there is Otherwise
+					 * prompt the user to enter a password
 					 */
 					if (System.getProperty("org.jpedal.password") != null) {
 						password = System.getProperty("org.jpedal.password");
@@ -401,8 +425,7 @@ public class PdfViewer extends EditorController {
 	 *            float value of the scale value to check
 	 * @param scalings
 	 *            float array holding scaling values
-	 * @return int value of the index from scalings closest to the value of
-	 *         scale
+	 * @return int value of the index from scalings closest to the value of scale
 	 */
 	private static int findClosestIndex(final float scale, final float[] scalings) {
 		float currentMinDiff = Float.MAX_VALUE;
@@ -428,8 +451,8 @@ public class PdfViewer extends EditorController {
 			final int rotation = pageData.getRotation(currentPage);
 
 			/*
-			 * Only call this when the page is displayed vertically, otherwise
-			 * it will mess up the document cropping on side-ways documents.
+			 * Only call this when the page is displayed vertically, otherwise it will mess
+			 * up the document cropping on side-ways documents.
 			 */
 			if (rotation == 0 || rotation == 180) {
 				pdf.setPageParameters(scale, currentPage);
