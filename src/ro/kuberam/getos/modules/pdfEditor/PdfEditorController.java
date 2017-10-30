@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
+import ro.kuberam.getos.modules.pdfEditor.jpedal.JpedalViewer;
 
 public final class PdfEditorController extends EditorController {
 
@@ -104,6 +105,7 @@ public final class PdfEditorController extends EditorController {
 		selectEditorCombobox.setValue("jpedal");
 
 		// initialize the PDF viewer
+		new JpedalViewer(centerSourcePane, contentSourcePane, pFile);
 
 		backButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override

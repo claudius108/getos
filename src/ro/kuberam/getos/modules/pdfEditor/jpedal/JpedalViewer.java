@@ -1,45 +1,33 @@
 package ro.kuberam.getos.modules.pdfEditor.jpedal;
 
 import java.io.File;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import org.jpedal.examples.viewer.gui.javafx.dialog.FXInputDialog;
 import org.jpedal.exception.PdfException;
 import org.jpedal.external.PluginHandler;
 import org.jpedal.objects.PdfPageData;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import ro.kuberam.getos.Getos;
-import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.modules.pdfEditor.PdfEvent;
 
-public class JavaFXViewer extends EditorController {
+public class JpedalViewer extends BorderPane {
 
-	private final static String TAG = JavaFXViewer.class.getSimpleName();
+	private final static String TAG = JpedalViewer.class.getSimpleName();
 
-	@FXML
-	private BorderPane root;
+	private ScrollPane scrollPane;
 
-	@FXML
-	private ScrollPane center;
-
-	@FXML
-	private Group contentPane;
+	private Group group;
 
 	private final org.jpedal.PdfDecoderFX pdf = new org.jpedal.PdfDecoderFX();
 
@@ -56,7 +44,7 @@ public class JavaFXViewer extends EditorController {
 	}
 
 	// Variable to hold the current file/directory
-	static File pFile;
+	static File file;
 
 	// These two variables are to do with PDF encryption & passwords
 	private String password; // Holds the password from the JVM or from User
@@ -82,8 +70,10 @@ public class JavaFXViewer extends EditorController {
 	 */
 	FitToPage zoomMode = FitToPage.AUTO;
 
-	public JavaFXViewer(Application application, Stage stage, File file) {
-		super(application, stage, file);
+	public JpedalViewer(ScrollPane pScrollPane, Group pGroup, File pFile) {
+		this.scrollPane = pScrollPane;
+		this.group = pGroup;
+		this.file = pFile;
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_BACK, event -> {
 			if (currentPage > 1) {
@@ -117,7 +107,7 @@ public class JavaFXViewer extends EditorController {
 			}
 
 			pdf.setPageParameters(scale, currentPage);
-			adjustPagePosition(center.getViewportBounds());
+			adjustPagePosition(scrollPane.getViewportBounds());
 			event.consume();
 		});
 
@@ -148,44 +138,42 @@ public class JavaFXViewer extends EditorController {
 			}
 			event.consume();
 		});
-	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		super.initialize(location, resources);
-
-		center.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
+		scrollPane.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
 			@Override
 			public void changed(final ObservableValue<? extends Bounds> ov, final Bounds ob, final Bounds nb) {
 				adjustPagePosition(nb);
 			}
 		});
 
-		contentPane.getChildren().add(pdf);
+		group.getChildren().add(pdf);
 
 		// Auto adjust so dynamically resized as viewer width alters
-		getStage().getScene().widthProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(final ObservableValue<? extends Number> observableValue, final Number oldSceneWidth,
-					final Number newSceneWidth) {
-				fitToX(zoomMode);
-			}
-		});
-
-		getStage().getScene().heightProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(final ObservableValue<? extends Number> observableValue, final Number oldSceneHeight,
-					final Number newSceneHeight) {
-
-				fitToX(zoomMode);
-
-			}
-		});
+		// getStage().getScene().widthProperty().addListener(new
+		// ChangeListener<Number>() {
+		// @Override
+		// public void changed(final ObservableValue<? extends Number> observableValue,
+		// final Number oldSceneWidth,
+		// final Number newSceneWidth) {
+		// fitToX(zoomMode);
+		// }
+		// });
+		//
+		// getStage().getScene().heightProperty().addListener(new
+		// ChangeListener<Number>() {
+		// @Override
+		// public void changed(final ObservableValue<? extends Number> observableValue,
+		// final Number oldSceneHeight,
+		// final Number newSceneHeight) {
+		// fitToX(zoomMode);
+		//
+		// }
+		// });
 
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				openFile(pFile);
+				openFile(file);
 			}
 		});
 	}
@@ -346,7 +334,7 @@ public class JavaFXViewer extends EditorController {
 			inputPasswordField.setText("Please Try Again");
 		}
 
-		final FXInputDialog passwordInput = new FXInputDialog(getStage(), titleText.getText()) {
+		final FXInputDialog passwordInput = new FXInputDialog(null, titleText.getText()) {
 			@Override
 			protected void positiveClose() {
 				super.positiveClose();
@@ -379,14 +367,14 @@ public class JavaFXViewer extends EditorController {
 
 		// Handle how we fit the content to the page width or height
 		if (fitToPage == FitToPage.WIDTH) {
-			final float width = (float) (getStage().getWidth());
+			final float width = (float) (getWidth());
 			if (rotation == 90 || rotation == 270) {
 				scale = (width - insetX - insetX) / pageH;
 			} else {
 				scale = (width - insetX - insetX) / pageW;
 			}
 		} else if (fitToPage == FitToPage.HEIGHT) {
-			final float height = (float) getStage().getScene().getHeight();
+			final float height = (float) getHeight();
 
 			if (rotation == 90 || rotation == 270) {
 				scale = (height - insetY - insetY) / pageW;
@@ -448,7 +436,7 @@ public class JavaFXViewer extends EditorController {
 		fitToX(FitToPage.AUTO);
 		updateNavButtons();
 		setBorder();
-		adjustPagePosition(center.getViewportBounds());
+		adjustPagePosition(scrollPane.getViewportBounds());
 	}
 
 	private void updateNavButtons() {
@@ -475,13 +463,13 @@ public class JavaFXViewer extends EditorController {
 
 	private void adjustPagePosition(final Bounds nb) {
 
-		double adjustment = ((nb.getWidth() / 2) - (contentPane.getBoundsInLocal().getWidth() / 2));
+		double adjustment = ((nb.getWidth() / 2) - (group.getBoundsInLocal().getWidth() / 2));
 
 		// Keep the group within the viewport of the scrollpane
 		if (adjustment < 0) {
 			adjustment = 0;
 		}
-		contentPane.setTranslateX(adjustment);
+		group.setTranslateX(adjustment);
 	}
 
 	// Set a space between the top toolbar and the page
