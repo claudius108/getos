@@ -3,6 +3,8 @@ package ro.kuberam.getos.modules.pdfEditor;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -57,6 +59,9 @@ public final class PdfEditorController extends EditorController {
 	private Label pgCountLabel;
 
 	@FXML
+	private Button extractTablesButton;
+
+	@FXML
 	private SplitPane contentPane;
 
 	@FXML
@@ -71,9 +76,6 @@ public final class PdfEditorController extends EditorController {
 	@FXML
 	private BorderPane targetPane;
 
-	@FXML
-	private Label testLabel;
-
 	private static File pFile;
 
 	public PdfEditorController(Application application, Stage stage, File file) {
@@ -87,25 +89,38 @@ public final class PdfEditorController extends EditorController {
 		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(pFile.getAbsolutePath()));
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_ENABLE_BUTTON, event -> {
+			String buttonId = (String) event.getData();
+
+			switch (buttonId) {
+			case "backButton":
+				backButton.setDisable(false);
+			case "forwardButton":
+				forwardButton.setDisable(false);
+			}
 
 			event.consume();
 		});
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_DISABLE_BUTTON, event -> {
-			pgCountLabel.setText(getResources().getString("pages_number_prefix") + " " + event.getData());
+			String buttonId = (String) event.getData();
+
+			switch (buttonId) {
+			case "backButton":
+				backButton.setDisable(true);
+			case "forwardButton":
+				forwardButton.setDisable(true);
+			}
 
 			event.consume();
 		});
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_UPDATE_PAGE_COUNT, event -> {
+			pgCountLabel.setText(getResources().getString("pages_number_prefix") + " " + event.getData());
 
 			event.consume();
 		});
 
 		selectEditorCombobox.setValue("jpedal");
-
-		// initialize the PDF viewer
-		new JpedalViewer(centerSourcePane, contentSourcePane, pFile);
 
 		backButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -156,8 +171,10 @@ public final class PdfEditorController extends EditorController {
 			}
 		});
 
-		testLabel.textProperty().bind(selectEditorCombobox.valueProperty().asString());
+		// detect PDF version and select the viewer accordingly
 
+		// initialize the PDF viewer
+		new JpedalViewer(centerSourcePane, contentSourcePane, pFile);
 	}
 
 	public static PdfEditorController create(File file) throws Exception {

@@ -204,9 +204,7 @@ public final class MainWindowController extends StageController {
 	}
 
 	public void createNewEditorTab(EditorController newTabController) {
-
 		File file = newTabController.getFile();
-		Logger.getLogger(TAG).log(Level.INFO, "file = " + file);
 
 		EditorTab newTab = new EditorTab(file);
 		newTab.setClosable(true);

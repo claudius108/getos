@@ -23,8 +23,6 @@ import ro.kuberam.getos.modules.pdfEditor.PdfEvent;
 
 public class JpedalViewer extends BorderPane {
 
-	private final static String TAG = JpedalViewer.class.getSimpleName();
-
 	private ScrollPane scrollPane;
 
 	private Group group;
@@ -43,8 +41,7 @@ public class JpedalViewer extends BorderPane {
 		NONE
 	}
 
-	// Variable to hold the current file/directory
-	static File file;
+	private File file;
 
 	// These two variables are to do with PDF encryption & passwords
 	private String password; // Holds the password from the JVM or from User
@@ -93,17 +90,13 @@ public class JpedalViewer extends BorderPane {
 			zoomMode = FitToPage.NONE;
 
 			if (currentScaling < scalings.length - 1) {
-
 				currentScaling = findClosestIndex(scale, scalings);
 
 				if (scale >= scalings[findClosestIndex(scale, scalings)]) {
-
 					currentScaling++;
-
 				}
 
 				scale = scalings[currentScaling];
-
 			}
 
 			pdf.setPageParameters(scale, currentPage);
@@ -112,30 +105,41 @@ public class JpedalViewer extends BorderPane {
 		});
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_ZOOM_OUT, event -> {
-			if (currentPage < pdf.getPageCount()) {
-				goToPage(currentPage + 1);
+			zoomMode = FitToPage.NONE;
+
+			if (currentScaling > 0) {
+				currentScaling = findClosestIndex(scale, scalings);
+				if (scale <= scalings[findClosestIndex(scale, scalings)]) {
+					currentScaling--;
+				}
+
+				scale = scalings[currentScaling];
 			}
+
+			pdf.setPageParameters(scale, currentPage);
+			adjustPagePosition(scrollPane.getViewportBounds());
+
 			event.consume();
 		});
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_FIT_TO_WIDTH, event -> {
-			if (currentPage < pdf.getPageCount()) {
-				goToPage(currentPage + 1);
-			}
+			zoomMode = FitToPage.WIDTH;
+			fitToX(FitToPage.WIDTH);
+
 			event.consume();
 		});
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_FIT_TO_HEIGHT, event -> {
-			if (currentPage < pdf.getPageCount()) {
-				goToPage(currentPage + 1);
-			}
+			zoomMode = FitToPage.HEIGHT;
+			fitToX(FitToPage.HEIGHT);
+
 			event.consume();
 		});
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_FIT_TO_PAGE, event -> {
-			if (currentPage < pdf.getPageCount()) {
-				goToPage(currentPage + 1);
-			}
+			zoomMode = FitToPage.AUTO;
+			fitToX(FitToPage.AUTO);
+
 			event.consume();
 		});
 
@@ -184,13 +188,6 @@ public class JpedalViewer extends BorderPane {
 	 *
 	 * @return ToolBar object used at the top of the user interface
 	 */
-	// final ComboBox<String> pages = new ComboBox<String>();
-	// final Label pageCount = new Label();
-	//
-	// pageCount.setId("pgCount");
-	// pages.setId("pages");
-	//
-	//
 	// pages.getSelectionModel().selectedIndexProperty().addListener(new
 	// ChangeListener<Number>() {
 	// @Override
@@ -200,62 +197,6 @@ public class JpedalViewer extends BorderPane {
 	// final int newPage = newVal.intValue() + 1;
 	// goToPage(newPage);
 	// }
-	// }
-	// });
-	//
-	//
-	// zoomOut.setOnAction(new EventHandler<ActionEvent>() {
-	//
-	// @Override
-	// public void handle(final ActionEvent t) {
-	// zoomMode = FitToPage.NONE;
-	//
-	// if (currentScaling > 0) {
-	//
-	// currentScaling = findClosestIndex(scale, scalings);
-	//
-	// if (scale <= scalings[findClosestIndex(scale, scalings)]) {
-	//
-	// currentScaling--;
-	//
-	// }
-	//
-	// scale = scalings[currentScaling];
-	//
-	// }
-	//
-	// pdf.setPageParameters(scale, currentPage);
-	// adjustPagePosition(centerPane.getViewportBounds());
-	// }
-	// });
-	//
-	// fitWidth.setOnAction(new EventHandler<ActionEvent>() {
-	//
-	// @Override
-	// public void handle(final ActionEvent t) {
-	// zoomMode = FitToPage.WIDTH;
-	// fitToX(FitToPage.WIDTH);
-	//
-	// }
-	// });
-	//
-	// fitHeight.setOnAction(new EventHandler<ActionEvent>() {
-	//
-	// @Override
-	// public void handle(final ActionEvent t) {
-	// zoomMode = FitToPage.HEIGHT;
-	// fitToX(FitToPage.HEIGHT);
-	//
-	// }
-	// });
-	//
-	// fitPage.setOnAction(new EventHandler<ActionEvent>() {
-	//
-	// @Override
-	// public void handle(final ActionEvent t) {
-	// zoomMode = FitToPage.AUTO;
-	// fitToX(FitToPage.AUTO);
-	//
 	// }
 	// });
 

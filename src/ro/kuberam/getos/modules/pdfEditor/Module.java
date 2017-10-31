@@ -22,6 +22,7 @@ public class Module {
 		Getos.eventsRegistry.put("pdf.update-page-count", new PdfEvent(PdfEvent.PDF_UPDATE_PAGE_COUNT));
 
 		Getos.eventBus.addEventHandler(PdfEvent.OPEN_PDF_FILE, event -> {
+			
 			try {
 				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("open-file")
 						.setData(PdfEditorController.create((File) event.getData())));
