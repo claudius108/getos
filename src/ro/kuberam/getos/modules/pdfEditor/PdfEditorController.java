@@ -3,8 +3,6 @@ package ro.kuberam.getos.modules.pdfEditor;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -19,10 +17,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import ro.kuberam.getos.DocumentRenderer;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
-import ro.kuberam.getos.modules.pdfEditor.jpedal.JpedalViewer;
+import ro.kuberam.getos.modules.pdfEditor.jpedal.JpedalRenderer;
 
 public final class PdfEditorController extends EditorController {
 
@@ -77,6 +76,8 @@ public final class PdfEditorController extends EditorController {
 	private BorderPane targetPane;
 
 	private static File pFile;
+	
+	private DocumentRenderer documentRenderer;
 
 	public PdfEditorController(Application application, Stage stage, File file) {
 		super(application, stage, file);
@@ -120,19 +121,18 @@ public final class PdfEditorController extends EditorController {
 			event.consume();
 		});
 
-		selectEditorCombobox.setValue("jpedal");
-
 		backButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.back"));
+//				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.back"));
+				documentRenderer.pageBack();
 			}
 		});
 
 		forwardButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.forward"));
+				documentRenderer.pageForward();
 			}
 		});
 
@@ -170,11 +170,20 @@ public final class PdfEditorController extends EditorController {
 				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-page"));
 			}
 		});
+		
+		extractTablesButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(final ActionEvent t) {
+				contentPane.getItems().add(new BorderPane());
+			}
+		});
 
 		// detect PDF version and select the viewer accordingly
 
+		selectEditorCombobox.setValue("jpedal");
+
 		// initialize the PDF viewer
-		new JpedalViewer(centerSourcePane, contentSourcePane, pFile);
+		documentRenderer = new JpedalRenderer(centerSourcePane, contentSourcePane, pFile);
 	}
 
 	public static PdfEditorController create(File file) throws Exception {

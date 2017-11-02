@@ -18,10 +18,11 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import ro.kuberam.getos.DocumentRenderer;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.modules.pdfEditor.PdfEvent;
 
-public class JpedalViewer extends BorderPane {
+public class JpedalRenderer extends BorderPane implements DocumentRenderer {
 
 	private ScrollPane scrollPane;
 
@@ -67,24 +68,10 @@ public class JpedalViewer extends BorderPane {
 	 */
 	FitToPage zoomMode = FitToPage.AUTO;
 
-	public JpedalViewer(ScrollPane pScrollPane, Group pGroup, File pFile) {
+	public JpedalRenderer(ScrollPane pScrollPane, Group pGroup, File pFile) {
 		this.scrollPane = pScrollPane;
 		this.group = pGroup;
 		this.file = pFile;
-
-		Getos.eventBus.addEventHandler(PdfEvent.PDF_BACK, event -> {
-			if (currentPage > 1) {
-				goToPage(currentPage - 1);
-			}
-			event.consume();
-		});
-
-		Getos.eventBus.addEventHandler(PdfEvent.PDF_FORWARD, event -> {
-			if (currentPage < pdf.getPageCount()) {
-				goToPage(currentPage + 1);
-			}
-			event.consume();
-		});
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_ZOOM_IN, event -> {
 			zoomMode = FitToPage.NONE;
@@ -180,6 +167,20 @@ public class JpedalViewer extends BorderPane {
 				openFile(file);
 			}
 		});
+	}
+
+	@Override
+	public void pageBack() {
+		if (currentPage > 1) {
+			goToPage(currentPage - 1);
+		}
+	}
+
+	@Override
+	public void pageForward() {
+		if (currentPage < pdf.getPageCount()) {
+			goToPage(currentPage + 1);
+		}
 	}
 
 	/**
