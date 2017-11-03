@@ -11,25 +11,25 @@ import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 
 public final class ControllerFactory implements Callback<Class<?>, Object> {
 
-	private final Application mApplication;
-	private final Stage mStage;
+	private final Application pApplication;
+	private final Stage pStage;
 	private final File pFile;
 
 	public ControllerFactory(Application application) {
-		mApplication = application;
-		mStage = null;
+		pApplication = application;
+		pStage = null;
 		pFile = null;
 	}
 
 	public ControllerFactory(Application application, Stage stage) {
-		mApplication = application;
-		mStage = stage;
+		pApplication = application;
+		pStage = stage;
 		pFile = null;
 	}
 
 	public ControllerFactory(Application application, Stage stage, File file) {
-		mApplication = application;
-		mStage = stage;
+		pApplication = application;
+		pStage = stage;
 		pFile = file;
 	}
 
@@ -37,13 +37,13 @@ public final class ControllerFactory implements Callback<Class<?>, Object> {
 	public Object call(Class<?> type) {
 		try {
 			if (PdfEditorController.class.isAssignableFrom(type)) {
-				return new PdfEditorController(mApplication, mStage, pFile);
+				return new PdfEditorController(pApplication, pStage, pFile);
 			} else if (PdfViewerController.class.isAssignableFrom(type)) {
-				return new PdfViewerController(mApplication, mStage, pFile);
+				return new PdfViewerController(pApplication, pStage, pFile);
 			} else if (StageController.class.isAssignableFrom(type)) {
-				return type.getConstructors()[0].newInstance(mApplication, mStage);
+				return type.getConstructors()[0].newInstance(pApplication, pStage);
 			} else if (Controller.class.isAssignableFrom(type)) {
-				return type.getConstructors()[0].newInstance(mApplication);
+				return type.getConstructors()[0].newInstance(pApplication);
 			}
 		} catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
