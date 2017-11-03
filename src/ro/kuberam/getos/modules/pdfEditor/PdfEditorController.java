@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
+import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentRenderer;
@@ -55,6 +57,9 @@ public final class PdfEditorController extends EditorController {
 	private Button fitToPageButton;
 
 	@FXML
+	private TextField currentPageTextfield;
+	
+	@FXML
 	private Label pgCountLabel;
 
 	@FXML
@@ -88,32 +93,35 @@ public final class PdfEditorController extends EditorController {
 		super.initialize(location, resources);
 
 		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(pFile.getAbsolutePath()));
+		
+		BooleanBinding booleanBind = currentPageTextfield.textProperty().isEqualTo("1");
+		backButton.disableProperty().bind(booleanBind);
 
-		Getos.eventBus.addEventHandler(PdfEvent.PDF_ENABLE_BUTTON, event -> {
-			String buttonId = (String) event.getData();
-
-			switch (buttonId) {
-			case "backButton":
-				backButton.setDisable(false);
-			case "forwardButton":
-				forwardButton.setDisable(false);
-			}
-
-			event.consume();
-		});
-
-		Getos.eventBus.addEventHandler(PdfEvent.PDF_DISABLE_BUTTON, event -> {
-			String buttonId = (String) event.getData();
-
-			switch (buttonId) {
-			case "backButton":
-				backButton.setDisable(true);
-			case "forwardButton":
-				forwardButton.setDisable(true);
-			}
-
-			event.consume();
-		});
+//		Getos.eventBus.addEventHandler(PdfEvent.PDF_ENABLE_BUTTON, event -> {
+//			String buttonId = (String) event.getData();
+//
+//			switch (buttonId) {
+//			case "backButton":
+//				backButton.setDisable(false);
+//			case "forwardButton":
+//				forwardButton.setDisable(false);
+//			}
+//
+//			event.consume();
+//		});
+//
+//		Getos.eventBus.addEventHandler(PdfEvent.PDF_DISABLE_BUTTON, event -> {
+//			String buttonId = (String) event.getData();
+//
+//			switch (buttonId) {
+//			case "backButton":
+//				backButton.setDisable(true);
+//			case "forwardButton":
+//				forwardButton.setDisable(true);
+//			}
+//
+//			event.consume();
+//		});
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_UPDATE_PAGE_COUNT, event -> {
 			pgCountLabel.setText(getResources().getString("pages_number_prefix") + " " + event.getData());
@@ -124,7 +132,6 @@ public final class PdfEditorController extends EditorController {
 		backButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-//				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.back"));
 				documentRenderer.pageBack();
 			}
 		});

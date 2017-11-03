@@ -79,6 +79,7 @@
 								<Glyph fontFamily="FontAwesome" fontSize="22.0" icon="SAVE" />
 							</graphic>
 						</Button>
+						<Button fx:id="pdfButton" mnemonicParsing="false" text="Editor Tab" />
 						<Pane HBox.hgrow="ALWAYS" />
 						<Button fx:id="closeAppButton" prefHeight="17.0"
 							style="-fx-background-color: transparent;">

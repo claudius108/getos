@@ -10,7 +10,6 @@
 		<SplitPane fx:id="contentPane" orientation="HORIZONTAL">
 			<items>
 				<BorderPane fx:id="sourcePane" />
-				<BorderPane fx:id="targetPane" />
 			</items>
 		</SplitPane>
 	</center>
