@@ -8,24 +8,24 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-	private static Application mApplication;
-	private ResourceBundle mResources;
+	private static Application application;
+	private ResourceBundle resources;
 
-	public Controller(Application application) {
-		mApplication = application;
+	public Controller(Application pApplication) {
+		application = pApplication;
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		mResources = resources;
+	public void initialize(URL location, ResourceBundle pResources) {
+		resources = pResources;
 	}
 
 	public static Application getApplication() {
-		return mApplication;
+		return application;
 	}
 
 	public ResourceBundle getResources() {
-		return mResources;
+		return resources;
 	}
 
 }
