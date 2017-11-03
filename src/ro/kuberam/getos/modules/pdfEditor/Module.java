@@ -10,8 +10,6 @@ public class Module {
 
 	static {
 		Getos.eventsRegistry.put("PDF", new PdfEvent(PdfEvent.OPEN_PDF_FILE));
-		Getos.eventsRegistry.put("pdf.back", new PdfEvent(PdfEvent.PDF_BACK));
-		Getos.eventsRegistry.put("pdf.forward", new PdfEvent(PdfEvent.PDF_FORWARD));
 		Getos.eventsRegistry.put("pdf.zoom-in", new PdfEvent(PdfEvent.PDF_ZOOM_IN));
 		Getos.eventsRegistry.put("pdf.zoom-out", new PdfEvent(PdfEvent.PDF_ZOOM_OUT));
 		Getos.eventsRegistry.put("pdf.fit-to-width", new PdfEvent(PdfEvent.PDF_FIT_TO_WIDTH));

@@ -93,14 +93,12 @@ public final class HtmlEditorController extends EditorController {
 		backButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.back"));
 			}
 		});
 
 		forwardButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.forward"));
 			}
 		});
 

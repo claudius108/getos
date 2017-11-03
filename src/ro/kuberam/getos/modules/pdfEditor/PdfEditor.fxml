@@ -51,7 +51,7 @@
 									text="Fit to Height" />
 								<Button fx:id="fitToPageButton" mnemonicParsing="false"
 									text="Fit to Page" />
-								<TextField prefHeight="26.0" prefWidth="46.0"
+								<TextField fx:id="currentPageTextfield" prefHeight="26.0" prefWidth="46.0"
 									style="-fx-border-radius: 5 0 0 5; -fx-background-radius: 5 0 0 5;" />
 								<Label fx:id="pgCountLabel"
 									style="-fx-border-radius: 0 5 5 0; -fx-background-radius: 0 5 5 0;" />

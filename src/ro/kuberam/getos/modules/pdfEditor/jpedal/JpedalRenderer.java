@@ -430,3 +430,4 @@ public class JpedalRenderer extends BorderPane implements DocumentRenderer {
 		this.customPluginHandle = customPluginHandle;
 	}
 }
+// https://files.idrsolutions.com/samplecode/org/jpedal/examples/baseviewer/BaseViewerFX.java.html
