@@ -80,8 +80,6 @@ public final class PdfEditorController extends EditorController {
 	@FXML
 	private BorderPane targetPane;
 
-	private static File pFile;
-	
 	private DocumentRenderer documentRenderer;
 
 	public PdfEditorController(Application application, Stage stage, File file) {
@@ -92,7 +90,7 @@ public final class PdfEditorController extends EditorController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(pFile.getAbsolutePath()));
+		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(getFile().getAbsolutePath()));
 		
 		BooleanBinding booleanBind = currentPageTextfield.textProperty().isEqualTo("1");
 		backButton.disableProperty().bind(booleanBind);
@@ -190,7 +188,7 @@ public final class PdfEditorController extends EditorController {
 		selectEditorCombobox.setValue("jpedal");
 
 		// initialize the PDF viewer
-		documentRenderer = new JpedalRenderer(centerSourcePane, contentSourcePane, pFile);
+		documentRenderer = new JpedalRenderer(centerSourcePane, contentSourcePane, getFile());
 	}
 
 	public static PdfEditorController create(File file) throws Exception {
@@ -199,19 +197,10 @@ public final class PdfEditorController extends EditorController {
 		FXMLLoader loader = new FXMLLoader(
 				PdfEditorController.class.getResource("/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml"),
 				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfEditor.ui"), null,
-				new ControllerFactory(getApplication(), getStage()));
+				new ControllerFactory(getApplication(), getStage(), getFile()));
 
 		loader.load();
 
 		return loader.getController();
 	}
-
-	public File getFile() {
-		return pFile;
-	}
-
-	public static void setFile(File pFile) {
-		PdfEditorController.pFile = pFile;
-	}
-
 }

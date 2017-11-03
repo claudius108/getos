@@ -9,7 +9,7 @@
 	<center>
 		<SplitPane fx:id="contentPane" orientation="HORIZONTAL">
 			<items>
-				<BorderPane fx:id="sourcePane" />
+<!-- 				<BorderPane fx:id="sourcePane" /> -->
 			</items>
 		</SplitPane>
 	</center>

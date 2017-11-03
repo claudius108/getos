@@ -162,13 +162,4 @@ public final class HtmlEditorController extends EditorController {
 
 		return loader.getController();
 	}
-
-	public File getFile() {
-		return pFile;
-	}
-
-	public static void setFile(File pFile) {
-		HtmlEditorController.pFile = pFile;
-	}
-
 }

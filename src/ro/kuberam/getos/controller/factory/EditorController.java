@@ -13,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
+import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
 
 public class EditorController extends Controller {
 
@@ -22,7 +23,7 @@ public class EditorController extends Controller {
 	private BorderPane root;
 
 	private static Stage stage;
-	private final File file;
+	private static File file;
 	protected ExecutorService executorService = null;
 	private static EditorTab editorTab;
 
@@ -38,8 +39,12 @@ public class EditorController extends Controller {
 		return stage;
 	}
 
-	public File getFile() {
+	public static File getFile() {
 		return file;
+	}
+
+	public static void setFile(File pFile) {
+		file = pFile;
 	}
 
 	public Node getRoot() {
