@@ -6,23 +6,23 @@ import java.io.File;
 
 public class EditorTab extends Tab {
 
-	private File mFile;
+	private File file;
 
 	public EditorTab() {
 	}
 
-	public EditorTab(File file) {
-		super(file.getName());
-		mFile = file;
+	public EditorTab(File pFile) {
+		super(pFile.getName());
+		file = pFile;
+		setText(file.getName());
 	}
 
 	public File getFile() {
-		return mFile;
+		return file;
 	}
 
-	public void setFile(File file) {
-		mFile = file;
-		setText(file.getName());
+	public void setFile(File pFile) {
+		file = pFile;
 	}
 
 }

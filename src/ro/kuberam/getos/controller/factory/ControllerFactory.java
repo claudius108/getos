@@ -6,44 +6,40 @@ import java.lang.reflect.InvocationTargetException;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
-import ro.kuberam.getos.modules.pdfViewer.PdfViewerController;
 
 public final class ControllerFactory implements Callback<Class<?>, Object> {
 
-	private final Application pApplication;
-	private final Stage pStage;
-	private final File pFile;
+	private final Application application;
+	private final Stage stage;
+	private final File file;
 
-	public ControllerFactory(Application application) {
-		pApplication = application;
-		pStage = null;
-		pFile = null;
+	public ControllerFactory(Application pApplication) {
+		application = pApplication;
+		stage = null;
+		file = null;
 	}
 
-	public ControllerFactory(Application application, Stage stage) {
-		pApplication = application;
-		pStage = stage;
-		pFile = null;
+	public ControllerFactory(Application pApplication, Stage pStage) {
+		application = pApplication;
+		stage = pStage;
+		file = null;
 	}
 
-	public ControllerFactory(Application application, Stage stage, File file) {
-		pApplication = application;
-		pStage = stage;
-		pFile = file;
+	public ControllerFactory(Application pApplication, Stage pStage, File pFile) {
+		application = pApplication;
+		stage = pStage;
+		file = pFile;
 	}
 
 	@Override
 	public Object call(Class<?> type) {
 		try {
-			if (PdfEditorController.class.isAssignableFrom(type)) {
-				return new PdfEditorController(pApplication, pStage, pFile);
-			} else if (PdfViewerController.class.isAssignableFrom(type)) {
-				return new PdfViewerController(pApplication, pStage, pFile);
+			if (EditorController.class.isAssignableFrom(type)) {
+				return type.getConstructors()[0].newInstance(application, stage, file);
 			} else if (StageController.class.isAssignableFrom(type)) {
-				return type.getConstructors()[0].newInstance(pApplication, pStage);
+				return type.getConstructors()[0].newInstance(application, stage);
 			} else if (Controller.class.isAssignableFrom(type)) {
-				return type.getConstructors()[0].newInstance(pApplication);
+				return type.getConstructors()[0].newInstance(application);
 			}
 		} catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
