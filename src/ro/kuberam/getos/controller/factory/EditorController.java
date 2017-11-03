@@ -21,25 +21,25 @@ public class EditorController extends Controller {
 	@FXML
 	private BorderPane root;
 
-	private static Stage pStage;
-	private final File pFile;
-	protected ExecutorService mExecutorService = null;
-	private static EditorTab mEditorTab;
+	private static Stage stage;
+	private final File file;
+	protected ExecutorService executorService = null;
+	private static EditorTab editorTab;
 
-	public EditorController(Application application, Stage stage, File file) {
+	public EditorController(Application application, Stage pStage, File pFile) {
 		super(application);
 
-		pStage = stage;
-		pFile = file;
-		mExecutorService = Executors.newFixedThreadPool(2);
+		stage = pStage;
+		file = pFile;
+		executorService = Executors.newFixedThreadPool(2);
 	}
 
 	public static Stage getStage() {
-		return pStage;
+		return stage;
 	}
 
 	public File getFile() {
-		return pFile;
+		return file;
 	}
 
 	public Node getRoot() {
@@ -53,28 +53,24 @@ public class EditorController extends Controller {
 	}
 
 	public void saveContent() {
-		Logger.getLogger(TAG).log(Level.INFO, "Not implemented: {0}", pFile);
+		Logger.getLogger(TAG).log(Level.INFO, "Not implemented: {0}", file);
 	}
 
 	public void shutDown() {
 		try {
-			mExecutorService.shutdown();
-			mExecutorService.awaitTermination(5, TimeUnit.SECONDS);
+			executorService.shutdown();
+			executorService.awaitTermination(5, TimeUnit.SECONDS);
 		} catch (InterruptedException ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 		}
 	}
 
-	public void setEditorPane(EditorTab editorTab) {
-		mEditorTab = editorTab;
+	public void setEditorTab(EditorTab pEditorTab) {
+		editorTab = pEditorTab;
 	}
 
-	public static EditorTab getEditorTab() {
-		return mEditorTab;
-	}
-
-	public static void setmEditorTab(EditorTab mEditorTab) {
-		EditorController.mEditorTab = mEditorTab;
+	public EditorTab getEditorTab() {
+		return editorTab;
 	}
 
 	public void onEditorTabSelected() {
