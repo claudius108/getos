@@ -13,6 +13,7 @@ public class PdfEvent extends GetosEvent {
 	private static final long serialVersionUID = 831113937747538096L;
 
 	public static final EventType<PdfEvent> OPEN_PDF_FILE = new EventType<>(Event.ANY, "OPEN_PDF_FILE");
+	public static final EventType<PdfEvent> PDF_METADATA = new EventType<>(Event.ANY, "PDF_METADATA");
 	public static final EventType<PdfEvent> PDF_ZOOM_IN = new EventType<>(Event.ANY, "PDF_ZOOM_IN");
 	public static final EventType<PdfEvent> PDF_ZOOM_OUT = new EventType<>(Event.ANY, "PDF_ZOOM_OUT");
 	public static final EventType<PdfEvent> PDF_FIT_TO_WIDTH = new EventType<>(Event.ANY, "PDF_FIT_TO_WIDTH");

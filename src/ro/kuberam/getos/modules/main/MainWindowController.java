@@ -108,42 +108,8 @@ public final class MainWindowController extends StageController {
 		});
 
 		pdfButton.setOnAction(event -> {
-			try {
-				File file = new File("/home/claudius/Downloads/comune.pdf");
-
-				EditorController newTabController = EditorTabController.create(getApplication(), getStage(), file);
-
-				EditorTab newTab = new EditorTab(file);
-				newTab.setClosable(true);
-				newTab.setContent(newTabController.getRoot());
-
-				newTab.setOnCloseRequest(event2 -> {
-					// todo: show yes/no save dialog
-					if (newTabController.isEdited()) {
-						newTabController.saveContent();
-					}
-					Getos.tabControllers.remove(newTabController);
-					newTabController.shutDown();
-					if (tabPane.getTabs().size() == 1) {
-						statusLabel.setText("");
-					}
-				});
-				newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
-					if (newValue) {
-						EditorController tabController = Getos.tabControllers.get(tabPane.getTabs().indexOf(newTab));
-						tabController.onEditorTabSelected();
-					}
-				});
-
-				newTabController.setEditorTab(newTab);
-				// newTabController.setStatusLabel(statusLabel);
-				Getos.tabControllers.add(newTabController);
-				tabPane.getTabs().add(newTab);
-				tabPane.getSelectionModel().select(newTab);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			File file = new File("/home/claudius/Downloads/comune.pdf");
+			createNewEditorTab2(file);
 
 			event.consume();
 		});
@@ -278,6 +244,43 @@ public final class MainWindowController extends StageController {
 		tabPane.getSelectionModel().select(newTab);
 	}
 
+	public void createNewEditorTab2(File file) {
+		try {
+			EditorController newTabController = EditorTabController.create(getApplication(), getStage(), file);
+
+			EditorTab newTab = new EditorTab(file);
+			newTab.setClosable(true);
+			newTab.setContent(newTabController.getRoot());
+
+			newTab.setOnCloseRequest(event2 -> {
+				// todo: show yes/no save dialog
+				if (newTabController.isEdited()) {
+					newTabController.saveContent();
+				}
+				Getos.tabControllers.remove(newTabController);
+				newTabController.shutDown();
+				if (tabPane.getTabs().size() == 1) {
+					statusLabel.setText("");
+				}
+			});
+			newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
+				if (newValue) {
+					EditorController tabController = Getos.tabControllers.get(tabPane.getTabs().indexOf(newTab));
+					tabController.onEditorTabSelected();
+				}
+			});
+
+			newTabController.setEditorTab(newTab);
+			// newTabController.setStatusLabel(statusLabel);
+			Getos.tabControllers.add(newTabController);
+			tabPane.getTabs().add(newTab);
+			tabPane.getSelectionModel().select(newTab);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void openFile(File file) {
 		String documentType = detectDocumentType(file);
 
@@ -286,7 +289,7 @@ public final class MainWindowController extends StageController {
 			return;
 		}
 
-		Getos.eventBus.fireEvent(Getos.eventsRegistry.get(documentType).setData(file));
+		createNewEditorTab2(file);
 	}
 
 	private String detectDocumentType(File file) {
