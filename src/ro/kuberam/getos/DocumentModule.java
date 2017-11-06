@@ -11,4 +11,8 @@ package ro.kuberam.getos;
  */
 public interface DocumentModule {
 
+	String getDocumentType();
+	
+	DocumentMetadata getDocumentMetadata();
+
 }

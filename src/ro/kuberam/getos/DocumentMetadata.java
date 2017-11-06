@@ -1,20 +1,99 @@
 package ro.kuberam.getos;
 
+import java.util.Calendar;
+
 /**
- * Metadata about the document.
+ * Metadata about a document.
  */
 public interface DocumentMetadata {
-	
+
 	/**
-	 * Path to the document.
+	 * Document's title.
+	 *
+	 */
+	String title();
+
+	/**
+	 * Document's subject.
+	 *
+	 */
+	String subject();
+
+	/**
+	 * Document's author.
+	 *
+	 */
+	String author();
+
+	/**
+	 * Document's keywords.
+	 *
+	 */
+	String keywords();
+
+	/**
+	 * Document's producer.
+	 *
+	 */
+	String producer();
+
+	/**
+	 * Document's creator.
+	 *
+	 */
+	String creator();
+
+	/**
+	 * When the document was created.
+	 *
+	 */
+	Calendar created();
+
+	/**
+	 * When the document was modified.
+	 *
+	 */
+	Calendar modified();
+
+	/**
+	 * Document's format.
+	 *
+	 */
+	float format();
+
+	/**
+	 * Document's number of pages.
+	 *
+	 */
+	int numberOfPages();
+
+	/**
+	 * Document is optimized.
+	 *
+	 */
+	String optimized();
+
+	/**
+	 * Document's security.
+	 *
+	 */
+	String security();
+
+	/**
+	 * Document's paper-size.
+	 *
+	 */
+	String paperSize();
+
+	/**
+	 * Document's fonts.
+	 *
+	 */
+	String fonts();
+
+	/**
+	 * Document's path.
 	 *
 	 */
 	String path();
-
-	/**
-	 * Render one page back.
-	 *
-	 */
-	void pageForward();
-
 }

@@ -5,14 +5,30 @@ import java.io.File;
 import com.google.auto.service.AutoService;
 
 import javafx.scene.control.Alert.AlertType;
+import ro.kuberam.getos.DocumentMetadata;
 import ro.kuberam.getos.DocumentModule;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.utils.Utils;
 
 @AutoService(DocumentModule.class)
 public class Module implements DocumentModule {
+	
+	private String documentType = "PDF";
+
+	@Override
+	public String getDocumentType() {
+		return documentType;
+	}
+	
+
+	@Override
+	public DocumentMetadata getDocumentMetadata() {
+		return null;
+	}
 
 	static {
+		System.out.println("Module = ");
+		
 		Getos.eventsRegistry.put("PDF", new PdfEvent(PdfEvent.OPEN_PDF_FILE));
 		Getos.eventsRegistry.put("pdf.metadata", new PdfEvent(PdfEvent.PDF_METADATA));
 		Getos.eventsRegistry.put("pdf.zoom-in", new PdfEvent(PdfEvent.PDF_ZOOM_IN));
@@ -36,5 +52,4 @@ public class Module implements DocumentModule {
 			event.consume();
 		});
 	}
-
 }

@@ -5,36 +5,42 @@ import java.util.HashMap;
 import java.util.ServiceLoader;
 
 import javafx.application.Application;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.eventBus.EventBus;
 import ro.kuberam.getos.eventBus.FXEventBus;
 import ro.kuberam.getos.events.GetosEvent;
 import ro.kuberam.getos.modules.main.MainWindowController;
-import ro.kuberam.getos.utils.Utils;
 
 public class Getos extends Application {
 
 	public static EventBus eventBus;
 	public static HashMap<String, GetosEvent> eventsRegistry = new HashMap<String, GetosEvent>();
-
 	public static ArrayList<EditorController> tabControllers;
+	public static HashMap<String, DocumentMetadata> documentMetadataGeneratorsRegistry = new HashMap<String, DocumentMetadata>();
 
 	static {
 		eventBus = new FXEventBus();
 		tabControllers = new ArrayList<>();
 
-		try {
-			Class.forName("ro.kuberam.getos.modules.pdfEditor.Module").getClass();
-		} catch (ClassNotFoundException ex) {
-			Utils.showAlert(AlertType.ERROR, ex);
-		}
+//		try {
+//			Class.forName("ro.kuberam.getos.modules.pdfEditor.Module").getClass();
+//		} catch (ClassNotFoundException ex) {
+//			Utils.showAlert(AlertType.ERROR, ex);
+//		}
 
-		ServiceLoader<DocumentModule> services = java.util.ServiceLoader.load(DocumentModule.class);
-		services.forEach(service -> {
-			System.out.println("service = " + service.getClass().getName());
-
+		ServiceLoader<DocumentModule> moduleDescriptionServices = java.util.ServiceLoader.load(DocumentModule.class);
+		
+		moduleDescriptionServices.forEach(service -> {
+			try {
+				DocumentModule moduleDescription = service.getClass().newInstance();
+				
+				System.out.println("moduleDescription = " + moduleDescription.getDocumentType());
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			
+//			Class.forName("ro.kuberam.getos.modules.pdfEditor.Module").getClass();
 		});
 	}
 
