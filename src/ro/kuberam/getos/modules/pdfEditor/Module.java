@@ -2,11 +2,15 @@ package ro.kuberam.getos.modules.pdfEditor;
 
 import java.io.File;
 
+import com.google.auto.service.AutoService;
+
 import javafx.scene.control.Alert.AlertType;
+import ro.kuberam.getos.DocumentModule;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.utils.Utils;
 
-public class Module {
+@AutoService(DocumentModule.class)
+public class Module implements DocumentModule {
 
 	static {
 		Getos.eventsRegistry.put("PDF", new PdfEvent(PdfEvent.OPEN_PDF_FILE));
