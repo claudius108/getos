@@ -32,6 +32,8 @@ public final class EditorTabController extends EditorController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 		
+		System.out.println(getDocumentMetadata().file());
+		
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {

@@ -103,4 +103,10 @@ public interface DocumentMetadata {
 	 *
 	 */
 	File file();
+	
+	/**
+	 * Document's type.
+	 *
+	 */
+	File type();
 }
