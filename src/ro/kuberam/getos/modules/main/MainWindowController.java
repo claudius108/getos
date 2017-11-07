@@ -1,6 +1,7 @@
 package ro.kuberam.getos.modules.main;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -20,12 +21,12 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import ro.kuberam.getos.DocumentMetadata;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.documentTypeDetection.ViewerFileType;
-import ro.kuberam.getos.events.FileEvent;
 import ro.kuberam.getos.events.UserInterfaceEvent;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
@@ -71,18 +72,8 @@ public final class MainWindowController extends StageController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		Getos.eventsRegistry.put("open-file", new FileEvent(FileEvent.OPEN_FILE));
 		Getos.eventsRegistry.put("update-status-label", new UserInterfaceEvent(UserInterfaceEvent.UPDATE_STATUS_LABEL));
 
-		Getos.eventBus.addEventHandler(FileEvent.OPEN_FILE, event -> {
-			try {
-				createNewEditorTab((EditorController) event.getData());
-			} catch (Exception ex) {
-				Utils.showAlert(AlertType.ERROR, ex);
-			}
-
-			event.consume();
-		});
 		Getos.eventBus.addEventHandler(UserInterfaceEvent.UPDATE_STATUS_LABEL, event -> {
 			statusLabel.setText((String) event.getData());
 
@@ -109,7 +100,8 @@ public final class MainWindowController extends StageController {
 
 		pdfButton.setOnAction(event -> {
 			File file = new File("/home/claudius/Downloads/comune.pdf");
-			createNewEditorTab2(file);
+
+			openFile(file);
 
 			event.consume();
 		});
@@ -212,47 +204,21 @@ public final class MainWindowController extends StageController {
 		}
 	}
 
-	public void createNewEditorTab(EditorController newTabController) {
-		File file = newTabController.getFile();
-
-		EditorTab newTab = new EditorTab(file);
-		newTab.setClosable(true);
-		newTab.setContent(newTabController.getRoot());
-
-		newTab.setOnCloseRequest(event -> {
-			// todo: show yes/no save dialog
-			if (newTabController.isEdited()) {
-				newTabController.saveContent();
-			}
-			Getos.tabControllers.remove(newTabController);
-			newTabController.shutDown();
-			if (tabPane.getTabs().size() == 1) {
-				statusLabel.setText("");
-			}
-		});
-		newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue) {
-				EditorController tabController = Getos.tabControllers.get(tabPane.getTabs().indexOf(newTab));
-				tabController.onEditorTabSelected();
-			}
-		});
-
-		newTabController.setEditorTab(newTab);
-		// newTabController.setStatusLabel(statusLabel);
-		Getos.tabControllers.add(newTabController);
-		tabPane.getTabs().add(newTab);
-		tabPane.getSelectionModel().select(newTab);
-	}
-
-	public void createNewEditorTab2(File file) {
+	public void createNewEditorTab(DocumentMetadata documentMetadata) {
 		try {
-			EditorController newTabController = EditorTabController.create(getApplication(), getStage(), file);
+			FXMLLoader loader = new FXMLLoader(
+					EditorTabController.class.getResource("/ro/kuberam/getos/modules/editorTab/EditorTab.fxml"),
+					ResourceBundle.getBundle("ro.kuberam.getos.modules.main.ui"), null,
+					new ControllerFactory(getApplication(), getStage(), documentMetadata, documentMetadata.file()));
+			loader.load();
 
-			EditorTab newTab = new EditorTab(file);
+			EditorController newTabController = loader.getController();
+
+			EditorTab newTab = new EditorTab(documentMetadata.file());
 			newTab.setClosable(true);
 			newTab.setContent(newTabController.getRoot());
 
-			newTab.setOnCloseRequest(event2 -> {
+			newTab.setOnCloseRequest(event -> {
 				// todo: show yes/no save dialog
 				if (newTabController.isEdited()) {
 					newTabController.saveContent();
@@ -289,7 +255,16 @@ public final class MainWindowController extends StageController {
 			return;
 		}
 
-		createNewEditorTab2(file);
+		DocumentMetadata documentMetadata = null;
+		try {
+			documentMetadata = (DocumentMetadata) Getos.documentMetadataGeneratorsRegistry.get(documentType)
+					.newInstance(file);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			e.printStackTrace();
+		}
+
+		createNewEditorTab(documentMetadata);
 	}
 
 	private String detectDocumentType(File file) {

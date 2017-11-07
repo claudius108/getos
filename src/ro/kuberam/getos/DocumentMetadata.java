@@ -1,5 +1,6 @@
 package ro.kuberam.getos;
 
+import java.io.File;
 import java.util.Calendar;
 
 /**
@@ -96,4 +97,10 @@ public interface DocumentMetadata {
 	 *
 	 */
 	String path();
+	
+	/**
+	 * Document's file.
+	 *
+	 */
+	File file();
 }

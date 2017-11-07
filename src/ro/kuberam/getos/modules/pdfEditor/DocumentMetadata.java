@@ -7,6 +7,9 @@ import java.util.Calendar;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 
+import javafx.scene.control.Alert.AlertType;
+import ro.kuberam.getos.utils.Utils;
+
 public class DocumentMetadata implements ro.kuberam.getos.DocumentMetadata {
 
 	private String title;
@@ -24,33 +27,37 @@ public class DocumentMetadata implements ro.kuberam.getos.DocumentMetadata {
 	private String paperSize;
 	private String fonts;
 	private String path;
+	private File file;
 
-	public DocumentMetadata(File file) {
+	public DocumentMetadata(File pFile) {
 		PDDocument pdfDocument = null;
 
 		try {
-			pdfDocument = PDDocument.load(file);
-		} catch (IOException e) {
-			e.printStackTrace();
+			pdfDocument = PDDocument.load(pFile);
+
+			PDDocumentInformation documentInformation = pdfDocument.getDocumentInformation();
+
+			title = documentInformation.getTitle();
+			subject = documentInformation.getSubject();
+			author = documentInformation.getAuthor();
+			keywords = documentInformation.getKeywords();
+			producer = documentInformation.getProducer();
+			creator = documentInformation.getCreator();
+			created = documentInformation.getCreationDate();
+			modified = documentInformation.getModificationDate();
+			format = pdfDocument.getVersion();
+			numberOfPages = pdfDocument.getNumberOfPages();
+			optimized = "";
+			security = "";
+			paperSize = "";
+			fonts = "";
+			path = pFile.getAbsolutePath();
+			file = pFile;
+
+			pdfDocument.close();
+		} catch (IOException ex) {
+			Utils.showAlert(AlertType.ERROR, ex);
 		}
-
-		PDDocumentInformation documentInformation = pdfDocument.getDocumentInformation();
-
-		title = documentInformation.getTitle();
-		subject = documentInformation.getSubject();
-		author = documentInformation.getAuthor();
-		keywords = documentInformation.getKeywords();
-		producer = documentInformation.getProducer();
-		creator = documentInformation.getCreator();
-		created = documentInformation.getCreationDate();
-		modified = documentInformation.getModificationDate();
-		format = pdfDocument.getVersion();
-		numberOfPages = pdfDocument.getNumberOfPages();
-		optimized = "";
-		security = "";
-		paperSize = "";
-		fonts = "";
-		path = file.getAbsolutePath();
 	}
 
 	@Override
@@ -128,4 +135,8 @@ public class DocumentMetadata implements ro.kuberam.getos.DocumentMetadata {
 		return path;
 	}
 
+	@Override
+	public File file() {
+		return file;
+	}
 }

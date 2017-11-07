@@ -1,5 +1,6 @@
 package ro.kuberam.getos;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ServiceLoader;
@@ -17,30 +18,24 @@ public class Getos extends Application {
 	public static EventBus eventBus;
 	public static HashMap<String, GetosEvent> eventsRegistry = new HashMap<String, GetosEvent>();
 	public static ArrayList<EditorController> tabControllers;
-	public static HashMap<String, DocumentMetadata> documentMetadataGeneratorsRegistry = new HashMap<String, DocumentMetadata>();
+	public static HashMap<String, Constructor<?>> documentMetadataGeneratorsRegistry = new HashMap<String, Constructor<?>>();
 
 	static {
 		eventBus = new FXEventBus();
 		tabControllers = new ArrayList<>();
-
-//		try {
-//			Class.forName("ro.kuberam.getos.modules.pdfEditor.Module").getClass();
-//		} catch (ClassNotFoundException ex) {
-//			Utils.showAlert(AlertType.ERROR, ex);
-//		}
 
 		ServiceLoader<DocumentModule> moduleDescriptionServices = java.util.ServiceLoader.load(DocumentModule.class);
 		
 		moduleDescriptionServices.forEach(service -> {
 			try {
 				DocumentModule moduleDescription = service.getClass().newInstance();
+				String documentType = moduleDescription.getDocumentType();
+				String modulePackageName = service.getClass().getPackage().getName();
 				
-				System.out.println("moduleDescription = " + moduleDescription.getDocumentType());
-			} catch (InstantiationException | IllegalAccessException e) {
+				documentMetadataGeneratorsRegistry.put(documentType, Class.forName(modulePackageName + ".DocumentMetadata").getConstructors()[0]);
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			
-//			Class.forName("ro.kuberam.getos.modules.pdfEditor.Module").getClass();
 		});
 	}
 

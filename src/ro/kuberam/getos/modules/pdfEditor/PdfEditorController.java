@@ -19,6 +19,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import ro.kuberam.getos.DocumentMetadata;
 import ro.kuberam.getos.DocumentRenderer;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
@@ -82,8 +83,8 @@ public final class PdfEditorController extends EditorController {
 
 	private DocumentRenderer documentRenderer;
 
-	public PdfEditorController(Application application, Stage stage, File file) {
-		super(application, stage, file);
+	public PdfEditorController(Application application, Stage stage, DocumentMetadata documentMetadata, File file) {
+		super(application, stage, documentMetadata, file);
 	}
 
 	@Override
@@ -197,7 +198,7 @@ public final class PdfEditorController extends EditorController {
 		FXMLLoader loader = new FXMLLoader(
 				PdfEditorController.class.getResource("/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml"),
 				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfEditor.ui"), null,
-				new ControllerFactory(getApplication(), getStage(), getFile()));
+				new ControllerFactory(getApplication(), getStage(), getDocumentMetadata(),getFile()));
 
 		loader.load();
 

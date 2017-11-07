@@ -27,8 +27,6 @@ public class Module implements DocumentModule {
 	}
 
 	static {
-		System.out.println("Module = ");
-		
 		Getos.eventsRegistry.put("PDF", new PdfEvent(PdfEvent.OPEN_PDF_FILE));
 		Getos.eventsRegistry.put("pdf.metadata", new PdfEvent(PdfEvent.PDF_METADATA));
 		Getos.eventsRegistry.put("pdf.zoom-in", new PdfEvent(PdfEvent.PDF_ZOOM_IN));

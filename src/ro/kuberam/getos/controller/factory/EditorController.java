@@ -12,8 +12,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import ro.kuberam.getos.DocumentMetadata;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
-import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
 
 public class EditorController extends Controller {
 
@@ -23,20 +23,26 @@ public class EditorController extends Controller {
 	private BorderPane root;
 
 	private static Stage stage;
+	private static DocumentMetadata documentMetadata;
 	private static File file;
 	protected ExecutorService executorService = null;
 	private static EditorTab editorTab;
 
-	public EditorController(Application application, Stage pStage, File pFile) {
+	public EditorController(Application application, Stage pStage, DocumentMetadata documentMetadata, File pFile) {
 		super(application);
 
 		stage = pStage;
+		setDocumentMetadata(documentMetadata);
 		file = pFile;
 		executorService = Executors.newFixedThreadPool(2);
 	}
 
 	public static Stage getStage() {
 		return stage;
+	}
+	
+	public static Stage setStage(Stage stage) {
+		return EditorController.stage = stage;
 	}
 
 	public static File getFile() {
@@ -45,6 +51,14 @@ public class EditorController extends Controller {
 
 	public static void setFile(File pFile) {
 		file = pFile;
+	}
+
+	public static DocumentMetadata getDocumentMetadata() {
+		return documentMetadata;
+	}
+
+	public void setDocumentMetadata(DocumentMetadata documentMetadata) {
+		this.documentMetadata = documentMetadata;
 	}
 
 	public Node getRoot() {
@@ -90,5 +104,4 @@ public class EditorController extends Controller {
 		// the last tab.
 		// Platform.runLater(() -> mCodeArea.requestFocus());
 	}
-
 }

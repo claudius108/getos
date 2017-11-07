@@ -19,6 +19,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import ro.kuberam.getos.DocumentMetadata;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
@@ -78,8 +79,8 @@ public final class HtmlEditorController extends EditorController {
 
 	private static File pFile;
 
-	public HtmlEditorController(Application application, Stage stage, File file) {
-		super(application, stage, file);
+	public HtmlEditorController(Application application, Stage stage, DocumentMetadata documentMetadata, File file) {
+		super(application, stage, documentMetadata, file);
 	}
 
 	@Override

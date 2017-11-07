@@ -56,6 +56,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import ro.kuberam.getos.DocumentMetadata;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 
@@ -132,8 +133,8 @@ public class PdfViewerController extends EditorController {
 	 */
 	FitToPage zoomMode = FitToPage.AUTO;
 
-	public PdfViewerController(Application application, Stage stage, File file) {
-		super(application, stage, file);
+	public PdfViewerController(Application application, Stage stage, DocumentMetadata documentMetadata, File file) {
+		super(application, stage, documentMetadata, file);
 	}
 
 	@Override
