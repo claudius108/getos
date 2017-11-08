@@ -1,6 +1,5 @@
 package ro.kuberam.getos.modules.pdfEditor;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -83,8 +82,8 @@ public final class PdfEditorController extends EditorController {
 
 	private DocumentRenderer documentRenderer;
 
-	public PdfEditorController(Application application, Stage stage, DocumentMetadata documentMetadata, File file) {
-		super(application, stage, documentMetadata, file);
+	public PdfEditorController(Application application, Stage stage, DocumentMetadata documentMetadata) {
+		super(application, stage, documentMetadata);
 	}
 
 	@Override
@@ -197,7 +196,7 @@ public final class PdfEditorController extends EditorController {
 		FXMLLoader loader = new FXMLLoader(
 				PdfEditorController.class.getResource("/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml"),
 				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfEditor.ui"), null,
-				new ControllerFactory(getApplication(), getStage(), getDocumentMetadata(),getFile()));
+				new ControllerFactory(getApplication(), getStage(), getDocumentMetadata()));
 
 		loader.load();
 

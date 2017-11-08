@@ -1,6 +1,5 @@
 package ro.kuberam.getos.modules.editorTab;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -12,7 +11,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentMetadata;
 import ro.kuberam.getos.controller.factory.EditorController;
-import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
 
 public final class EditorTabController extends EditorController {
 
@@ -24,23 +22,20 @@ public final class EditorTabController extends EditorController {
 	@FXML
 	private SplitPane contentPane;
 
-	public EditorTabController(Application application, Stage stage, DocumentMetadata documentMetadata, File file) {
-		super(application, stage, documentMetadata, file);
+	public EditorTabController(Application application, Stage stage, DocumentMetadata documentMetadata) {
+		super(application, stage, documentMetadata);
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 		
-		System.out.println(getDocumentMetadata().file());
-		
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-//				Getos.eventBus.fireEvent(Getos.eventsRegistry.get(documentType).setData(file));
 				EditorController controller = null;
 				try {
-					controller = PdfEditorController.create();
+					controller = (EditorController) Class.forName(getDocumentMetadata().controller()).getDeclaredMethod ("create").invoke(null);
 					
 					contentPane.getItems().add(controller.getRoot());
 				} catch (Exception e) {

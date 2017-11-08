@@ -133,8 +133,8 @@ public class PdfViewerController extends EditorController {
 	 */
 	FitToPage zoomMode = FitToPage.AUTO;
 
-	public PdfViewerController(Application application, Stage stage, DocumentMetadata documentMetadata, File file) {
-		super(application, stage, documentMetadata, file);
+	public PdfViewerController(Application application, Stage stage, DocumentMetadata documentMetadata) {
+		super(application, stage, documentMetadata);
 	}
 
 	@Override

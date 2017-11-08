@@ -209,7 +209,7 @@ public final class MainWindowController extends StageController {
 			FXMLLoader loader = new FXMLLoader(
 					EditorTabController.class.getResource("/ro/kuberam/getos/modules/editorTab/EditorTab.fxml"),
 					ResourceBundle.getBundle("ro.kuberam.getos.modules.main.ui"), null,
-					new ControllerFactory(getApplication(), getStage(), documentMetadata, documentMetadata.file()));
+					new ControllerFactory(getApplication(), getStage(), documentMetadata));
 			loader.load();
 
 			EditorController newTabController = loader.getController();

@@ -3,8 +3,6 @@ package ro.kuberam.getos.modules.htmlEditor;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -79,8 +77,8 @@ public final class HtmlEditorController extends EditorController {
 
 	private static File pFile;
 
-	public HtmlEditorController(Application application, Stage stage, DocumentMetadata documentMetadata, File file) {
-		super(application, stage, documentMetadata, file);
+	public HtmlEditorController(Application application, Stage stage, DocumentMetadata documentMetadata) {
+		super(application, stage, documentMetadata);
 	}
 
 	@Override
@@ -151,13 +149,12 @@ public final class HtmlEditorController extends EditorController {
 		new JpedalRenderer(centerSourcePane, contentSourcePane, pFile);
 	}
 
-	public static HtmlEditorController create(File file) throws Exception {
-		setFile(file);
+	public static HtmlEditorController create() throws Exception {
 
 		FXMLLoader loader = new FXMLLoader(
 				HtmlEditorController.class.getResource("/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml"),
 				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfEditor.ui"), null,
-				new ControllerFactory(getApplication(), getStage()));
+				new ControllerFactory(getApplication(), getStage(), getDocumentMetadata()));
 
 		loader.load();
 

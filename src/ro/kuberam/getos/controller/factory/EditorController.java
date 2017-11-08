@@ -1,6 +1,5 @@
 package ro.kuberam.getos.controller.factory;
 
-import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -24,16 +23,14 @@ public class EditorController extends Controller {
 
 	private static Stage stage;
 	private static DocumentMetadata documentMetadata;
-	private static File file;
 	protected ExecutorService executorService = null;
 	private static EditorTab editorTab;
 
-	public EditorController(Application application, Stage pStage, DocumentMetadata documentMetadata, File pFile) {
+	public EditorController(Application application, Stage pStage, DocumentMetadata documentMetadata) {
 		super(application);
 
 		stage = pStage;
 		setDocumentMetadata(documentMetadata);
-		file = pFile;
 		executorService = Executors.newFixedThreadPool(2);
 	}
 
@@ -45,20 +42,12 @@ public class EditorController extends Controller {
 		return EditorController.stage = stage;
 	}
 
-	public static File getFile() {
-		return file;
-	}
-
-	public static void setFile(File pFile) {
-		file = pFile;
-	}
-
 	public static DocumentMetadata getDocumentMetadata() {
 		return documentMetadata;
 	}
 
 	public void setDocumentMetadata(DocumentMetadata documentMetadata) {
-		this.documentMetadata = documentMetadata;
+		EditorController.documentMetadata = documentMetadata;
 	}
 
 	public Node getRoot() {
@@ -72,7 +61,7 @@ public class EditorController extends Controller {
 	}
 
 	public void saveContent() {
-		Logger.getLogger(TAG).log(Level.INFO, "Not implemented: {0}", file);
+		Logger.getLogger(TAG).log(Level.INFO, "Not implemented: {0}");
 	}
 
 	public void shutDown() {
