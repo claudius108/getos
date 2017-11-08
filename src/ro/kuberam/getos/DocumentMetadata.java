@@ -105,8 +105,8 @@ public interface DocumentMetadata {
 	File file();
 	
 	/**
-	 * Document's type.
+	 * Document type's controller.
 	 *
 	 */
-	File type();
+	String controller();
 }

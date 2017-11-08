@@ -139,4 +139,9 @@ public class DocumentMetadata implements ro.kuberam.getos.DocumentMetadata {
 	public File file() {
 		return file;
 	}
+
+	@Override
+	public String controller() {
+		return "ro.kuberam.getos.modules.pdfEditor.PdfEditorController";
+	}
 }

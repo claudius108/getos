@@ -91,7 +91,7 @@ public final class PdfEditorController extends EditorController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(getFile().getAbsolutePath()));
+		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(getDocumentMetadata().path()));
 		
 		BooleanBinding booleanBind = currentPageTextfield.textProperty().isEqualTo("1");
 		backButton.disableProperty().bind(booleanBind);
@@ -189,11 +189,10 @@ public final class PdfEditorController extends EditorController {
 		selectEditorCombobox.setValue("jpedal");
 
 		// initialize the PDF viewer
-		documentRenderer = new JpedalRenderer(centerSourcePane, contentSourcePane, getFile());
+		documentRenderer = new JpedalRenderer(centerSourcePane, contentSourcePane, getDocumentMetadata().file());
 	}
 
-	public static PdfEditorController create(File file) throws Exception {
-		setFile(file);
+	public static PdfEditorController create() throws Exception {
 
 		FXMLLoader loader = new FXMLLoader(
 				PdfEditorController.class.getResource("/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml"),

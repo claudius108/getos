@@ -40,7 +40,7 @@ public final class EditorTabController extends EditorController {
 //				Getos.eventBus.fireEvent(Getos.eventsRegistry.get(documentType).setData(file));
 				EditorController controller = null;
 				try {
-					controller = PdfEditorController.create(getFile());
+					controller = PdfEditorController.create();
 					
 					contentPane.getItems().add(controller.getRoot());
 				} catch (Exception e) {
