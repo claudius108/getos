@@ -14,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -66,19 +65,10 @@ public final class PdfEditorController extends EditorController {
 	private Button extractTablesButton;
 
 	@FXML
-	private SplitPane contentPane;
-
-	@FXML
-	private BorderPane sourcePane;
-
-	@FXML
 	private ScrollPane centerSourcePane;
 
 	@FXML
 	private Group contentSourcePane;
-
-	@FXML
-	private BorderPane targetPane;
 
 	private DocumentRenderer documentRenderer;
 
@@ -120,6 +110,12 @@ public final class PdfEditorController extends EditorController {
 //
 //			event.consume();
 //		});
+		
+		Getos.eventBus.addEventHandler(PdfEvent.PDF_GO_TO_PAGE, event -> {
+			documentRenderer.pageForward();
+
+			event.consume();
+		});
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_UPDATE_PAGE_COUNT, event -> {
 			pgCountLabel.setText(getResources().getString("pages_number_prefix") + " " + event.getData());
@@ -179,7 +175,7 @@ public final class PdfEditorController extends EditorController {
 		extractTablesButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				contentPane.getItems().add(new BorderPane());
+				//contentPane.getItems().add(new BorderPane());
 			}
 		});
 

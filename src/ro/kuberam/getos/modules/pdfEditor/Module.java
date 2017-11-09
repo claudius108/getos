@@ -16,6 +16,8 @@ public class Module implements DocumentModule {
 	}
 
 	static {
+		Getos.eventsRegistry.put("pdf.go-to-page", new PdfEvent(PdfEvent.PDF_GO_TO_PAGE));
+		
 		Getos.eventsRegistry.put("pdf.zoom-in", new PdfEvent(PdfEvent.PDF_ZOOM_IN));
 		Getos.eventsRegistry.put("pdf.zoom-out", new PdfEvent(PdfEvent.PDF_ZOOM_OUT));
 		Getos.eventsRegistry.put("pdf.fit-to-width", new PdfEvent(PdfEvent.PDF_FIT_TO_WIDTH));
