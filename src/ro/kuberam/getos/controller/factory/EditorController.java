@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentMetadata;
+import ro.kuberam.getos.DocumentRenderer;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
 
 public class EditorController extends Controller {
@@ -25,6 +26,7 @@ public class EditorController extends Controller {
 	private static DocumentMetadata documentMetadata;
 	protected ExecutorService executorService = null;
 	private static EditorTab editorTab;
+	private DocumentRenderer documentRenderer;
 
 	public EditorController(Application application, Stage pStage, DocumentMetadata documentMetadata) {
 		super(application);
@@ -37,7 +39,7 @@ public class EditorController extends Controller {
 	public static Stage getStage() {
 		return stage;
 	}
-	
+
 	public static Stage setStage(Stage stage) {
 		return EditorController.stage = stage;
 	}
@@ -92,5 +94,13 @@ public class EditorController extends Controller {
 		// Without this trying to format text (ctrl+space) will always format
 		// the last tab.
 		// Platform.runLater(() -> mCodeArea.requestFocus());
+	}
+
+	public void setDocumentRenderer(DocumentRenderer documentRenderer) {
+		this.documentRenderer = documentRenderer;
+	}
+
+	public DocumentRenderer getDocumentRenderer() {
+		return documentRenderer;
 	}
 }

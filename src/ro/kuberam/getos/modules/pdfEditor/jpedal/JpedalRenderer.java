@@ -170,6 +170,11 @@ public class JpedalRenderer extends BorderPane implements DocumentRenderer {
 	}
 
 	@Override
+	public ScrollPane root() {
+		return scrollPane;
+	}
+
+	@Override
 	public void pageBack() {
 		if (currentPage > 1) {
 			goToPage(currentPage - 1);

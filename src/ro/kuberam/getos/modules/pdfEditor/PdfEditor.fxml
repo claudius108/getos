@@ -37,13 +37,6 @@
 						<Tooltip text="%forward_button_tooltip" />
 					</tooltip>
 				</Button>
-				<Button fx:id="zoomInButton" mnemonicParsing="false" text="Zoom in" />
-				<Button fx:id="zoomOutButton" mnemonicParsing="false" text="Zoom out" />
-				<Button fx:id="fitToWidthButton" mnemonicParsing="false"
-					text="Fit to Width" />
-				<Button fx:id="fitToHeightButton" mnemonicParsing="false"
-					text="Fit to Height" />
-				<Button fx:id="fitToPageButton" mnemonicParsing="false" text="Fit to Page" />
 				<TextField fx:id="currentPageTextfield" prefHeight="26.0"
 					prefWidth="46.0"
 					style="-fx-border-radius: 5 0 0 5; -fx-background-radius: 5 0 0 5;" />

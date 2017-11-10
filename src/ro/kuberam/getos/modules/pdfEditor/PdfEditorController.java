@@ -41,23 +41,8 @@ public final class PdfEditorController extends EditorController {
 	private Button forwardButton;
 
 	@FXML
-	private Button zoomInButton;
-
-	@FXML
-	private Button zoomOutButton;
-
-	@FXML
-	private Button fitToWidthButton;
-
-	@FXML
-	private Button fitToHeightButton;
-
-	@FXML
-	private Button fitToPageButton;
-
-	@FXML
 	private TextField currentPageTextfield;
-	
+
 	@FXML
 	private Label pgCountLabel;
 
@@ -70,8 +55,6 @@ public final class PdfEditorController extends EditorController {
 	@FXML
 	private Group contentSourcePane;
 
-	private DocumentRenderer documentRenderer;
-
 	public PdfEditorController(Application application, Stage stage, DocumentMetadata documentMetadata) {
 		super(application, stage, documentMetadata);
 	}
@@ -81,38 +64,38 @@ public final class PdfEditorController extends EditorController {
 		super.initialize(location, resources);
 
 		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(getDocumentMetadata().path()));
-		
+
 		BooleanBinding booleanBind = currentPageTextfield.textProperty().isEqualTo("1");
 		backButton.disableProperty().bind(booleanBind);
 
-//		Getos.eventBus.addEventHandler(PdfEvent.PDF_ENABLE_BUTTON, event -> {
-//			String buttonId = (String) event.getData();
-//
-//			switch (buttonId) {
-//			case "backButton":
-//				backButton.setDisable(false);
-//			case "forwardButton":
-//				forwardButton.setDisable(false);
-//			}
-//
-//			event.consume();
-//		});
-//
-//		Getos.eventBus.addEventHandler(PdfEvent.PDF_DISABLE_BUTTON, event -> {
-//			String buttonId = (String) event.getData();
-//
-//			switch (buttonId) {
-//			case "backButton":
-//				backButton.setDisable(true);
-//			case "forwardButton":
-//				forwardButton.setDisable(true);
-//			}
-//
-//			event.consume();
-//		});
-		
+		// Getos.eventBus.addEventHandler(PdfEvent.PDF_ENABLE_BUTTON, event -> {
+		// String buttonId = (String) event.getData();
+		//
+		// switch (buttonId) {
+		// case "backButton":
+		// backButton.setDisable(false);
+		// case "forwardButton":
+		// forwardButton.setDisable(false);
+		// }
+		//
+		// event.consume();
+		// });
+		//
+		// Getos.eventBus.addEventHandler(PdfEvent.PDF_DISABLE_BUTTON, event -> {
+		// String buttonId = (String) event.getData();
+		//
+		// switch (buttonId) {
+		// case "backButton":
+		// backButton.setDisable(true);
+		// case "forwardButton":
+		// forwardButton.setDisable(true);
+		// }
+		//
+		// event.consume();
+		// });
+
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_GO_TO_PAGE, event -> {
-			documentRenderer.pageForward();
+			getDocumentRenderer().pageForward();
 
 			event.consume();
 		});
@@ -126,56 +109,21 @@ public final class PdfEditorController extends EditorController {
 		backButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				documentRenderer.pageBack();
+				getDocumentRenderer().pageBack();
 			}
 		});
 
 		forwardButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				documentRenderer.pageForward();
+				getDocumentRenderer().pageForward();
 			}
 		});
 
-		zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.zoom-in"));
-			}
-		});
-
-		zoomOutButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.zoom-out"));
-			}
-		});
-
-		fitToWidthButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-width"));
-			}
-		});
-
-		fitToHeightButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-height"));
-			}
-		});
-
-		fitToPageButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-page"));
-			}
-		});
-		
 		extractTablesButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				//contentPane.getItems().add(new BorderPane());
+				// contentPane.getItems().add(new BorderPane());
 			}
 		});
 
@@ -184,7 +132,7 @@ public final class PdfEditorController extends EditorController {
 		selectEditorCombobox.setValue("jpedal");
 
 		// initialize the PDF viewer
-		documentRenderer = new JpedalRenderer(centerSourcePane, contentSourcePane, getDocumentMetadata().file());
+		setDocumentRenderer(new JpedalRenderer(centerSourcePane, contentSourcePane, getDocumentMetadata().file()));
 	}
 
 	public static PdfEditorController create() throws Exception {
