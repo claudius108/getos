@@ -13,12 +13,14 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.EditorController;
+import ro.kuberam.getos.utils.Utils;
 
 public final class EditorTabController extends EditorController {
 
@@ -116,8 +118,8 @@ public final class EditorTabController extends EditorController {
 							.getDeclaredMethod("create").invoke(null);
 
 					contentPane.getItems().add(controller.getRoot());
-				} catch (Exception e) {
-					e.printStackTrace();
+				} catch (Exception ex) {
+					Utils.showAlert(AlertType.ERROR, ex);
 				}
 			}
 		});

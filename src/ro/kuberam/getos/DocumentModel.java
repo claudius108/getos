@@ -3,10 +3,20 @@ package ro.kuberam.getos;
 import java.io.File;
 import java.util.Calendar;
 
+import javafx.scene.image.Image;
+
 /**
  * Metadata about a document.
+ * 
+ * @param <T>
  */
 public interface DocumentModel {
+
+	/**
+	 * Document itself.
+	 *
+	 */
+	Object document();
 
 	/**
 	 * Document's title.
@@ -97,16 +107,22 @@ public interface DocumentModel {
 	 *
 	 */
 	String path();
-	
+
 	/**
 	 * Document's file.
 	 *
 	 */
 	File file();
-	
+
 	/**
 	 * Document type's controller.
 	 *
 	 */
 	String controller();
+
+	/**
+	 * Get a page from document.
+	 *
+	 */
+	Image goToPage(int pageNumber);
 }

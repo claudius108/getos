@@ -18,7 +18,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
-import ro.kuberam.getos.DocumentRenderer;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
@@ -95,7 +94,8 @@ public final class PdfEditorController extends EditorController {
 		// });
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_GO_TO_PAGE, event -> {
-			getDocumentRenderer().pageForward();
+			//getDocumentRenderer().pageForward();
+			getDocumentModel().goToPage(5);
 
 			event.consume();
 		});
@@ -132,7 +132,7 @@ public final class PdfEditorController extends EditorController {
 		selectEditorCombobox.setValue("jpedal");
 
 		// initialize the PDF viewer
-		setDocumentRenderer(new JpedalRenderer(centerSourcePane, contentSourcePane, getDocumentModel().file()));
+		//setDocumentRenderer(new JpedalRenderer(centerSourcePane, contentSourcePane, getDocumentModel().file()));
 	}
 
 	public static PdfEditorController create() throws Exception {

@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.ServiceLoader;
 
 import javafx.application.Application;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.eventBus.EventBus;
 import ro.kuberam.getos.eventBus.FXEventBus;
 import ro.kuberam.getos.events.GetosEvent;
 import ro.kuberam.getos.modules.main.MainWindowController;
+import ro.kuberam.getos.utils.Utils;
 
 public class Getos extends Application {
 
@@ -33,8 +35,8 @@ public class Getos extends Application {
 				String modulePackageName = service.getClass().getPackage().getName();
 				
 				documentModelsRegistry.put(documentType, Class.forName(modulePackageName + ".DocumentModel").getConstructors()[0]);
-			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-				e.printStackTrace();
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
+				Utils.showAlert(AlertType.ERROR, ex);
 			}
 		});
 	}

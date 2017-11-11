@@ -1,17 +1,23 @@
 package ro.kuberam.getos.modules.pdfEditor;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import ro.kuberam.getos.utils.Utils;
 
 public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
+	private PDDocument document;
+	private PDFRenderer renderer;
 	private String title;
 	private String subject;
 	private String author;
@@ -30,12 +36,13 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	private File file;
 
 	public DocumentModel(File pFile) {
-		PDDocument pdfDocument = null;
+		PDDocument document = null;
 
 		try {
-			pdfDocument = PDDocument.load(pFile);
+			document = PDDocument.load(pFile);
+			renderer = new PDFRenderer(document);
 
-			PDDocumentInformation documentInformation = pdfDocument.getDocumentInformation();
+			PDDocumentInformation documentInformation = document.getDocumentInformation();
 
 			title = documentInformation.getTitle();
 			subject = documentInformation.getSubject();
@@ -45,8 +52,8 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 			creator = documentInformation.getCreator();
 			created = documentInformation.getCreationDate();
 			modified = documentInformation.getModificationDate();
-			format = pdfDocument.getVersion();
-			numberOfPages = pdfDocument.getNumberOfPages();
+			format = document.getVersion();
+			numberOfPages = document.getNumberOfPages();
 			optimized = "";
 			security = "";
 			paperSize = "";
@@ -54,10 +61,14 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 			path = pFile.getAbsolutePath();
 			file = pFile;
 
-			pdfDocument.close();
 		} catch (IOException ex) {
 			Utils.showAlert(AlertType.ERROR, ex);
 		}
+	}
+
+	@Override
+	public PDDocument document() {
+		return document;
 	}
 
 	@Override
@@ -143,5 +154,17 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	@Override
 	public String controller() {
 		return "ro.kuberam.getos.modules.pdfEditor.PdfEditorController";
+	}
+
+	@Override
+	public Image goToPage(int pageNumber) {
+		BufferedImage pageImage = null;
+		try {
+			pageImage = renderer.renderImage(pageNumber);
+		} catch (IOException ex) {
+			Utils.showAlert(AlertType.ERROR, ex);
+		}
+		
+		return SwingFXUtils.toFXImage(pageImage, null);
 	}
 }
