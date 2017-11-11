@@ -10,7 +10,7 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import javafx.scene.control.Alert.AlertType;
 import ro.kuberam.getos.utils.Utils;
 
-public class DocumentMetadata implements ro.kuberam.getos.DocumentMetadata {
+public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
 	private String title;
 	private String subject;
@@ -29,7 +29,7 @@ public class DocumentMetadata implements ro.kuberam.getos.DocumentMetadata {
 	private String path;
 	private File file;
 
-	public DocumentMetadata(File pFile) {
+	public DocumentModel(File pFile) {
 		PDDocument pdfDocument = null;
 
 		try {

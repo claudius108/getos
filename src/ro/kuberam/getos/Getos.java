@@ -18,7 +18,7 @@ public class Getos extends Application {
 	public static EventBus eventBus;
 	public static HashMap<String, GetosEvent> eventsRegistry = new HashMap<String, GetosEvent>();
 	public static ArrayList<EditorController> tabControllers;
-	public static HashMap<String, Constructor<?>> documentMetadataGeneratorsRegistry = new HashMap<String, Constructor<?>>();
+	public static HashMap<String, Constructor<?>> documentModelsRegistry = new HashMap<String, Constructor<?>>();
 
 	static {
 		eventBus = new FXEventBus();
@@ -32,7 +32,7 @@ public class Getos extends Application {
 				String documentType = moduleDescription.getDocumentType();
 				String modulePackageName = service.getClass().getPackage().getName();
 				
-				documentMetadataGeneratorsRegistry.put(documentType, Class.forName(modulePackageName + ".DocumentMetadata").getConstructors()[0]);
+				documentModelsRegistry.put(documentType, Class.forName(modulePackageName + ".DocumentModel").getConstructors()[0]);
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}

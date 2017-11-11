@@ -68,10 +68,10 @@ public class JpedalRenderer extends BorderPane implements DocumentRenderer {
 	 */
 	FitToPage zoomMode = FitToPage.AUTO;
 
-	public JpedalRenderer(ScrollPane pScrollPane, Group pGroup, File pFile) {
-		this.scrollPane = pScrollPane;
-		this.group = pGroup;
-		this.file = pFile;
+	public JpedalRenderer(ScrollPane scrollPane, Group group, File file) {
+		this.scrollPane = scrollPane;
+		this.group = group;
+		this.file = file;
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_ZOOM_IN, event -> {
 			zoomMode = FitToPage.NONE;
@@ -167,11 +167,6 @@ public class JpedalRenderer extends BorderPane implements DocumentRenderer {
 				openFile(file);
 			}
 		});
-	}
-
-	@Override
-	public ScrollPane root() {
-		return scrollPane;
 	}
 
 	@Override
@@ -398,9 +393,6 @@ public class JpedalRenderer extends BorderPane implements DocumentRenderer {
 		} else {
 			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.disable-button").setData("forwardButton"));
 		}
-
-		// ((ComboBox)
-		// top.lookup("#pages")).getSelectionModel().select(currentPage - 1);
 	}
 
 	private void goToPage(final int newPage) {

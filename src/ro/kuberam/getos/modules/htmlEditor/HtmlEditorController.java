@@ -17,7 +17,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ro.kuberam.getos.DocumentMetadata;
+import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
@@ -77,8 +77,8 @@ public final class HtmlEditorController extends EditorController {
 
 	private static File pFile;
 
-	public HtmlEditorController(Application application, Stage stage, DocumentMetadata documentMetadata) {
-		super(application, stage, documentMetadata);
+	public HtmlEditorController(Application application, Stage stage, DocumentModel documentModel) {
+		super(application, stage, documentModel);
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public final class HtmlEditorController extends EditorController {
 		FXMLLoader loader = new FXMLLoader(
 				HtmlEditorController.class.getResource("/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml"),
 				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfEditor.ui"), null,
-				new ControllerFactory(getApplication(), getStage(), getDocumentMetadata()));
+				new ControllerFactory(getApplication(), getStage(), getDocumentModel()));
 
 		loader.load();
 

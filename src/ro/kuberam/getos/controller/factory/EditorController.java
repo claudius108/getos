@@ -11,7 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ro.kuberam.getos.DocumentMetadata;
+import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.DocumentRenderer;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
 
@@ -23,16 +23,16 @@ public class EditorController extends Controller {
 	private BorderPane root;
 
 	private static Stage stage;
-	private static DocumentMetadata documentMetadata;
+	private static DocumentModel documentModel;
 	protected ExecutorService executorService = null;
 	private static EditorTab editorTab;
 	private DocumentRenderer documentRenderer;
 
-	public EditorController(Application application, Stage pStage, DocumentMetadata documentMetadata) {
+	public EditorController(Application application, Stage pStage, DocumentModel documentModel) {
 		super(application);
 
 		stage = pStage;
-		setDocumentMetadata(documentMetadata);
+		setDocumentModel(documentModel);
 		executorService = Executors.newFixedThreadPool(2);
 	}
 
@@ -44,12 +44,12 @@ public class EditorController extends Controller {
 		return EditorController.stage = stage;
 	}
 
-	public static DocumentMetadata getDocumentMetadata() {
-		return documentMetadata;
+	public static DocumentModel getDocumentModel() {
+		return documentModel;
 	}
 
-	public void setDocumentMetadata(DocumentMetadata documentMetadata) {
-		EditorController.documentMetadata = documentMetadata;
+	public void setDocumentModel(DocumentModel documentModel) {
+		EditorController.documentModel = documentModel;
 	}
 
 	public Node getRoot() {

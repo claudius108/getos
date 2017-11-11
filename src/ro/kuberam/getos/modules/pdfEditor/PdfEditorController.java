@@ -17,7 +17,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ro.kuberam.getos.DocumentMetadata;
+import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.DocumentRenderer;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
@@ -55,15 +55,15 @@ public final class PdfEditorController extends EditorController {
 	@FXML
 	private Group contentSourcePane;
 
-	public PdfEditorController(Application application, Stage stage, DocumentMetadata documentMetadata) {
-		super(application, stage, documentMetadata);
+	public PdfEditorController(Application application, Stage stage, DocumentModel documentModel) {
+		super(application, stage, documentModel);
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(getDocumentMetadata().path()));
+		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(getDocumentModel().path()));
 
 		BooleanBinding booleanBind = currentPageTextfield.textProperty().isEqualTo("1");
 		backButton.disableProperty().bind(booleanBind);
@@ -132,7 +132,7 @@ public final class PdfEditorController extends EditorController {
 		selectEditorCombobox.setValue("jpedal");
 
 		// initialize the PDF viewer
-		setDocumentRenderer(new JpedalRenderer(centerSourcePane, contentSourcePane, getDocumentMetadata().file()));
+		setDocumentRenderer(new JpedalRenderer(centerSourcePane, contentSourcePane, getDocumentModel().file()));
 	}
 
 	public static PdfEditorController create() throws Exception {
@@ -140,7 +140,7 @@ public final class PdfEditorController extends EditorController {
 		FXMLLoader loader = new FXMLLoader(
 				PdfEditorController.class.getResource("/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml"),
 				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfEditor.ui"), null,
-				new ControllerFactory(getApplication(), getStage(), getDocumentMetadata()));
+				new ControllerFactory(getApplication(), getStage(), getDocumentModel()));
 
 		loader.load();
 

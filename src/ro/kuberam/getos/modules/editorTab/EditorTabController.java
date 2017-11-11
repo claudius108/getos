@@ -16,7 +16,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import ro.kuberam.getos.DocumentMetadata;
+import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.EditorController;
 
@@ -51,8 +51,8 @@ public final class EditorTabController extends EditorController {
 	@FXML
 	private SplitPane contentPane;
 
-	public EditorTabController(Application application, Stage stage, DocumentMetadata documentMetadata) {
-		super(application, stage, documentMetadata);
+	public EditorTabController(Application application, Stage stage, DocumentModel documentModel) {
+		super(application, stage, documentModel);
 	}
 
 	@Override
@@ -105,14 +105,14 @@ public final class EditorTabController extends EditorController {
 			}
 		});
 
-		pagination.pageCountProperty().bind(new SimpleIntegerProperty(getDocumentMetadata().numberOfPages()).asObject());
+		pagination.pageCountProperty().bind(new SimpleIntegerProperty(getDocumentModel().numberOfPages()).asObject());
 
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				EditorController controller = null;
 				try {
-					controller = (EditorController) Class.forName(getDocumentMetadata().controller())
+					controller = (EditorController) Class.forName(getDocumentModel().controller())
 							.getDeclaredMethod("create").invoke(null);
 
 					contentPane.getItems().add(controller.getRoot());

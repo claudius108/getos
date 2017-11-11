@@ -5,37 +5,37 @@ import java.lang.reflect.InvocationTargetException;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import ro.kuberam.getos.DocumentMetadata;
+import ro.kuberam.getos.DocumentModel;
 
 public final class ControllerFactory implements Callback<Class<?>, Object> {
 
 	private final Application application;
 	private final Stage stage;
-	private final DocumentMetadata documentMetadata;
+	private final DocumentModel documentModel;
 
 	public ControllerFactory(Application pApplication) {
 		application = pApplication;
 		stage = null;
-		documentMetadata = null;
+		documentModel = null;
 	}
 
 	public ControllerFactory(Application pApplication, Stage pStage) {
 		application = pApplication;
 		stage = pStage;
-		documentMetadata = null;
+		documentModel = null;
 	}
 
-	public ControllerFactory(Application pApplication, Stage pStage, DocumentMetadata pDocumentMetadata) {
+	public ControllerFactory(Application pApplication, Stage pStage, DocumentModel pDocumentModel) {
 		application = pApplication;
 		stage = pStage;
-		documentMetadata = pDocumentMetadata;
+		documentModel = pDocumentModel;
 	}
 
 	@Override
 	public Object call(Class<?> type) {
 		try {
 			if (EditorController.class.isAssignableFrom(type)) {
-				return type.getConstructors()[0].newInstance(application, stage, documentMetadata);
+				return type.getConstructors()[0].newInstance(application, stage, documentModel);
 			} else if (StageController.class.isAssignableFrom(type)) {
 				return type.getConstructors()[0].newInstance(application, stage);
 			} else if (Controller.class.isAssignableFrom(type)) {

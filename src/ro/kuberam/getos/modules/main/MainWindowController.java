@@ -21,7 +21,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ro.kuberam.getos.DocumentMetadata;
+import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
@@ -204,17 +204,17 @@ public final class MainWindowController extends StageController {
 		}
 	}
 
-	public void createNewEditorTab(DocumentMetadata documentMetadata) {
+	public void createNewEditorTab(DocumentModel documentModel) {
 		try {
 			FXMLLoader loader = new FXMLLoader(
 					EditorTabController.class.getResource("/ro/kuberam/getos/modules/editorTab/EditorTab.fxml"),
 					ResourceBundle.getBundle("ro.kuberam.getos.modules.main.ui"), null,
-					new ControllerFactory(getApplication(), getStage(), documentMetadata));
+					new ControllerFactory(getApplication(), getStage(), documentModel));
 			loader.load();
 
 			EditorController newTabController = loader.getController();
 
-			EditorTab newTab = new EditorTab(documentMetadata.file());
+			EditorTab newTab = new EditorTab(documentModel.file());
 			newTab.setClosable(true);
 			newTab.setContent(newTabController.getRoot());
 
@@ -255,16 +255,16 @@ public final class MainWindowController extends StageController {
 			return;
 		}
 
-		DocumentMetadata documentMetadata = null;
+		DocumentModel documentModel = null;
 		try {
-			documentMetadata = (DocumentMetadata) Getos.documentMetadataGeneratorsRegistry.get(documentType)
+			documentModel = (DocumentModel) Getos.documentModelsRegistry.get(documentType)
 					.newInstance(file);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			e.printStackTrace();
 		}
 
-		createNewEditorTab(documentMetadata);
+		createNewEditorTab(documentModel);
 	}
 
 	private String detectDocumentType(File file) {

@@ -6,7 +6,7 @@ import java.util.Calendar;
 /**
  * Metadata about a document.
  */
-public interface DocumentMetadata {
+public interface DocumentModel {
 
 	/**
 	 * Document's title.

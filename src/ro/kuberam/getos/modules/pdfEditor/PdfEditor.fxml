@@ -64,11 +64,7 @@
 		<ScrollPane fx:id="centerSourcePane" pannable="true"
 			BorderPane.alignment="CENTER">
 			<content>
-				<AnchorPane>
-					<children>
-						<Group fx:id="contentSourcePane" />
-					</children>
-				</AnchorPane>
+				<Group fx:id="contentSourcePane" />
 			</content>
 		</ScrollPane>
 	</center>
