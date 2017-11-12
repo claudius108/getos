@@ -9,22 +9,18 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.utils.Utils;
 
 public final class EditorTabController extends EditorController {
-
-	private final static String TAG = EditorTabController.class.getSimpleName();
 
 	@FXML
 	private BorderPane root;
@@ -97,17 +93,13 @@ public final class EditorTabController extends EditorController {
 		});
 
 		pagination.setCurrentPageIndex(0);
-		
-		pagination.setPageFactory(new Callback<Integer, Node>() {
-			@Override
-			public Node call(Integer pageNumber) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.go-to-page"));
-
-				return paginationPane;
-			}
-		});
-
 		pagination.pageCountProperty().bind(new SimpleIntegerProperty(getDocumentModel().numberOfPages()).asObject());
+		pagination.setPageFactory(index -> {
+			System.out.println("pageNumber = " + index);
+			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.go-to-page").setData(index));
+
+			return paginationPane;
+        });
 
 		Platform.runLater(new Runnable() {
 			@Override

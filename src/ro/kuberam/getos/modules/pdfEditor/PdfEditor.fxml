@@ -25,18 +25,6 @@
 						<Tooltip text="%select_viewer_tooltip" />
 					</tooltip>
 				</ComboBox>
-				<Button fx:id="backButton" mnemonicParsing="false"
-					text="%back_button_text">
-					<tooltip>
-						<Tooltip text="%back_button_tooltip" />
-					</tooltip>
-				</Button>
-				<Button fx:id="forwardButton" mnemonicParsing="false"
-					text="%forward_button_text">
-					<tooltip>
-						<Tooltip text="%forward_button_tooltip" />
-					</tooltip>
-				</Button>
 				<TextField fx:id="currentPageTextfield" prefHeight="26.0"
 					prefWidth="46.0"
 					style="-fx-border-radius: 5 0 0 5; -fx-background-radius: 5 0 0 5;" />

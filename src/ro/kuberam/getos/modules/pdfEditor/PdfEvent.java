@@ -19,8 +19,6 @@ public class PdfEvent extends GetosEvent {
 	public static final EventType<PdfEvent> PDF_FIT_TO_WIDTH = new EventType<>(Event.ANY, "PDF_FIT_TO_WIDTH");
 	public static final EventType<PdfEvent> PDF_FIT_TO_HEIGHT = new EventType<>(Event.ANY, "PDF_FIT_TO_HEIGHT");
 	public static final EventType<PdfEvent> PDF_FIT_TO_PAGE = new EventType<>(Event.ANY, "PDF_FIT_TO_PAGE");
-	public static final EventType<PdfEvent> PDF_ENABLE_BUTTON = new EventType<>(Event.ANY, "PDF_ENABLE_BUTTON");
-	public static final EventType<PdfEvent> PDF_DISABLE_BUTTON = new EventType<>(Event.ANY, "PDF_DISABLE_BUTTON");
 	public static final EventType<PdfEvent> PDF_UPDATE_PAGE_COUNT = new EventType<>(Event.ANY, "PDF_UPDATE_PAGE_COUNT");
 	
 	public PdfEvent(@NamedArg("eventType") EventType<? extends Event> eventType) {
