@@ -99,7 +99,7 @@ public final class MainWindowController extends StageController {
 		});
 
 		pdfButton.setOnAction(event -> {
-			File file = new File("/home/claudius/Downloads/comune.pdf");
+			File file = new File("/home/claudius/2016-54.pdf");
 
 			openFile(file);
 

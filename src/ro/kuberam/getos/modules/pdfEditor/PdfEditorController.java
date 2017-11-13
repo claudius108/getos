@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -46,7 +45,7 @@ public final class PdfEditorController extends EditorController {
 	private ScrollPane centerSourcePane;
 
 	@FXML
-	private Group contentSourcePane;
+	private ImageView contentSourcePane;
 
 	public PdfEditorController(Application application, Stage stage, DocumentModel documentModel) {
 		super(application, stage, documentModel);
@@ -55,13 +54,13 @@ public final class PdfEditorController extends EditorController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
-
+		
 		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(getDocumentModel().path()));
 
 		BooleanBinding booleanBind = currentPageTextfield.textProperty().isEqualTo("1");
 
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_GO_TO_PAGE, event -> {
-			centerSourcePane.setContent(new ImageView(getDocumentModel().goToPage((int) event.getData())));
+			contentSourcePane.setImage(getDocumentModel().goToPage((int) event.getData()));
 
 			event.consume();
 		});
