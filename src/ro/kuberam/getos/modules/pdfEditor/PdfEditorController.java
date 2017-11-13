@@ -54,8 +54,6 @@ public final class PdfEditorController extends EditorController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
-		
-		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(getDocumentModel().path()));
 
 		BooleanBinding booleanBind = currentPageTextfield.textProperty().isEqualTo("1");
 
@@ -74,7 +72,7 @@ public final class PdfEditorController extends EditorController {
 		extractTablesButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				// contentPane.getItems().add(new BorderPane());
+//				contentPane.getItems().add(new BorderPane());
 			}
 		});
 
@@ -83,7 +81,8 @@ public final class PdfEditorController extends EditorController {
 		selectEditorCombobox.setValue("jpedal");
 
 		// initialize the PDF viewer
-		//setDocumentRenderer(new JpedalRenderer(centerSourcePane, contentSourcePane, getDocumentModel().file()));
+		// setDocumentRenderer(new JpedalRenderer(centerSourcePane, contentSourcePane,
+		// getDocumentModel().file()));
 	}
 
 	public static PdfEditorController create() throws Exception {

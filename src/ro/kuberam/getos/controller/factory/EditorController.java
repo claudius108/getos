@@ -12,7 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
-import ro.kuberam.getos.DocumentRenderer;
+import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
 
 public class EditorController extends Controller {
@@ -26,7 +26,6 @@ public class EditorController extends Controller {
 	private static DocumentModel documentModel;
 	protected ExecutorService executorService = null;
 	private static EditorTab editorTab;
-	private DocumentRenderer documentRenderer;
 
 	public EditorController(Application application, Stage pStage, DocumentModel documentModel) {
 		super(application);
@@ -84,6 +83,8 @@ public class EditorController extends Controller {
 	}
 
 	public void onEditorTabSelected() {
+		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(getDocumentModel().path()));
+		
 		// todo: later we can use an other kind of control to show character
 		// count
 		// or caret position, number of words..
@@ -94,13 +95,5 @@ public class EditorController extends Controller {
 		// Without this trying to format text (ctrl+space) will always format
 		// the last tab.
 		// Platform.runLater(() -> mCodeArea.requestFocus());
-	}
-
-	public void setDocumentRenderer(DocumentRenderer documentRenderer) {
-		this.documentRenderer = documentRenderer;
-	}
-
-	public DocumentRenderer getDocumentRenderer() {
-		return documentRenderer;
 	}
 }

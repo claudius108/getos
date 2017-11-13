@@ -18,11 +18,10 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import ro.kuberam.getos.DocumentRenderer;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.modules.pdfEditor.PdfEvent;
 
-public class JpedalRenderer extends BorderPane implements DocumentRenderer {
+public class JpedalRenderer extends BorderPane {
 
 	private ScrollPane scrollPane;
 
@@ -168,20 +167,20 @@ public class JpedalRenderer extends BorderPane implements DocumentRenderer {
 			}
 		});
 	}
-
-	@Override
-	public void pageBack() {
-		if (currentPage > 1) {
-			goToPage(currentPage - 1);
-		}
-	}
-
-	@Override
-	public void pageForward() {
-		if (currentPage < pdf.getPageCount()) {
-			goToPage(currentPage + 1);
-		}
-	}
+//
+//	@Override
+//	public void pageBack() {
+//		if (currentPage > 1) {
+//			goToPage(currentPage - 1);
+//		}
+//	}
+//
+//	@Override
+//	public void pageForward() {
+//		if (currentPage < pdf.getPageCount()) {
+//			goToPage(currentPage + 1);
+//		}
+//	}
 
 	/**
 	 * Sets up a MenuBar to be used at the top of the window. It contains one Menu -
