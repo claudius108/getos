@@ -131,4 +131,10 @@ public interface DocumentModel {
 	 *
 	 */
 	Image goToPage(int pageNumber);
+	
+	/**
+	 * Closing of document.
+	 *
+	 */
+	void shutdown();
 }

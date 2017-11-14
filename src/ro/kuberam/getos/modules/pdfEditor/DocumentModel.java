@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
@@ -15,6 +17,8 @@ import javafx.scene.image.Image;
 import ro.kuberam.getos.utils.Utils;
 
 public class DocumentModel implements ro.kuberam.getos.DocumentModel {
+	
+	private final static String TAG = DocumentModel.class.getSimpleName();
 
 	private PDDocument document;
 	private PDFRenderer renderer;
@@ -36,8 +40,6 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	private File file;
 
 	public DocumentModel(File pFile) {
-		PDDocument document = null;
-
 		try {
 			document = PDDocument.load(pFile);
 			renderer = new PDFRenderer(document);
@@ -167,9 +169,18 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 		try {
 			pageImage = renderer.renderImage(pageNumber);
 		} catch (IOException ex) {
-			Utils.showAlert(AlertType.ERROR, ex);
+			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 		}
 
 		return SwingFXUtils.toFXImage(pageImage, null);
+	}
+
+	@Override
+	public void shutdown() {
+		try {
+			document.close();
+		} catch (IOException ex) {
+			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
+		}
 	}
 }

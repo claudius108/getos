@@ -97,7 +97,7 @@ public final class MainWindowController extends StageController {
 		});
 
 		pdfButton.setOnAction(event -> {
-			File file = new File("/home/claudius/2016-54.pdf");
+			File file = new File("/home/claudius/ABBYYOCRInstallationGuide.pdf");
 
 			openFile(file);
 

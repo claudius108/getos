@@ -69,6 +69,7 @@ public class EditorController extends Controller {
 		try {
 			executorService.shutdown();
 			executorService.awaitTermination(5, TimeUnit.SECONDS);
+			documentModel.shutdown();
 		} catch (InterruptedException ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 		}
