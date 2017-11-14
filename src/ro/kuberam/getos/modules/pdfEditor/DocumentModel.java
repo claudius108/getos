@@ -152,8 +152,13 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	}
 
 	@Override
-	public String controller() {
-		return "ro.kuberam.getos.modules.pdfEditor.PdfEditorController";
+	public String fxml() {
+		return "/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml";
+	}
+
+	@Override
+	public String bundle() {
+		return "ro.kuberam.getos.modules.pdfEditor.ui";
 	}
 
 	@Override
@@ -164,7 +169,7 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 		} catch (IOException ex) {
 			Utils.showAlert(AlertType.ERROR, ex);
 		}
-		
+
 		return SwingFXUtils.toFXImage(pageImage, null);
 	}
 }

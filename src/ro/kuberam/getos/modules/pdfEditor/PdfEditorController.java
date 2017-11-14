@@ -1,24 +1,17 @@
 package ro.kuberam.getos.modules.pdfEditor;
 
-import java.util.ResourceBundle;
-
 import javafx.application.Application;
-import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.Getos;
-import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 
 public final class PdfEditorController extends EditorController {
@@ -30,12 +23,6 @@ public final class PdfEditorController extends EditorController {
 
 	@FXML
 	private ComboBox<String> selectEditorCombobox;
-
-	@FXML
-	private TextField currentPageTextfield;
-
-	@FXML
-	private Label pgCountLabel;
 
 	@FXML
 	private Button extractTablesButton;
@@ -53,16 +40,8 @@ public final class PdfEditorController extends EditorController {
 	@FXML
 	public void initialize() {
 
-		BooleanBinding booleanBind = currentPageTextfield.textProperty().isEqualTo("1");
-
 		Getos.eventBus.addEventHandler(PdfEvent.PDF_GO_TO_PAGE, event -> {
 			contentSourcePane.setImage(getDocumentModel().goToPage((int) event.getData()));
-
-			event.consume();
-		});
-
-		Getos.eventBus.addEventHandler(PdfEvent.PDF_UPDATE_PAGE_COUNT, event -> {
-			pgCountLabel.setText(getResources().getString("pages_number_prefix") + " " + event.getData());
 
 			event.consume();
 		});
@@ -70,7 +49,7 @@ public final class PdfEditorController extends EditorController {
 		extractTablesButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-//				contentPane.getItems().add(new BorderPane());
+				// contentPane.getItems().add(new BorderPane());
 			}
 		});
 
@@ -81,17 +60,5 @@ public final class PdfEditorController extends EditorController {
 		// initialize the PDF viewer
 		// setDocumentRenderer(new JpedalRenderer(centerSourcePane, contentSourcePane,
 		// getDocumentModel().file()));
-	}
-
-	public static PdfEditorController create() throws Exception {
-
-		FXMLLoader loader = new FXMLLoader(
-				PdfEditorController.class.getResource("/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml"),
-				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfEditor.ui"), null,
-				new ControllerFactory(getApplication(), getStage(), getDocumentModel()));
-
-		loader.load();
-
-		return loader.getController();
 	}
 }

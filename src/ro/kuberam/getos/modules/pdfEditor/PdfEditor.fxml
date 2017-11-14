@@ -31,22 +31,6 @@
 						<Tooltip text="%select_viewer_tooltip" />
 					</tooltip>
 				</ComboBox>
-				<TextField fx:id="currentPageTextfield" prefHeight="26.0"
-					prefWidth="46.0"
-					style="-fx-border-radius: 5 0 0 5; -fx-background-radius: 5 0 0 5;" />
-				<Label fx:id="pgCountLabel"
-					style="-fx-border-radius: 0 5 5 0; -fx-background-radius: 0 5 5 0;" />
-				<ComboBox editable="true" minWidth="80.0" prefWidth="90.0"
-					style="-fx-border-radius: 5 0 0 5; -fx-background-radius: 5 0 0 5;">
-					<items>
-						<FXCollections fx:factory="observableArrayList">
-							<String fx:value="NVT" />
-							<String fx:value="Bezig" />
-							<String fx:value="Positief" />
-							<String fx:value="Negatief" />
-						</FXCollections>
-					</items>
-				</ComboBox>
 			</items>
 		</ToolBar>
 	</top>

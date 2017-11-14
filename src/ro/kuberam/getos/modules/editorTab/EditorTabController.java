@@ -1,11 +1,14 @@
 package ro.kuberam.getos.modules.editorTab;
 
+import java.util.ResourceBundle;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Pagination;
@@ -14,14 +17,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.Getos;
+import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
+import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
 import ro.kuberam.getos.utils.Utils;
 
 public final class EditorTabController extends EditorController {
 
 	@FXML
 	private BorderPane root;
-	
+
 	@FXML
 	private Button zoomInButton;
 
@@ -52,7 +57,7 @@ public final class EditorTabController extends EditorController {
 
 	@FXML
 	public void initialize() {
-		
+
 		zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
@@ -94,17 +99,19 @@ public final class EditorTabController extends EditorController {
 			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.go-to-page").setData(index));
 
 			return paginationPane;
-        });
+		});
 
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				EditorController controller = null;
 				try {
-					controller = (EditorController) Class.forName(getDocumentModel().controller())
-							.getDeclaredMethod("create").invoke(null);
+					FXMLLoader loader = new FXMLLoader(PdfEditorController.class.getResource(getDocumentModel().fxml()),
+							ResourceBundle.getBundle(getDocumentModel().bundle()), null,
+							new ControllerFactory(getApplication(), getStage(), getDocumentModel()));
 
-					contentPane.getItems().add(controller.getRoot());
+					loader.load();
+
+					contentPane.getItems().add(((EditorController) loader.getController()).getRoot());
 				} catch (Exception ex) {
 					Utils.showAlert(AlertType.ERROR, ex);
 				}

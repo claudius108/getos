@@ -235,7 +235,6 @@ public final class MainWindowController extends StageController {
 			});
 
 			newTabController.setEditorTab(newTab);
-			// newTabController.setStatusLabel(statusLabel);
 			Getos.tabControllers.add(newTabController);
 			tabPane.getTabs().add(newTab);
 			tabPane.getSelectionModel().select(newTab);

@@ -115,10 +115,16 @@ public interface DocumentModel {
 	File file();
 
 	/**
-	 * Document type's controller.
+	 * Document type's fxml path.
 	 *
 	 */
-	String controller();
+	String fxml();
+
+	/**
+	 * Document type's recource bundle path.
+	 *
+	 */
+	String bundle();
 
 	/**
 	 * Get a page from document.

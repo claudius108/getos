@@ -23,7 +23,7 @@ public class EditorController extends Controller {
 	private BorderPane root;
 
 	private static Stage stage;
-	private static DocumentModel documentModel;
+	private DocumentModel documentModel;
 	protected ExecutorService executorService = null;
 	private static EditorTab editorTab;
 
@@ -43,12 +43,12 @@ public class EditorController extends Controller {
 		return EditorController.stage = stage;
 	}
 
-	public static DocumentModel getDocumentModel() {
+	public DocumentModel getDocumentModel() {
 		return documentModel;
 	}
 
 	public void setDocumentModel(DocumentModel documentModel) {
-		EditorController.documentModel = documentModel;
+		this.documentModel = documentModel;
 	}
 
 	public Node getRoot() {

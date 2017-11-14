@@ -23,7 +23,5 @@ public class Module implements DocumentModule {
 		Getos.eventsRegistry.put("pdf.fit-to-width", new PdfEvent(PdfEvent.PDF_FIT_TO_WIDTH));
 		Getos.eventsRegistry.put("pdf.fit-to-height", new PdfEvent(PdfEvent.PDF_FIT_TO_HEIGHT));
 		Getos.eventsRegistry.put("pdf.fit-to-page", new PdfEvent(PdfEvent.PDF_FIT_TO_PAGE));
-		Getos.eventsRegistry.put("pdf.update-page-count", new PdfEvent(PdfEvent.PDF_UPDATE_PAGE_COUNT));
-
 	}
 }

@@ -147,7 +147,7 @@ public final class HtmlEditorController extends EditorController {
 		new JpedalRenderer(centerSourcePane, contentSourcePane, pFile);
 	}
 
-	public static HtmlEditorController create() throws Exception {
+	public HtmlEditorController create() throws Exception {
 
 		FXMLLoader loader = new FXMLLoader(
 				HtmlEditorController.class.getResource("/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml"),
