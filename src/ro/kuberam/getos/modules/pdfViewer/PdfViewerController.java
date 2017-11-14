@@ -1,28 +1,7 @@
-
-/*
- * ===========================================
- * Java Pdf Extraction Decoding Access Library
- * ===========================================
- *
- * Project Info:  http://www.idrsolutions.com
- * Help section for developers at http://www.idrsolutions.com/support/
- *
- * (C) Copyright 1997-2017 IDRsolutions and Contributors.
- *
- * This file is part of JPedal/JPDF2HTML5
- *
- 
- *
- * ---------------
- * BaseViewerFX.java
- * ---------------
- */
-
 package ro.kuberam.getos.modules.pdfViewer;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -137,9 +116,8 @@ public class PdfViewerController extends EditorController {
 		super(application, stage, documentModel);
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		super.initialize(location, resources);
+	@FXML
+	public void initialize() {
 
 		center.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
 			@Override

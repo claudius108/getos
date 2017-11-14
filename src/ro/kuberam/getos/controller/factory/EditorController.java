@@ -83,6 +83,7 @@ public class EditorController extends Controller {
 	}
 
 	public void onEditorTabSelected() {
+		Logger.getLogger(TAG).log(Level.INFO, "onEditorTabSelected" + getDocumentModel().path());
 		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(getDocumentModel().path()));
 		
 		// todo: later we can use an other kind of control to show character

@@ -1,8 +1,5 @@
 package ro.kuberam.getos.modules.editorTab;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -53,9 +50,8 @@ public final class EditorTabController extends EditorController {
 		super(application, stage, documentModel);
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		super.initialize(location, resources);
+	@FXML
+	public void initialize() {
 		
 		zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override

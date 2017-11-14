@@ -1,7 +1,6 @@
 package ro.kuberam.getos.modules.htmlEditor;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -81,9 +80,8 @@ public final class HtmlEditorController extends EditorController {
 		super(application, stage, documentModel);
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		super.initialize(location, resources);
+	@FXML
+	public void initialize() {
 
 		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(pFile.getAbsolutePath()));
 

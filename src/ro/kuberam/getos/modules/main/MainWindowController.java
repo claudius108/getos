@@ -2,7 +2,6 @@ package ro.kuberam.getos.modules.main;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -68,9 +67,8 @@ public final class MainWindowController extends StageController {
 		super(application, stage);
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		super.initialize(location, resources);
+	@FXML
+	public void initialize() {
 
 		Getos.eventsRegistry.put("update-status-label", new UserInterfaceEvent(UserInterfaceEvent.UPDATE_STATUS_LABEL));
 
@@ -136,7 +134,7 @@ public final class MainWindowController extends StageController {
 		fileChooser.getExtensionFilters().addAll(ViewerFileType.getExtensionFilters());
 
 		Stage stage = getStage();
-		stage.setTitle(resources.getString("appname") + " v. " + resources.getString("appversion"));
+		stage.setTitle(getResources().getString("appname") + " v. " + getResources().getString("appversion"));
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.centerOnScreen();

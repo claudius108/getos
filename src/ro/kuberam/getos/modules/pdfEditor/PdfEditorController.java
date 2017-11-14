@@ -1,6 +1,5 @@
 package ro.kuberam.getos.modules.pdfEditor;
 
-import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -51,9 +50,8 @@ public final class PdfEditorController extends EditorController {
 		super(application, stage, documentModel);
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		super.initialize(location, resources);
+	@FXML
+	public void initialize() {
 
 		BooleanBinding booleanBind = currentPageTextfield.textProperty().isEqualTo("1");
 

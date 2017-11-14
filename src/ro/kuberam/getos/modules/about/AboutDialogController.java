@@ -1,6 +1,5 @@
 package ro.kuberam.getos.modules.about;
 
-import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -29,20 +28,19 @@ public final class AboutDialogController extends StageController {
 		super(application, stage);
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		super.initialize(location, resources);
+	@FXML
+	public void initialize() {
 
 		root.lookupButton(ButtonType.CLOSE).setOnMouseClicked((MouseEvent ev) -> getStage().close());
 
 		hyperlink.setOnAction(event -> {
-			getApplication().getHostServices().showDocument(resources.getString("homelink"));
+			getApplication().getHostServices().showDocument(getResources().getString("homelink"));
 			event.consume();
 		});
 
 		Stage stage = getStage();
 		stage.initModality(Modality.APPLICATION_MODAL);
-		stage.setTitle(resources.getString("about_dialog_title"));
+		stage.setTitle(getResources().getString("about_dialog_title"));
 		stage.setScene(new Scene(root));
 		stage.setResizable(false);
 		stage.centerOnScreen();
@@ -60,7 +58,7 @@ public final class AboutDialogController extends StageController {
 		stage.initOwner(parent);
 		
 		FXMLLoader.load(AboutDialogController.class.getResource("/ro/kuberam/getos/modules/about/about-dialog.fxml"),
-				ResourceBundle.getBundle("ro.kuberam.getos.ui"), null, new ControllerFactory(application, stage));
+				ResourceBundle.getBundle("ro.kuberam.getos.modules.main.ui"), null, new ControllerFactory(application, stage));
 	}
 
 }
