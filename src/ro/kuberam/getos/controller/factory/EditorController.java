@@ -30,7 +30,7 @@ public class EditorController extends StageController {
 		super(application, stage);
 
 		setDocumentModel(documentModel);
-		executorService = Executors.newFixedThreadPool(2);
+		executorService = Executors.newFixedThreadPool(5);
 	}
 
 	public DocumentModel getDocumentModel() {
@@ -59,8 +59,8 @@ public class EditorController extends StageController {
 		try {
 			executorService.shutdown();
 			executorService.awaitTermination(5, TimeUnit.SECONDS);
-			Logger.getLogger(TAG).log(Level.INFO, "documentModel = " + documentModel);
 			documentModel.shutdown();
+			System.gc();
 		} catch (InterruptedException ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 		}

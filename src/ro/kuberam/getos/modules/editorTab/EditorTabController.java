@@ -96,7 +96,6 @@ public final class EditorTabController extends EditorController {
 		pagination.setCurrentPageIndex(0);
 		pagination.pageCountProperty().bind(new SimpleIntegerProperty(getDocumentModel().numberOfPages()).asObject());
 		pagination.setPageFactory(index -> {
-			System.out.println("index = " + index);
 			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.go-to-page").setData(index));
 
 			return paginationPane;

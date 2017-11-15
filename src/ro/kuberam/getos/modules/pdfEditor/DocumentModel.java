@@ -7,8 +7,6 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.imageio.ImageIO;
-
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -19,10 +17,17 @@ import javafx.scene.image.Image;
 import ro.kuberam.getos.utils.Utils;
 
 public class DocumentModel implements ro.kuberam.getos.DocumentModel {
-	
+
 	private final static String TAG = DocumentModel.class.getSimpleName();
 
-	private PDDocument document;
+	private ThreadLocal<PDDocument> localPdDocument = new ThreadLocal<PDDocument>() {
+	    @Override
+	    protected PDDocument initialValue() {
+	        return new PDDocument();
+	    }
+	};
+	
+	private PDDocument document = localPdDocument.get();
 	private PDFRenderer renderer;
 	private String title;
 	private String subject;
@@ -40,10 +45,10 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	private String fonts;
 	private String path;
 	private File file;
-
-	public DocumentModel(File pFile) {
+	
+	public DocumentModel(File file) {
 		try {
-			document = PDDocument.load(pFile);
+			document = PDDocument.load(file);
 			renderer = new PDFRenderer(document);
 
 			PDDocumentInformation documentInformation = document.getDocumentInformation();
@@ -62,9 +67,8 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 			security = "";
 			paperSize = "";
 			fonts = "";
-			path = pFile.getAbsolutePath();
-			file = pFile;
-
+			path = file.getAbsolutePath();
+			this.file = file;
 		} catch (IOException ex) {
 			Utils.showAlert(AlertType.ERROR, ex);
 		}
@@ -165,10 +169,7 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 		BufferedImage pageImage = null;
 		try {
 			pageImage = renderer.renderImage(pageNumber);
-			
-			ImageIO.write(pageImage, "png", new File("getos/" + pageNumber + ".png"));
 
-			
 		} catch (IOException ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 		}
@@ -178,10 +179,6 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
 	@Override
 	public void shutdown() {
-		try {
-			document.close();
-		} catch (IOException ex) {
-			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
-		}
+		localPdDocument.remove();
 	}
 }
