@@ -1,8 +1,5 @@
 package ro.kuberam.getos.controller.factory;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,14 +20,12 @@ public class EditorController extends StageController {
 	private BorderPane root;
 
 	private DocumentModel documentModel;
-	protected ExecutorService executorService = null;
 	private static EditorTab editorTab;
 
 	public EditorController(Application application, Stage stage, DocumentModel documentModel) {
 		super(application, stage);
 
 		setDocumentModel(documentModel);
-		executorService = Executors.newFixedThreadPool(5);
 	}
 
 	public DocumentModel getDocumentModel() {
@@ -56,14 +51,7 @@ public class EditorController extends StageController {
 	}
 
 	public void shutDown() {
-		try {
-			executorService.shutdown();
-			executorService.awaitTermination(5, TimeUnit.SECONDS);
-			documentModel.shutdown();
-			System.gc();
-		} catch (InterruptedException ex) {
-			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
-		}
+		documentModel.shutdown();
 	}
 
 	public void setEditorTab(EditorTab pEditorTab) {

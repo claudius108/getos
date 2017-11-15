@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -48,7 +49,7 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	
 	public DocumentModel(File file) {
 		try {
-			document = PDDocument.load(file);
+			document = PDDocument.load(file, MemoryUsageSetting.setupTempFileOnly());
 			renderer = new PDFRenderer(document);
 
 			PDDocumentInformation documentInformation = document.getDocumentInformation();
@@ -179,6 +180,7 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
 	@Override
 	public void shutdown() {
+		System.gc();
 		localPdDocument.remove();
 	}
 }
