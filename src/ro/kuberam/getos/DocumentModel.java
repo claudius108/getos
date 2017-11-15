@@ -13,12 +13,6 @@ import javafx.scene.image.Image;
 public interface DocumentModel {
 
 	/**
-	 * Document itself.
-	 *
-	 */
-	Object document();
-
-	/**
 	 * Document's title.
 	 *
 	 */

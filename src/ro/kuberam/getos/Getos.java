@@ -1,5 +1,6 @@
 package ro.kuberam.getos;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,8 +35,8 @@ public class Getos extends Application {
 				String documentType = moduleDescription.getDocumentType();
 				String modulePackageName = service.getClass().getPackage().getName();
 				
-				documentModelsRegistry.put(documentType, Class.forName(modulePackageName + ".DocumentModel").getConstructors()[0]);
-			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
+				documentModelsRegistry.put(documentType, Class.forName(modulePackageName + ".DocumentModel").getConstructor(File.class));
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
 				Utils.showAlert(AlertType.ERROR, ex);
 			}
 		});

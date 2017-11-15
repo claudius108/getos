@@ -13,22 +13,22 @@ public final class ControllerFactory implements Callback<Class<?>, Object> {
 	private final Stage stage;
 	private final DocumentModel documentModel;
 
-	public ControllerFactory(Application pApplication) {
-		application = pApplication;
-		stage = null;
-		documentModel = null;
+	public ControllerFactory(Application application) {
+		this.application = application;
+		this.stage = null;
+		this.documentModel = null;
 	}
 
-	public ControllerFactory(Application pApplication, Stage pStage) {
-		application = pApplication;
-		stage = pStage;
-		documentModel = null;
+	public ControllerFactory(Application pApplication, Stage stage) {
+		this.application = pApplication;
+		this.stage = stage;
+		this.documentModel = null;
 	}
 
-	public ControllerFactory(Application pApplication, Stage pStage, DocumentModel pDocumentModel) {
-		application = pApplication;
-		stage = pStage;
-		documentModel = pDocumentModel;
+	public ControllerFactory(Application pApplication, Stage stage, DocumentModel documentModel) {
+		this.application = pApplication;
+		this.stage = stage;
+		this.documentModel = documentModel;
 	}
 
 	@Override

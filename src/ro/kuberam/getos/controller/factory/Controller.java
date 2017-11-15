@@ -10,13 +10,13 @@ public class Controller {
 	@FXML
 	private ResourceBundle resources;
 
-	private static Application application;
+	private Application application;
 
-	public Controller(Application pApplication) {
-		application = pApplication;
+	public Controller(Application application) {
+		this.application = application;
 	}
 
-	public static Application getApplication() {
+	public Application getApplication() {
 		return application;
 	}
 

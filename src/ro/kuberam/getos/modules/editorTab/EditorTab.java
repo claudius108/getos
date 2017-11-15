@@ -8,12 +8,9 @@ public class EditorTab extends Tab {
 
 	private File file;
 
-	public EditorTab() {
-	}
-
-	public EditorTab(File pFile) {
-		super(pFile.getName());
-		file = pFile;
+	public EditorTab(File file) {
+		super(file.getName());
+		this.file = file;
 		setText(file.getName());
 	}
 
@@ -21,8 +18,7 @@ public class EditorTab extends Tab {
 		return file;
 	}
 
-	public void setFile(File pFile) {
-		file = pFile;
+	public void setFile(File file) {
+		this.file = file;
 	}
-
 }

@@ -15,32 +15,22 @@ import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
 
-public class EditorController extends Controller {
+public class EditorController extends StageController {
 
 	private final static String TAG = EditorController.class.getSimpleName();
 
 	@FXML
 	private BorderPane root;
 
-	private static Stage stage;
 	private DocumentModel documentModel;
 	protected ExecutorService executorService = null;
 	private static EditorTab editorTab;
 
-	public EditorController(Application application, Stage pStage, DocumentModel documentModel) {
-		super(application);
+	public EditorController(Application application, Stage stage, DocumentModel documentModel) {
+		super(application, stage);
 
-		stage = pStage;
 		setDocumentModel(documentModel);
 		executorService = Executors.newFixedThreadPool(2);
-	}
-
-	public static Stage getStage() {
-		return stage;
-	}
-
-	public static Stage setStage(Stage stage) {
-		return EditorController.stage = stage;
 	}
 
 	public DocumentModel getDocumentModel() {
@@ -69,6 +59,7 @@ public class EditorController extends Controller {
 		try {
 			executorService.shutdown();
 			executorService.awaitTermination(5, TimeUnit.SECONDS);
+			Logger.getLogger(TAG).log(Level.INFO, "documentModel = " + documentModel);
 			documentModel.shutdown();
 		} catch (InterruptedException ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
@@ -84,7 +75,7 @@ public class EditorController extends Controller {
 	}
 
 	public void onEditorTabSelected() {
-		Logger.getLogger(TAG).log(Level.INFO, "onEditorTabSelected" + getDocumentModel().path());
+		Logger.getLogger(TAG).log(Level.INFO, "onEditorTabSelected = " + getDocumentModel().path());
 		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(getDocumentModel().path()));
 		
 		// todo: later we can use an other kind of control to show character

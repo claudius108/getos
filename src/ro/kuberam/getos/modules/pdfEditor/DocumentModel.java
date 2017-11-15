@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -66,11 +68,6 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 		} catch (IOException ex) {
 			Utils.showAlert(AlertType.ERROR, ex);
 		}
-	}
-
-	@Override
-	public PDDocument document() {
-		return document;
 	}
 
 	@Override
@@ -168,6 +165,10 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 		BufferedImage pageImage = null;
 		try {
 			pageImage = renderer.renderImage(pageNumber);
+			
+			ImageIO.write(pageImage, "png", new File("getos/" + pageNumber + ".png"));
+
+			
 		} catch (IOException ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 		}
