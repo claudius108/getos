@@ -1,13 +1,11 @@
 package ro.kuberam.getos.modules.htmlEditor;
 
 import java.io.File;
-import java.util.ResourceBundle;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -16,10 +14,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.Getos;
-import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
+import ro.kuberam.getos.eventBus.EventBus;
+import ro.kuberam.getos.modules.pdfEditor.DocumentModel;
 import ro.kuberam.getos.modules.pdfEditor.jpedal.JpedalRenderer;
 
 public final class HtmlEditorController extends EditorController {
@@ -75,15 +73,15 @@ public final class HtmlEditorController extends EditorController {
 	private BorderPane targetPane;
 
 	private static File pFile;
+	
+	private EventBus eventBus;
 
-	public HtmlEditorController(Application application, Stage stage, DocumentModel documentModel) {
+	public HtmlEditorController(Application application, Stage stage, DocumentModel documentModel, EventBus eventBus) {
 		super(application, stage, documentModel);
 	}
 
 	@FXML
 	public void initialize() {
-
-		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(pFile.getAbsolutePath()));
 
 		selectEditorCombobox.setValue("jpedal");
 
@@ -145,17 +143,5 @@ public final class HtmlEditorController extends EditorController {
 
 		// initialize the PDF viewer
 		new JpedalRenderer(centerSourcePane, contentSourcePane, pFile);
-	}
-
-	public HtmlEditorController create() throws Exception {
-
-		FXMLLoader loader = new FXMLLoader(
-				HtmlEditorController.class.getResource("/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml"),
-				ResourceBundle.getBundle("ro.kuberam.getos.modules.pdfEditor.ui"), null,
-				new ControllerFactory(getApplication(), getStage(), getDocumentModel()));
-
-		loader.load();
-
-		return loader.getController();
 	}
 }

@@ -6,35 +6,49 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import ro.kuberam.getos.DocumentModel;
+import ro.kuberam.getos.eventBus.EventBus;
 
 public final class ControllerFactory implements Callback<Class<?>, Object> {
 
 	private final Application application;
 	private final Stage stage;
 	private final DocumentModel documentModel;
+	private final EventBus eventBus;
 
 	public ControllerFactory(Application application) {
 		this.application = application;
 		this.stage = null;
 		this.documentModel = null;
+		this.eventBus = null;
 	}
 
 	public ControllerFactory(Application pApplication, Stage stage) {
 		this.application = pApplication;
 		this.stage = stage;
 		this.documentModel = null;
+		this.eventBus = null;
 	}
 
 	public ControllerFactory(Application pApplication, Stage stage, DocumentModel documentModel) {
 		this.application = pApplication;
 		this.stage = stage;
 		this.documentModel = documentModel;
+		this.eventBus = null;
+	}
+	
+	public ControllerFactory(Application pApplication, Stage stage, DocumentModel documentModel, EventBus eventBus) {
+		this.application = pApplication;
+		this.stage = stage;
+		this.documentModel = documentModel;
+		this.eventBus = eventBus;
 	}
 
 	@Override
 	public Object call(Class<?> type) {
 		try {
-			if (EditorController.class.isAssignableFrom(type)) {
+			if (RendererController.class.isAssignableFrom(type)) {
+				return type.getConstructors()[0].newInstance(application, stage, documentModel, eventBus);
+			} else if (EditorController.class.isAssignableFrom(type)) {
 				return type.getConstructors()[0].newInstance(application, stage, documentModel);
 			} else if (StageController.class.isAssignableFrom(type)) {
 				return type.getConstructors()[0].newInstance(application, stage);

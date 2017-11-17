@@ -1,5 +1,6 @@
 package ro.kuberam.getos.modules.editorTab;
 
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -19,7 +20,12 @@ import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
+import ro.kuberam.getos.controller.factory.RendererController;
+import ro.kuberam.getos.eventBus.EventBus;
+import ro.kuberam.getos.eventBus.FXEventBus;
+import ro.kuberam.getos.events.GetosEvent;
 import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
+import ro.kuberam.getos.modules.pdfEditor.PdfEvent;
 import ro.kuberam.getos.utils.Utils;
 
 public final class EditorTabController extends EditorController {
@@ -50,6 +56,9 @@ public final class EditorTabController extends EditorController {
 
 	@FXML
 	private SplitPane contentPane;
+	
+	public EventBus eventBus;
+	public HashMap<String, GetosEvent> eventsRegistry = new HashMap<String, GetosEvent>();
 
 	public EditorTabController(Application application, Stage stage, DocumentModel documentModel) {
 		super(application, stage, documentModel);
@@ -57,7 +66,11 @@ public final class EditorTabController extends EditorController {
 
 	@FXML
 	public void initialize() {
-
+		
+		eventBus = new FXEventBus();
+		eventsRegistry.put("go-to-page", new PdfEvent(PdfEvent.GO_TO_PAGE));
+		System.out.println("eventsRegistry = " + eventsRegistry);
+		
 		zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
@@ -94,9 +107,9 @@ public final class EditorTabController extends EditorController {
 		});
 
 		pagination.setCurrentPageIndex(0);
-		pagination.pageCountProperty().bind(new SimpleIntegerProperty(getDocumentModel().numberOfPages()).asObject());
+		pagination.pageCountProperty().bind(new SimpleIntegerProperty(getSourceDocumentModel().numberOfPages()).asObject());
 		pagination.setPageFactory(index -> {
-			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.go-to-page").setData(index));
+			eventBus.fireEvent(eventsRegistry.get("go-to-page").setData(index));
 
 			return paginationPane;
 		});
@@ -105,13 +118,13 @@ public final class EditorTabController extends EditorController {
 			@Override
 			public void run() {
 				try {
-					FXMLLoader loader = new FXMLLoader(PdfEditorController.class.getResource(getDocumentModel().fxml()),
-							ResourceBundle.getBundle(getDocumentModel().bundle()), null,
-							new ControllerFactory(getApplication(), getStage(), getDocumentModel()));
+					FXMLLoader loader = new FXMLLoader(PdfEditorController.class.getResource(getSourceDocumentModel().fxml()),
+							ResourceBundle.getBundle(getSourceDocumentModel().bundle()), null,
+							new ControllerFactory(getApplication(), getStage(), getSourceDocumentModel(), eventBus));
 
 					loader.load();
 
-					contentPane.getItems().add(((EditorController) loader.getController()).getRoot());
+					contentPane.getItems().add(((RendererController) loader.getController()).getRoot());
 				} catch (Exception ex) {
 					Utils.showAlert(AlertType.ERROR, ex);
 				}

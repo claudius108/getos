@@ -12,7 +12,7 @@ public class PdfEvent extends GetosEvent {
 	 */
 	private static final long serialVersionUID = 831113937747538096L;
 
-	public static final EventType<PdfEvent> PDF_GO_TO_PAGE = new EventType<>(Event.ANY, "PDF_GO_TO_PAGE");
+	public static final EventType<PdfEvent> GO_TO_PAGE = new EventType<>(Event.ANY, "GO_TO_PAGE");
 	
 	public static final EventType<PdfEvent> PDF_ZOOM_IN = new EventType<>(Event.ANY, "PDF_ZOOM_IN");
 	public static final EventType<PdfEvent> PDF_ZOOM_OUT = new EventType<>(Event.ANY, "PDF_ZOOM_OUT");

@@ -8,18 +8,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
-import ro.kuberam.getos.Getos;
-import ro.kuberam.getos.controller.factory.EditorController;
+import ro.kuberam.getos.controller.factory.RendererController;
+import ro.kuberam.getos.eventBus.EventBus;
 
-public final class PdfEditorController extends EditorController {
+public final class PdfEditorController extends RendererController {
 
 	private final static String TAG = PdfEditorController.class.getSimpleName();
-
-	@FXML
-	private BorderPane root;
 
 	@FXML
 	private ComboBox<String> selectEditorCombobox;
@@ -32,16 +28,21 @@ public final class PdfEditorController extends EditorController {
 
 	@FXML
 	private ImageView contentSourcePane;
+	
+	private EventBus eventBus;
 
-	public PdfEditorController(Application application, Stage stage, DocumentModel documentModel) {
+	public PdfEditorController(Application application, Stage stage, DocumentModel documentModel, EventBus eventBus) {
 		super(application, stage, documentModel);
+		
+		this.eventBus = eventBus;
 	}
 
 	@FXML
 	public void initialize() {
 
-		Getos.eventBus.addEventHandler(PdfEvent.PDF_GO_TO_PAGE, event -> {
-			contentSourcePane.setImage(getDocumentModel().goToPage((int) event.getData()));
+		eventBus.addEventHandler(PdfEvent.GO_TO_PAGE, event -> {
+			System.out.println("event = " + event);
+			contentSourcePane.setImage(getSourceDocumentModel().goToPage((int) event.getData()));
 
 			event.consume();
 		});

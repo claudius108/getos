@@ -12,9 +12,9 @@ import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
 
-public class EditorController extends StageController {
+public class RendererController extends StageController {
 
-	private final static String TAG = EditorController.class.getSimpleName();
+	private final static String TAG = RendererController.class.getSimpleName();
 
 	@FXML
 	private BorderPane root;
@@ -22,7 +22,7 @@ public class EditorController extends StageController {
 	private DocumentModel sourceDocumentModel;
 	private static EditorTab editorTab;
 
-	public EditorController(Application application, Stage stage, DocumentModel sourceDocumentModel) {
+	public RendererController(Application application, Stage stage, DocumentModel sourceDocumentModel) {
 		super(application, stage);
 
 		setSourceDocumentModel(sourceDocumentModel);
