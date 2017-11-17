@@ -180,7 +180,6 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
 	@Override
 	public void shutdown() {
-		System.gc();
 		localPdDocument.remove();
 	}
 }

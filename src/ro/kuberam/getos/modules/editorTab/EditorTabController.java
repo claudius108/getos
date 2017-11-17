@@ -69,7 +69,6 @@ public final class EditorTabController extends EditorController {
 		
 		eventBus = new FXEventBus();
 		eventsRegistry.put("go-to-page", new PdfEvent(PdfEvent.GO_TO_PAGE));
-		System.out.println("eventsRegistry = " + eventsRegistry);
 		
 		zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override

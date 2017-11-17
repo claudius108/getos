@@ -29,12 +29,8 @@ public final class PdfEditorController extends RendererController {
 	@FXML
 	private ImageView contentSourcePane;
 	
-	private EventBus eventBus;
-
 	public PdfEditorController(Application application, Stage stage, DocumentModel documentModel, EventBus eventBus) {
-		super(application, stage, documentModel);
-		
-		this.eventBus = eventBus;
+		super(application, stage, documentModel, eventBus);
 	}
 
 	@FXML
