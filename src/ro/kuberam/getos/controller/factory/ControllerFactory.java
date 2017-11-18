@@ -6,7 +6,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import ro.kuberam.getos.DocumentModel;
-import ro.kuberam.getos.eventBus.EventBus;
+import ro.kuberam.getos.events.EventBus;
 
 public final class ControllerFactory implements Callback<Class<?>, Object> {
 

@@ -1,8 +1,7 @@
-package ro.kuberam.getos.eventBus;
+package ro.kuberam.getos.events;
 
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-import ro.kuberam.getos.events.GetosEvent;
 
 /**
  * An event dispatcher that can be used for subscribing to events and posting the events.

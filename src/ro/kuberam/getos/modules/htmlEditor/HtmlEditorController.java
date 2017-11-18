@@ -16,7 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.EditorController;
-import ro.kuberam.getos.eventBus.EventBus;
+import ro.kuberam.getos.events.EventBus;
 import ro.kuberam.getos.modules.pdfEditor.DocumentModel;
 import ro.kuberam.getos.modules.pdfEditor.jpedal.JpedalRenderer;
 

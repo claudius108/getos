@@ -1,11 +1,10 @@
-package ro.kuberam.getos.eventBus;
+package ro.kuberam.getos.events;
 
 import java.util.HashMap;
 
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Group;
-import ro.kuberam.getos.events.GetosEvent;
 
 public final class FXEventBus implements EventBus {
 

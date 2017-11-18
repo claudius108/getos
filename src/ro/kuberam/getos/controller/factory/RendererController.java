@@ -6,7 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
-import ro.kuberam.getos.eventBus.EventBus;
+import ro.kuberam.getos.events.EventBus;
 
 public class RendererController extends StageController {
 

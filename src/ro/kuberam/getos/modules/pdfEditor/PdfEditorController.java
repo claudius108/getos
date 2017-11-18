@@ -11,7 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.controller.factory.RendererController;
-import ro.kuberam.getos.eventBus.EventBus;
+import ro.kuberam.getos.events.EventBus;
 
 public final class PdfEditorController extends RendererController {
 
