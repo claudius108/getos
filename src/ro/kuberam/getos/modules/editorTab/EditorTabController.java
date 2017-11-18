@@ -120,7 +120,7 @@ public final class EditorTabController extends EditorController {
 		pagination.pageCountProperty()
 				.bind(new SimpleIntegerProperty(getSourceDocumentModel().numberOfPages()).asObject());
 		pagination.setPageFactory(index -> {
-			//eventBus.fireEvent("go-to-page", index);
+			eventBus.fireEvent("go-to-page", index);
 
 			return paginationPane;
 		});

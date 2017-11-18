@@ -12,14 +12,12 @@ import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.events.EventBus;
 import ro.kuberam.getos.events.FXEventBus;
-import ro.kuberam.getos.events.GetosEvent;
 import ro.kuberam.getos.modules.main.MainWindowController;
 import ro.kuberam.getos.utils.Utils;
 
 public class Getos extends Application {
 
 	public static EventBus eventBus;
-	public static HashMap<String, GetosEvent> eventsRegistry = new HashMap<String, GetosEvent>();
 	public static ArrayList<EditorController> tabControllers;
 	public static HashMap<String, Constructor<?>> documentModelsRegistry = new HashMap<String, Constructor<?>>();
 
