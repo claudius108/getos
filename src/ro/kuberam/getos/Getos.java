@@ -1,7 +1,7 @@
 package ro.kuberam.getos;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ServiceLoader;
@@ -34,7 +34,7 @@ public class Getos extends Application {
 				String modulePackageName = service.getClass().getPackage().getName();
 
 				documentModelsRegistry.put(documentType,
-						Class.forName(modulePackageName + ".DocumentModel").getConstructor(File.class));
+						Class.forName(modulePackageName + ".DocumentModel").getConstructor(Path.class));
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException
 					| SecurityException ex) {
 				Utils.showAlert(AlertType.ERROR, ex);
@@ -53,9 +53,12 @@ public class Getos extends Application {
 
 }
 
+// Images
 // Java library for reading, writing, converting and manipulating images and
 // metadata https://github.com/dragon66/icafe
+// Highlight differences between images, https://stackoverflow.com/questions/25022578/highlight-differences-between-images
 
+// PDF
 // Create PDF documents
 // Assemble documents (split, merge, combine, remove pages)
 // Encrypt documents using RC4 or AES encryption, set passwords and permissions

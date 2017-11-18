@@ -1,6 +1,6 @@
 package ro.kuberam.getos;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.Calendar;
 
 import javafx.scene.image.Image;
@@ -11,6 +11,8 @@ import javafx.scene.image.Image;
  * @param <T>
  */
 public interface DocumentModel {
+	
+	String TAG = DocumentModel.class.getSimpleName();
 
 	/**
 	 * Document's title.
@@ -100,13 +102,7 @@ public interface DocumentModel {
 	 * Document's path.
 	 *
 	 */
-	String path();
-
-	/**
-	 * Document's file.
-	 *
-	 */
-	File file();
+	Path path();
 
 	/**
 	 * Document type's fxml path.

@@ -6,6 +6,8 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 
 public class Controller {
+	
+	public final static String TAG = Controller.class.getSimpleName();
 
 	@FXML
 	private ResourceBundle resources;

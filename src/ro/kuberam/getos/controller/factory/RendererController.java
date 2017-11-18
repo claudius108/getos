@@ -10,8 +10,6 @@ import ro.kuberam.getos.events.EventBus;
 
 public class RendererController extends StageController {
 
-	private final static String TAG = RendererController.class.getSimpleName();
-
 	@FXML
 	private BorderPane root;
 

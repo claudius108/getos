@@ -15,8 +15,6 @@ import ro.kuberam.getos.events.EventBus;
 
 public final class PdfEditorController extends RendererController {
 
-	private final static String TAG = PdfEditorController.class.getSimpleName();
-
 	@FXML
 	private ComboBox<String> selectEditorCombobox;
 
@@ -45,6 +43,7 @@ public final class PdfEditorController extends RendererController {
 		extractTablesButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
+				
 				eventBus.fireEvent("open-target-document");
 			}
 		});

@@ -41,8 +41,6 @@ import ro.kuberam.getos.controller.factory.EditorController;
 
 public class PdfViewerController extends EditorController {
 
-	private final static String TAG = PdfViewerController.class.getSimpleName();
-
 	@FXML
 	private BorderPane root;
 

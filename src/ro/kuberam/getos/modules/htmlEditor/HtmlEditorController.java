@@ -22,8 +22,6 @@ import ro.kuberam.getos.modules.pdfEditor.jpedal.JpedalRenderer;
 
 public final class HtmlEditorController extends EditorController {
 
-	private final static String TAG = HtmlEditorController.class.getSimpleName();
-
 	@FXML
 	private BorderPane root;
 

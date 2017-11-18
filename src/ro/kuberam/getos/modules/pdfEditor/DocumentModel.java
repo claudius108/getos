@@ -3,6 +3,7 @@ package ro.kuberam.getos.modules.pdfEditor;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,8 +19,6 @@ import javafx.scene.image.Image;
 import ro.kuberam.getos.utils.Utils;
 
 public class DocumentModel implements ro.kuberam.getos.DocumentModel {
-
-	private final static String TAG = DocumentModel.class.getSimpleName();
 
 	private ThreadLocal<PDDocument> localPdDocument = new ThreadLocal<PDDocument>() {
 	    @Override
@@ -44,12 +43,12 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	private String security;
 	private String paperSize;
 	private String fonts;
-	private String path;
+	private Path path;
 	private File file;
 	
-	public DocumentModel(File file) {
+	public DocumentModel(Path path) {
 		try {
-			document = PDDocument.load(file, MemoryUsageSetting.setupTempFileOnly());
+			document = PDDocument.load(path.toFile(), MemoryUsageSetting.setupTempFileOnly());
 			renderer = new PDFRenderer(document);
 
 			PDDocumentInformation documentInformation = document.getDocumentInformation();
@@ -68,8 +67,7 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 			security = "";
 			paperSize = "";
 			fonts = "";
-			path = file.getAbsolutePath();
-			this.file = file;
+			this.path = path;
 		} catch (IOException ex) {
 			Utils.showAlert(AlertType.ERROR, ex);
 		}
@@ -146,13 +144,8 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	}
 
 	@Override
-	public String path() {
+	public Path path() {
 		return path;
-	}
-
-	@Override
-	public File file() {
-		return file;
 	}
 
 	@Override

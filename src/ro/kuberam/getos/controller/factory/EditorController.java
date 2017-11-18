@@ -14,8 +14,6 @@ import ro.kuberam.getos.modules.editorTab.EditorTab;
 
 public class EditorController extends StageController {
 
-	private final static String TAG = EditorController.class.getSimpleName();
-
 	@FXML
 	private BorderPane root;
 
@@ -63,7 +61,7 @@ public class EditorController extends StageController {
 	}
 
 	public void onEditorTabSelected() {
-		Getos.eventBus.fireEvent("update-status-label", getSourceDocumentModel().path());
+		Getos.eventBus.fireEvent("update-status-label", getSourceDocumentModel().path().toString());
 
 		// todo: later we can use an other kind of control to show character
 		// count

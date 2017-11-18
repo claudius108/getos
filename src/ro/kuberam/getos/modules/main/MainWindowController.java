@@ -2,6 +2,8 @@ package ro.kuberam.getos.modules.main;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -33,8 +35,6 @@ import ro.kuberam.getos.modules.editorTab.EditorTabController;
 import ro.kuberam.getos.utils.Utils;
 
 public final class MainWindowController extends StageController {
-
-	private final static String TAG = MainWindowController.class.getSimpleName();
 
 	@FXML
 	private BorderPane root;
@@ -89,9 +89,9 @@ public final class MainWindowController extends StageController {
 			// fileChooser.setInitialDirectory(file.getParentFile());
 			// }
 
-			File file = new File("/home/claudius/Downloads/comune.pdf");
+			Path path = Paths.get("/home/claudius/Downloads/comune.pdf");
 
-			openFile(file);
+			openFile(path);
 
 			event.consume();
 		});
@@ -99,7 +99,7 @@ public final class MainWindowController extends StageController {
 		pdfButton.setOnAction(event -> {
 			File file = new File("/home/claudius/ABBYYOCRInstallationGuide.pdf");
 
-			openFile(file);
+			openFile(file.toPath());
 
 			event.consume();
 		});
@@ -114,7 +114,7 @@ public final class MainWindowController extends StageController {
 				fileChooser.setInitialDirectory(file.getParentFile());
 			}
 
-			openFile(file);
+			openFile(file.toPath());
 
 			event.consume();
 		});
@@ -161,7 +161,7 @@ public final class MainWindowController extends StageController {
 				if (db.hasFiles()) {
 					success = true;
 					for (File file : db.getFiles()) {
-						openFile(file);
+						openFile(file.toPath());
 					}
 				}
 				event.setDropCompleted(success);
@@ -212,7 +212,7 @@ public final class MainWindowController extends StageController {
 
 			EditorController newTabController = loader.getController();
 
-			EditorTab newTab = new EditorTab(documentModel.file());
+			EditorTab newTab = new EditorTab(documentModel.path().toFile());
 			newTab.setClosable(true);
 			newTab.setContent(newTabController.getRoot());
 
@@ -244,18 +244,18 @@ public final class MainWindowController extends StageController {
 		}
 	}
 
-	private void openFile(File file) {
-		String documentType = detectDocumentType(file);
+	private void openFile(Path path) {
+		String documentType = detectDocumentType(path.toFile());
 
 		if (documentType == null) {
-			Utils.showAlert(AlertType.ERROR, file.getName(), getResources().getString("cant_handle_filetype"));
+			Utils.showAlert(AlertType.ERROR, path.getFileName().toString(), getResources().getString("cant_handle_filetype"));
 			return;
 		}
 
 		DocumentModel documentModel = null;
 		try {
 			documentModel = (DocumentModel) Getos.documentModelsRegistry.get(documentType)
-					.newInstance(file);
+					.newInstance(path);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			e.printStackTrace();
