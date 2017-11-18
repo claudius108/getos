@@ -63,8 +63,8 @@ public class EditorController extends StageController {
 	}
 
 	public void onEditorTabSelected() {
-		Getos.eventBus.fireEvent(Getos.eventsRegistry.get("update-status-label").setData(getSourceDocumentModel().path()));
-		
+		Getos.eventBus.fireEvent("update-status-label", getSourceDocumentModel().path());
+
 		// todo: later we can use an other kind of control to show character
 		// count
 		// or caret position, number of words..

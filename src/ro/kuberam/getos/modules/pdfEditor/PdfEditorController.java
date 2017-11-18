@@ -37,7 +37,6 @@ public final class PdfEditorController extends RendererController {
 	public void initialize() {
 
 		eventBus.addEventHandler(PdfEvent.GO_TO_PAGE, event -> {
-			System.out.println("event = " + event);
 			contentSourcePane.setImage(getSourceDocumentModel().goToPage((int) event.getData()));
 
 			event.consume();
@@ -46,7 +45,7 @@ public final class PdfEditorController extends RendererController {
 		extractTablesButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				// contentPane.getItems().add(new BorderPane());
+				eventBus.fireEvent("open-target-document");
 			}
 		});
 

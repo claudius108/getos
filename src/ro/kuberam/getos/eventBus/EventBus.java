@@ -29,16 +29,25 @@ public interface EventBus {
                                               EventHandler<? super T> eventHandler);
 
     /**
-     * Post (fire) given event. All listening parties will be notified.
-     * Events will be handled on the same thread that fired the event,
-     * i.e. synchronous.
+     * Post (fire) given event.
      *
-     * <p>
-     *     Note: according to JavaFX doc this must be called on JavaFX Application Thread.
-     *     In reality this doesn't seem to be true.
-     * </p>
-     *
-     * @param event the event
+     * @param eventName the event name
      */
-    void fireEvent(GetosEvent event);
+    void fireEvent(String eventName);
+    
+    /**
+     * Post (fire) given event. The data for the event is passed, too.
+     *
+     * @param eventName the event name
+     * @param data the event data
+     */
+    void fireEvent(String eventName, Object data);
+    
+    /**
+     * Register an event.
+     * 
+     * @param eventName the event name
+     * @param event the event
+     */    
+    void registerEvent(String eventName, GetosEvent event);
 }

@@ -28,15 +28,17 @@ public class Getos extends Application {
 		tabControllers = new ArrayList<>();
 
 		ServiceLoader<DocumentModule> moduleDescriptionServices = java.util.ServiceLoader.load(DocumentModule.class);
-		
+
 		moduleDescriptionServices.forEach(service -> {
 			try {
 				DocumentModule moduleDescription = service.getClass().newInstance();
 				String documentType = moduleDescription.getDocumentType();
 				String modulePackageName = service.getClass().getPackage().getName();
-				
-				documentModelsRegistry.put(documentType, Class.forName(modulePackageName + ".DocumentModel").getConstructor(File.class));
-			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
+
+				documentModelsRegistry.put(documentType,
+						Class.forName(modulePackageName + ".DocumentModel").getConstructor(File.class));
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException
+					| SecurityException ex) {
 				Utils.showAlert(AlertType.ERROR, ex);
 			}
 		});
@@ -72,14 +74,5 @@ public class Getos extends Application {
 // Linearize PDF documents for fast web viewing
 // Create PDF layers and draw onto them
 
-// I have to process PDF files, that (supposedly) contain one big image
-// per page, which is a result from a Document-Scanner. I'd like to avoid
-// performing PDF-To-Image in these cases, and use the underlying image
-// instead.
-// I am not well-versed in all things PDF and have no idea how to
-// detect if a page has content other than a single image.
-// Please advise.
-//
-//
-// Please have a look at the ExtractImages.java source code. You can change that
-// one to your needs.
+// Zoomable and Pannable JavaFX ImageView Example
+// https://gist.github.com/james-d/ce5ec1fd44ce6c64e81a

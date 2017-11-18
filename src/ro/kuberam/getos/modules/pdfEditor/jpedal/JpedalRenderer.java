@@ -242,7 +242,7 @@ public class JpedalRenderer extends BorderPane {
 
 			}
 
-			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.update-page-count").setData(pdf.getPageCount()));
+			Getos.eventBus.fireEvent("pdf.update-page-count", pdf.getPageCount());
 
 			// Goes to the first page and starts the decoding process
 			goToPage(currentPage);
@@ -382,15 +382,15 @@ public class JpedalRenderer extends BorderPane {
 
 	private void updateNavButtons() {
 		if (currentPage > 1) {
-			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.enable-button").setData("backButton"));
+			Getos.eventBus.fireEvent("pdf.enable-button", "backButton");
 		} else {
-			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.disable-button").setData("backButton"));
+			Getos.eventBus.fireEvent("pdf.disable-button", "backButton");
 		}
 
 		if (currentPage < pdf.getPageCount()) {
-			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.enable-button").setData("forwardButton"));
+			Getos.eventBus.fireEvent("pdf.enable-button", "forwardButton");
 		} else {
-			Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.disable-button").setData("forwardButton"));
+			Getos.eventBus.fireEvent("pdf.disable-button", "forwardButton");
 		}
 	}
 

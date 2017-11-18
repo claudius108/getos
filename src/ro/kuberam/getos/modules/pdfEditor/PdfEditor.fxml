@@ -48,7 +48,7 @@
 		<ToolBar orientation="VERTICAL">
 			<items>
 				<Button fx:id="extractTablesButton" mnemonicParsing="false"
-					text="Extract Tables" />
+					text="Metadata" />
 				<Button fx:id="extractTablesButton" mnemonicParsing="false"
 					text="Extract Tables" />
 			</items>

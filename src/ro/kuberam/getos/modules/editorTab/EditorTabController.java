@@ -56,7 +56,7 @@ public final class EditorTabController extends EditorController {
 
 	@FXML
 	private SplitPane contentPane;
-	
+
 	public EventBus eventBus;
 	public HashMap<String, GetosEvent> eventsRegistry = new HashMap<String, GetosEvent>();
 
@@ -66,49 +66,61 @@ public final class EditorTabController extends EditorController {
 
 	@FXML
 	public void initialize() {
-		
+
+		// initialize the events
 		eventBus = new FXEventBus();
-		eventsRegistry.put("go-to-page", new PdfEvent(PdfEvent.GO_TO_PAGE));
-		
+		eventBus.registerEvent("go-to-page", new PdfEvent(PdfEvent.GO_TO_PAGE));
+		eventBus.registerEvent("open-target-document", new PdfEvent(PdfEvent.OPEN_TARGET_DOCUMENT));
+
+		// register the event listers
+		eventBus.addEventHandler(PdfEvent.OPEN_TARGET_DOCUMENT, event -> {
+			// contentSourcePane.setImage(getSourceDocumentModel().goToPage((int)
+			// event.getData()));
+			contentPane.getItems().add(new BorderPane());
+
+			event.consume();
+		});
+
 		zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.zoom-in"));
+				Getos.eventBus.fireEvent("pdf.zoom-in");
 			}
 		});
 
 		zoomOutButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.zoom-out"));
+				Getos.eventBus.fireEvent("pdf.zoom-out");
 			}
 		});
 
 		fitToWidthButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-width"));
+				Getos.eventBus.fireEvent("pdf.fit-to-width");
 			}
 		});
 
 		fitToHeightButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-height"));
+				Getos.eventBus.fireEvent("pdf.fit-to-height");
 			}
 		});
 
 		fitToPageButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-page"));
+				Getos.eventBus.fireEvent("pdf.fit-to-page");
 			}
 		});
 
 		pagination.setCurrentPageIndex(0);
-		pagination.pageCountProperty().bind(new SimpleIntegerProperty(getSourceDocumentModel().numberOfPages()).asObject());
+		pagination.pageCountProperty()
+				.bind(new SimpleIntegerProperty(getSourceDocumentModel().numberOfPages()).asObject());
 		pagination.setPageFactory(index -> {
-			eventBus.fireEvent(eventsRegistry.get("go-to-page").setData(index));
+			//eventBus.fireEvent("go-to-page", index);
 
 			return paginationPane;
 		});
@@ -117,7 +129,8 @@ public final class EditorTabController extends EditorController {
 			@Override
 			public void run() {
 				try {
-					FXMLLoader loader = new FXMLLoader(PdfEditorController.class.getResource(getSourceDocumentModel().fxml()),
+					FXMLLoader loader = new FXMLLoader(
+							PdfEditorController.class.getResource(getSourceDocumentModel().fxml()),
 							ResourceBundle.getBundle(getSourceDocumentModel().bundle()), null,
 							new ControllerFactory(getApplication(), getStage(), getSourceDocumentModel(), eventBus));
 

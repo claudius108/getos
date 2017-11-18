@@ -100,35 +100,35 @@ public final class HtmlEditorController extends EditorController {
 		zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.zoom-in"));
+				Getos.eventBus.fireEvent("pdf.zoom-in");
 			}
 		});
 
 		zoomOutButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.zoom-out"));
+				Getos.eventBus.fireEvent("pdf.zoom-out");
 			}
 		});
 
 		fitToWidthButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-width"));
+				Getos.eventBus.fireEvent("pdf.fit-to-width");
 			}
 		});
 
 		fitToHeightButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-height"));
+				Getos.eventBus.fireEvent("pdf.fit-to-height");
 			}
 		});
 
 		fitToPageButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent(Getos.eventsRegistry.get("pdf.fit-to-page"));
+				Getos.eventBus.fireEvent("pdf.fit-to-page");
 			}
 		});
 		
