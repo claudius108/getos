@@ -27,7 +27,7 @@ import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
-import ro.kuberam.getos.documentTypeDetection.ViewerFileType;
+import ro.kuberam.getos.documentTypeDetection.DocumentTypes;
 import ro.kuberam.getos.events.UserInterfaceEvent;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
@@ -131,7 +131,7 @@ public final class MainWindowController extends StageController {
 
 		fileChooser = new FileChooser();
 		fileChooser.setInitialFileName("");
-		fileChooser.getExtensionFilters().addAll(ViewerFileType.getExtensionFilters());
+		fileChooser.getExtensionFilters().addAll(DocumentTypes.getExtensionFilters());
 
 		Stage stage = getStage();
 		stage.setTitle(getResources().getString("appname") + " v. " + getResources().getString("appversion"));
@@ -267,10 +267,10 @@ public final class MainWindowController extends StageController {
 	private String detectDocumentType(File file) {
 		String documentType = null;
 
-		ViewerFileType type = ViewerFileType.getTypeByExtension(file);
+		DocumentTypes type = DocumentTypes.getTypeByExtension(file);
 
 		if (type != null) {
-			documentType = type.getName();
+			documentType = type.getMimeType();
 		}
 
 		return documentType;

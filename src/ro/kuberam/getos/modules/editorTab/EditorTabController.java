@@ -1,5 +1,6 @@
 package ro.kuberam.getos.modules.editorTab;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
@@ -76,6 +77,9 @@ public final class EditorTabController extends EditorController {
 		eventBus.addEventHandler(PdfEvent.OPEN_TARGET_DOCUMENT, event -> {
 			// contentSourcePane.setImage(getSourceDocumentModel().goToPage((int)
 			// event.getData()));
+			Path targetDocumentPath = (Path) event.getData();
+			System.out.println("targetDocumentPath = " + targetDocumentPath);
+			
 			contentPane.getItems().add(new BorderPane());
 
 			event.consume();

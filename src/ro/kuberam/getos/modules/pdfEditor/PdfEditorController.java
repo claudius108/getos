@@ -1,5 +1,7 @@
 package ro.kuberam.getos.modules.pdfEditor;
 
+import java.nio.file.Path;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -43,8 +45,10 @@ public final class PdfEditorController extends RendererController {
 		extractTablesButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
+				Path sourceDocumentPath = getSourceDocumentModel().path();
+				Path targetDocumentPath = sourceDocumentPath.getParent().resolve(sourceDocumentPath.getFileName().toString().replaceFirst(".pdf", ".html"));
 				
-				eventBus.fireEvent("open-target-document");
+				eventBus.fireEvent("open-target-document", targetDocumentPath);
 			}
 		});
 

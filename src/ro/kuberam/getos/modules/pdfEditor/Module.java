@@ -8,7 +8,7 @@ import ro.kuberam.getos.Getos;
 @AutoService(DocumentModule.class)
 public class Module implements DocumentModule {
 	
-	private String documentType = "PDF";
+	private String documentType = "application/pdf";
 
 	@Override
 	public String getDocumentType() {
