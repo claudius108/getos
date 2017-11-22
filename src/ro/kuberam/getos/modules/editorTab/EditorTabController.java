@@ -78,7 +78,6 @@ public final class EditorTabController extends EditorController {
 			// contentSourcePane.setImage(getSourceDocumentModel().goToPage((int)
 			// event.getData()));
 			Path targetDocumentPath = (Path) event.getData();
-			System.out.println("targetDocumentPath = " + targetDocumentPath);
 			
 			contentPane.getItems().add(new BorderPane());
 
@@ -122,7 +121,7 @@ public final class EditorTabController extends EditorController {
 
 		pagination.setCurrentPageIndex(0);
 		pagination.pageCountProperty()
-				.bind(new SimpleIntegerProperty(getSourceDocumentModel().numberOfPages()).asObject());
+				.bind(new SimpleIntegerProperty(Integer.parseInt(getSourceDocumentModel().generalMetadata().get("dcterms:extent"))).asObject());
 		pagination.setPageFactory(index -> {
 			eventBus.fireEvent("go-to-page", index);
 

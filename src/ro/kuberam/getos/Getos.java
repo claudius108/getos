@@ -53,12 +53,13 @@ public class Getos extends Application {
 
 }
 
-// Images
+// IMAGE document type
 // Java library for reading, writing, converting and manipulating images and
 // metadata https://github.com/dragon66/icafe
-// Highlight differences between images, https://stackoverflow.com/questions/25022578/highlight-differences-between-images
+// Highlight differences between images,
+// https://stackoverflow.com/questions/25022578/highlight-differences-between-images
 
-// PDF
+// PDF document type
 // Create PDF documents
 // Assemble documents (split, merge, combine, remove pages)
 // Encrypt documents using RC4 or AES encryption, set passwords and permissions
@@ -74,6 +75,13 @@ public class Getos extends Application {
 // Edit document properties such as title, keywords, subject
 // Linearize PDF documents for fast web viewing
 // Create PDF layers and draw onto them
-
 // Zoomable and Pannable JavaFX ImageView Example
 // https://gist.github.com/james-d/ce5ec1fd44ce6c64e81a
+
+// Document type conversions
+// HTML to XHTML
+// HTML to DITA
+// Markdown to XHTML
+// Markdown to DITA
+// XML to JSON
+// JSON to XML

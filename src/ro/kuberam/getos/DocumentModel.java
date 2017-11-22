@@ -1,102 +1,29 @@
 package ro.kuberam.getos;
 
 import java.nio.file.Path;
-import java.util.Calendar;
+import java.util.LinkedHashMap;
 
 import javafx.scene.image.Image;
 
 /**
  * Metadata about a document.
  * 
- * @param <T>
  */
 public interface DocumentModel {
-	
+
 	String TAG = DocumentModel.class.getSimpleName();
 
 	/**
-	 * Document's title.
+	 * Document's general metadata.
 	 *
 	 */
-	String title();
+	LinkedHashMap<String, String> generalMetadata();
 
 	/**
-	 * Document's subject.
+	 * Document's specific metadata.
 	 *
 	 */
-	String subject();
-
-	/**
-	 * Document's author.
-	 *
-	 */
-	String author();
-
-	/**
-	 * Document's keywords.
-	 *
-	 */
-	String keywords();
-
-	/**
-	 * Document's producer.
-	 *
-	 */
-	String producer();
-
-	/**
-	 * Document's creator.
-	 *
-	 */
-	String creator();
-
-	/**
-	 * When the document was created.
-	 *
-	 */
-	Calendar created();
-
-	/**
-	 * When the document was modified.
-	 *
-	 */
-	Calendar modified();
-
-	/**
-	 * Document's format.
-	 *
-	 */
-	float format();
-
-	/**
-	 * Document's number of pages.
-	 *
-	 */
-	int numberOfPages();
-
-	/**
-	 * Document is optimized.
-	 *
-	 */
-	String optimized();
-
-	/**
-	 * Document's security.
-	 *
-	 */
-	String security();
-
-	/**
-	 * Document's paper-size.
-	 *
-	 */
-	String paperSize();
-
-	/**
-	 * Document's fonts.
-	 *
-	 */
-	String fonts();
+	LinkedHashMap<String, String> specificMetadata();
 
 	/**
 	 * Document's path.
@@ -121,10 +48,12 @@ public interface DocumentModel {
 	 *
 	 */
 	Image goToPage(int pageNumber);
-	
+
 	/**
 	 * Closing of document.
 	 *
 	 */
 	void shutdown();
 }
+
+// http://dublincore.org/documents/dcmi-terms/

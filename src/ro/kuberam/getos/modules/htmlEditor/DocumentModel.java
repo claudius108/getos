@@ -3,7 +3,9 @@ package ro.kuberam.getos.modules.htmlEditor;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Calendar;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,30 +22,20 @@ import ro.kuberam.getos.utils.Utils;
 public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
 	private ThreadLocal<PDDocument> localPdDocument = new ThreadLocal<PDDocument>() {
-	    @Override
-	    protected PDDocument initialValue() {
-	        return new PDDocument();
-	    }
+		@Override
+		protected PDDocument initialValue() {
+			return new PDDocument();
+		}
 	};
-	
+
 	private PDDocument document = localPdDocument.get();
 	private PDFRenderer renderer;
-	private String title;
-	private String subject;
-	private String author;
-	private String keywords;
-	private String producer;
-	private String creator;
-	private Calendar created;
-	private Calendar modified;
-	private float format;
-	private int numberOfPages;
-	private String optimized;
-	private String security;
-	private String paperSize;
-	private String fonts;
+
+	public static LinkedHashMap<String, String> generalMetadata;
+	public static LinkedHashMap<String, String> specificMetadata;
+
 	private Path path;
-	
+
 	public DocumentModel(Path path) {
 		try {
 			document = PDDocument.load(path.toFile(), MemoryUsageSetting.setupTempFileOnly());
@@ -51,20 +43,37 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
 			PDDocumentInformation documentInformation = document.getDocumentInformation();
 
-			title = documentInformation.getTitle();
-			subject = documentInformation.getSubject();
-			author = documentInformation.getAuthor();
-			keywords = documentInformation.getKeywords();
-			producer = documentInformation.getProducer();
-			creator = documentInformation.getCreator();
-			created = documentInformation.getCreationDate();
-			modified = documentInformation.getModificationDate();
-			format = document.getVersion();
-			numberOfPages = document.getNumberOfPages();
-			optimized = "";
-			security = "";
-			paperSize = "";
-			fonts = "";
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
+
+			// set the general metadata
+			generalMetadata = new LinkedHashMap<String, String>();
+			generalMetadata.put("dc:title", documentInformation.getTitle());
+			generalMetadata.put("dc:creator", documentInformation.getAuthor());
+			generalMetadata.put("dc:subject", documentInformation.getKeywords());
+			generalMetadata.put("dc:description", documentInformation.getSubject());
+			generalMetadata.put("dc:publisher", "");
+			generalMetadata.put("dc:contributor", "");
+			generalMetadata.put("dc:date", dateFormat.format(documentInformation.getCreationDate().getTime()));
+			generalMetadata.put("dc:type", "");
+			generalMetadata.put("dc:format", Float.toString(document.getVersion()));
+			generalMetadata.put("dc:identifier", "");
+			generalMetadata.put("dc:source", "");
+			generalMetadata.put("dc:language", "");
+			generalMetadata.put("dc:relation", "");
+			generalMetadata.put("dc:coverage", "");
+			generalMetadata.put("dc:rights", "");
+			generalMetadata.put("dcterms:modified",
+					dateFormat.format(documentInformation.getModificationDate().getTime()));
+			generalMetadata.put("dcterms:extent", Integer.toString(document.getNumberOfPages()));
+
+			// set the specific metadata
+			specificMetadata.put("pdf:creator", documentInformation.getCreator());
+			specificMetadata.put("pdf:encrypted", "");
+			specificMetadata.put("pdf:producer", documentInformation.getProducer());
+			specificMetadata.put("pdf:optimized", "");
+			specificMetadata.put("pdf:paperSize", "");
+			specificMetadata.put("pdf:fonts", "");
+
 			this.path = path;
 		} catch (IOException ex) {
 			Utils.showAlert(AlertType.ERROR, ex);
@@ -72,73 +81,13 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	}
 
 	@Override
-	public String title() {
-		return title;
+	public LinkedHashMap<String, String> generalMetadata() {
+		return generalMetadata;
 	}
 
 	@Override
-	public String subject() {
-		return subject;
-	}
-
-	@Override
-	public String author() {
-		return author;
-	}
-
-	@Override
-	public String keywords() {
-		return keywords;
-	}
-
-	@Override
-	public String producer() {
-		return producer;
-	}
-
-	@Override
-	public String creator() {
-		return creator;
-	}
-
-	@Override
-	public Calendar created() {
-		return created;
-	}
-
-	@Override
-	public Calendar modified() {
-		return modified;
-	}
-
-	@Override
-	public float format() {
-		return format;
-	}
-
-	@Override
-	public int numberOfPages() {
-		return numberOfPages;
-	}
-
-	@Override
-	public String optimized() {
-		return optimized;
-	}
-
-	@Override
-	public String security() {
-		return security;
-	}
-
-	@Override
-	public String paperSize() {
-		return paperSize;
-	}
-
-	@Override
-	public String fonts() {
-		return fonts;
+	public LinkedHashMap<String, String> specificMetadata() {
+		return specificMetadata;
 	}
 
 	@Override
@@ -174,3 +123,5 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 		localPdDocument.remove();
 	}
 }
+
+// https://github.com/apache/tika/blob/master/tika-parsers/src/main/java/org/apache/tika/parser/pdf/PDFParser.java
