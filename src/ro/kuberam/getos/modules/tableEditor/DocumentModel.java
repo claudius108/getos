@@ -1,36 +1,20 @@
 package ro.kuberam.getos.modules.tableEditor;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map.Entry;
+import java.util.Set;
 
-import org.apache.pdfbox.io.MemoryUsageSetting;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDDocumentInformation;
-import org.apache.pdfbox.rendering.PDFRenderer;
-
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
+import net.sf.saxon.s9api.SaxonApiException;
+import net.sf.saxon.s9api.SaxonApiUncheckedException;
+import net.sf.saxon.s9api.XdmAtomicValue;
+import net.sf.saxon.s9api.XdmValue;
 import ro.kuberam.getos.utils.Utils;
 
 public class DocumentModel implements ro.kuberam.getos.DocumentModel {
-
-	private ThreadLocal<PDDocument> localPdDocument = new ThreadLocal<PDDocument>() {
-		@Override
-		protected PDDocument initialValue() {
-			return new PDDocument();
-		}
-	};
-
-	private PDDocument document = localPdDocument.get();
-	private PDFRenderer renderer;
 
 	public static LinkedHashMap<String, String> generalMetadata;
 	public static LinkedHashMap<String, String> specificMetadata;
@@ -39,54 +23,19 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
 	public DocumentModel(Path path) {
 		try {
-			document = PDDocument.load(path.toFile(), MemoryUsageSetting.setupTempFileOnly());
-			renderer = new PDFRenderer(document);
-
-			PDDocumentInformation documentInformation = document.getDocumentInformation();
-
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
 			// set the general metadata
 			generalMetadata = new LinkedHashMap<String, String>();
-			generalMetadata.put("dc:title",
-					Optional.ofNullable(documentInformation.getTitle()).filter(str -> !str.isEmpty()).orElse(""));
-			generalMetadata.put("dc:creator",
-					Optional.ofNullable(documentInformation.getAuthor()).filter(str -> !str.isEmpty()).orElse(""));
-			generalMetadata.put("dc:subject",
-					Optional.ofNullable(documentInformation.getKeywords()).filter(str -> !str.isEmpty()).orElse(""));
-			generalMetadata.put("dc:description",
-					Optional.ofNullable(documentInformation.getSubject()).filter(str -> !str.isEmpty()).orElse(""));
-			generalMetadata.put("dc:publisher", "");
-			generalMetadata.put("dc:contributor", "");
-			generalMetadata.put("dc:date", Optional.ofNullable(documentInformation.getCreationDate())
-					.map(date -> date.getTime()).map(dateTime -> dateFormat.format(dateTime)).orElse(""));
-			generalMetadata.put("dc:type", "");
-			generalMetadata.put("dc:format", Float.toString(document.getVersion()));
-			generalMetadata.put("dc:identifier", "");
-			generalMetadata.put("dc:source", "");
-			generalMetadata.put("dc:language", "");
-			generalMetadata.put("dc:relation", "");
-			generalMetadata.put("dc:coverage", "");
-			generalMetadata.put("dc:rights", "");
-			generalMetadata.put("dcterms:modified", Optional.ofNullable(documentInformation.getModificationDate())
-					.map(date -> date.getTime()).map(dateTime -> dateFormat.format(dateTime)).orElse(""));
-			generalMetadata.put("dcterms:extent", Integer.toString(document.getNumberOfPages()));
+			Set<Entry<XdmAtomicValue, XdmValue>> metadataSet = Utils
+					.transform(path.toFile(), getClass().getResourceAsStream("get-metadata.xql"), true, null, null)
+					.itemAt(0).asMap().entrySet();
+			for (Entry<XdmAtomicValue, XdmValue> metadata : metadataSet) {
+				generalMetadata.put(metadata.getKey().getStringValue(), metadata.getValue().toString());
+			}
 
-			// set the specific metadata
-			specificMetadata = new LinkedHashMap<String, String>();
-			specificMetadata.put("pdf:creator",
-					Optional.ofNullable(documentInformation.getCreator()).filter(str -> !str.isEmpty()).orElse(""));
-			specificMetadata.put("pdf:encrypted", "");
-			specificMetadata.put("pdf:producer",
-					Optional.ofNullable(documentInformation.getProducer()).filter(str -> !str.isEmpty()).orElse(""));
-			specificMetadata.put("pdf:optimized", "");
-			specificMetadata.put("pdf:paperSize", "");
-			specificMetadata.put("pdf:fonts", "");
-
-			System.out.println("dcterms:extent" + generalMetadata);
+			System.out.println("generalMetadata" + generalMetadata);
 
 			this.path = path;
-		} catch (IOException ex) {
+		} catch (IOException | IndexOutOfBoundsException | SaxonApiUncheckedException | SaxonApiException ex) {
 			Utils.showAlert(AlertType.ERROR, ex);
 		}
 	}
@@ -118,20 +67,11 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
 	@Override
 	public Image goToPage(int pageNumber) {
-		BufferedImage pageImage = null;
-		try {
-			pageImage = renderer.renderImage(pageNumber);
-
-		} catch (IOException ex) {
-			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
-		}
-
-		return SwingFXUtils.toFXImage(pageImage, null);
+		return null;
 	}
 
 	@Override
 	public void shutdown() {
-		localPdDocument.remove();
 	}
 }
 

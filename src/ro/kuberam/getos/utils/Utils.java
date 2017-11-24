@@ -60,7 +60,7 @@ public final class Utils {
 		}
 	}
 
-	public static XdmValue transform(Reader xml, InputStream xquery, boolean omitXmlDeclaration, URI baseURI,
+	public static XdmValue transform(File xml, InputStream xquery, boolean omitXmlDeclaration, URI baseURI,
 			Map<String, String> parameters) throws SaxonApiException, IOException {
 		XdmValue result = null;
 
@@ -77,9 +77,11 @@ public final class Utils {
 		XQueryEvaluator xqueryEvaluator = xqueryExecutable.load();
 		xqueryEvaluator.setSource(xmlSrc);
 
-		for (Entry<String, String> parameter : parameters.entrySet()) {
-			xqueryEvaluator.setExternalVariable(new QName(parameter.getKey()),
-					new XdmAtomicValue(parameter.getValue()));
+		if (parameters != null) {
+			for (Entry<String, String> parameter : parameters.entrySet()) {
+				xqueryEvaluator.setExternalVariable(new QName(parameter.getKey()),
+						new XdmAtomicValue(parameter.getValue()));
+			}
 		}
 
 		result = xqueryEvaluator.evaluate();

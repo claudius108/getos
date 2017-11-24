@@ -79,6 +79,8 @@ public final class EditorTabController extends EditorController {
 			// event.getData()));
 			Path targetDocumentPath = (Path) event.getData();
 			
+			new ro.kuberam.getos.modules.tableEditor.DocumentModel(targetDocumentPath);
+			
 			contentPane.getItems().add(new BorderPane());
 
 			event.consume();
