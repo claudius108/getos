@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.controller.factory.RendererController;
 import ro.kuberam.getos.events.EventBus;
+import ro.kuberam.getos.modules.editorTab.EditorEvent;
 import ro.kuberam.getos.utils.Utils;
 
 public final class PdfEditorController extends RendererController {
@@ -51,7 +52,7 @@ public final class PdfEditorController extends RendererController {
 	@FXML
 	public void initialize() {
 
-		eventBus.addEventHandler(PdfEvent.GO_TO_PAGE, event -> {
+		eventBus.addEventHandler(EditorEvent.GO_TO_PAGE, event -> {
 			contentSourcePane.setImage(getSourceDocumentModel().goToPage((int) event.getData()));
 
 			event.consume();

@@ -70,11 +70,11 @@ public final class EditorTabController extends EditorController {
 
 		// initialize the events
 		eventBus = new FXEventBus();
-		eventBus.registerEvent("go-to-page", new PdfEvent(PdfEvent.GO_TO_PAGE));
-		eventBus.registerEvent("open-target-document", new PdfEvent(PdfEvent.OPEN_TARGET_DOCUMENT));
+		eventBus.registerEvent("go-to-page", new EditorEvent(EditorEvent.GO_TO_PAGE));
+		eventBus.registerEvent("open-target-document", new EditorEvent(EditorEvent.OPEN_TARGET_DOCUMENT));
 
 		// register the event listers
-		eventBus.addEventHandler(PdfEvent.OPEN_TARGET_DOCUMENT, event -> {
+		eventBus.addEventHandler(EditorEvent.OPEN_TARGET_DOCUMENT, event -> {
 			// contentSourcePane.setImage(getSourceDocumentModel().goToPage((int)
 			// event.getData()));
 			Path targetDocumentPath = (Path) event.getData();

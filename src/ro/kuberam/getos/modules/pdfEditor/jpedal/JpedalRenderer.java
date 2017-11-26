@@ -19,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import ro.kuberam.getos.Getos;
+import ro.kuberam.getos.modules.editorTab.EditorEvent;
 import ro.kuberam.getos.modules.pdfEditor.PdfEvent;
 
 public class JpedalRenderer extends BorderPane {
@@ -72,7 +73,7 @@ public class JpedalRenderer extends BorderPane {
 		this.group = group;
 		this.file = file;
 
-		Getos.eventBus.addEventHandler(PdfEvent.PDF_ZOOM_IN, event -> {
+		Getos.eventBus.addEventHandler(EditorEvent.ZOOM_IN, event -> {
 			zoomMode = FitToPage.NONE;
 
 			if (currentScaling < scalings.length - 1) {
@@ -90,7 +91,7 @@ public class JpedalRenderer extends BorderPane {
 			event.consume();
 		});
 
-		Getos.eventBus.addEventHandler(PdfEvent.PDF_ZOOM_OUT, event -> {
+		Getos.eventBus.addEventHandler(EditorEvent.ZOOM_OUT, event -> {
 			zoomMode = FitToPage.NONE;
 
 			if (currentScaling > 0) {
@@ -108,21 +109,21 @@ public class JpedalRenderer extends BorderPane {
 			event.consume();
 		});
 
-		Getos.eventBus.addEventHandler(PdfEvent.PDF_FIT_TO_WIDTH, event -> {
+		Getos.eventBus.addEventHandler(EditorEvent.FIT_TO_WIDTH, event -> {
 			zoomMode = FitToPage.WIDTH;
 			fitToX(FitToPage.WIDTH);
 
 			event.consume();
 		});
 
-		Getos.eventBus.addEventHandler(PdfEvent.PDF_FIT_TO_HEIGHT, event -> {
+		Getos.eventBus.addEventHandler(EditorEvent.FIT_TO_HEIGHT, event -> {
 			zoomMode = FitToPage.HEIGHT;
 			fitToX(FitToPage.HEIGHT);
 
 			event.consume();
 		});
 
-		Getos.eventBus.addEventHandler(PdfEvent.PDF_FIT_TO_PAGE, event -> {
+		Getos.eventBus.addEventHandler(EditorEvent.FIT_TO_PAGE, event -> {
 			zoomMode = FitToPage.AUTO;
 			fitToX(FitToPage.AUTO);
 
