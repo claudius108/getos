@@ -89,7 +89,7 @@ public final class MainWindowController extends StageController {
 			// fileChooser.setInitialDirectory(file.getParentFile());
 			// }
 
-			Path path = Paths.get("/home/claudius/Downloads/comune.pdf");
+			Path path = Paths.get("/home/claudius/comune.pdf");
 
 			openFile(path);
 

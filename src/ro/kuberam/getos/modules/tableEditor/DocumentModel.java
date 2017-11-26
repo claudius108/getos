@@ -72,12 +72,12 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
 	@Override
 	public String fxml() {
-		return "/ro/kuberam/getos/modules/pdfEditor/PdfEditor.fxml";
+		return "/ro/kuberam/getos/modules/tableEditor/TableEditor.fxml";
 	}
 
 	@Override
 	public String bundle() {
-		return "ro.kuberam.getos.modules.pdfEditor.ui";
+		return "ro.kuberam.getos.modules.tableEditor.ui";
 	}
 
 	@Override
