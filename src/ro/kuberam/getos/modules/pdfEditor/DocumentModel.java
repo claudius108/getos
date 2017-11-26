@@ -83,8 +83,6 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 			specificMetadata.put("pdf:paperSize", "");
 			specificMetadata.put("pdf:fonts", "");
 
-			System.out.println("dcterms:extent" + generalMetadata);
-
 			this.path = path;
 		} catch (IOException ex) {
 			Utils.showAlert(AlertType.ERROR, ex);

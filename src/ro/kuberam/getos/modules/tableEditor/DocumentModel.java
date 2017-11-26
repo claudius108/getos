@@ -3,15 +3,18 @@ package ro.kuberam.getos.modules.tableEditor;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
-import java.util.Map.Entry;
-import java.util.Set;
+import java.util.List;
+
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.filter.Filters;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.xpath.XPathExpression;
+import org.jdom2.xpath.XPathFactory;
 
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
-import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.SaxonApiUncheckedException;
-import net.sf.saxon.s9api.XdmAtomicValue;
-import net.sf.saxon.s9api.XdmValue;
 import ro.kuberam.getos.utils.Utils;
 
 public class DocumentModel implements ro.kuberam.getos.DocumentModel {
@@ -20,22 +23,34 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	public static LinkedHashMap<String, String> specificMetadata;
 
 	private Path path;
+	private Document document;
 
 	public DocumentModel(Path path) {
 		try {
 			// set the general metadata
 			generalMetadata = new LinkedHashMap<String, String>();
-			Set<Entry<XdmAtomicValue, XdmValue>> metadataSet = Utils
-					.transform(path.toFile(), getClass().getResourceAsStream("get-metadata.xql"), true, null, null)
-					.itemAt(0).asMap().entrySet();
-			for (Entry<XdmAtomicValue, XdmValue> metadata : metadataSet) {
-				generalMetadata.put(metadata.getKey().getStringValue(), metadata.getValue().toString());
+
+			SAXBuilder documentBuilder = new SAXBuilder();
+			document = documentBuilder.build(path.toFile());
+
+			XPathExpression<Element> xpath = XPathFactory.instance().compile("/html/head/meta[@name]",
+					Filters.element());
+			List<Element> metaElements = xpath.evaluate(document);
+			for (Element metaElement : metaElements) {
+				generalMetadata.put(metaElement.getAttributeValue("name"), metaElement.getAttributeValue("content"));
 			}
 
-			System.out.println("generalMetadata" + generalMetadata);
+			// StringWriter writer = new StringWriter();
+			// XMLOutputter outputter = new XMLOutputter();
+			// outputter.setFormat(Format.getPrettyFormat());
+			// outputter.output(document, writer);
+			// outputter.output(document, System.out);
+			// writer.close(); // close writer
+
+			System.out.println("generalMetadata: " + generalMetadata);
 
 			this.path = path;
-		} catch (IOException | IndexOutOfBoundsException | SaxonApiUncheckedException | SaxonApiException ex) {
+		} catch (IOException | IndexOutOfBoundsException | JDOMException ex) {
 			Utils.showAlert(AlertType.ERROR, ex);
 		}
 	}
