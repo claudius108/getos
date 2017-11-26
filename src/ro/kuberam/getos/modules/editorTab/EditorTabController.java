@@ -26,7 +26,6 @@ import ro.kuberam.getos.events.EventBus;
 import ro.kuberam.getos.events.FXEventBus;
 import ro.kuberam.getos.events.GetosEvent;
 import ro.kuberam.getos.modules.pdfEditor.PdfEditorController;
-import ro.kuberam.getos.modules.pdfEditor.PdfEvent;
 import ro.kuberam.getos.utils.Utils;
 
 public final class EditorTabController extends EditorController {
@@ -78,10 +77,8 @@ public final class EditorTabController extends EditorController {
 			// contentSourcePane.setImage(getSourceDocumentModel().goToPage((int)
 			// event.getData()));
 			Path targetDocumentPath = (Path) event.getData();
-			
-			new ro.kuberam.getos.modules.tableEditor.DocumentModel(targetDocumentPath);
-			
-			contentPane.getItems().add(new BorderPane());
+
+			loadRenderer(new ro.kuberam.getos.modules.tableEditor.DocumentModel(targetDocumentPath));
 
 			event.consume();
 		});
@@ -122,22 +119,25 @@ public final class EditorTabController extends EditorController {
 		});
 
 		pagination.setCurrentPageIndex(0);
-		pagination.pageCountProperty()
-				.bind(new SimpleIntegerProperty(Integer.parseInt(getSourceDocumentModel().generalMetadata().get("dcterms:extent"))).asObject());
+		pagination.pageCountProperty().bind(new SimpleIntegerProperty(
+				Integer.parseInt(getSourceDocumentModel().generalMetadata().get("dcterms:extent"))).asObject());
 		pagination.setPageFactory(index -> {
 			eventBus.fireEvent("go-to-page", index);
 
 			return paginationPane;
 		});
 
+		loadRenderer(getSourceDocumentModel());
+	}
+
+	private void loadRenderer(DocumentModel documentModel) {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					FXMLLoader loader = new FXMLLoader(
-							PdfEditorController.class.getResource(getSourceDocumentModel().fxml()),
-							ResourceBundle.getBundle(getSourceDocumentModel().bundle()), null,
-							new ControllerFactory(getApplication(), getStage(), getSourceDocumentModel(), eventBus));
+					FXMLLoader loader = new FXMLLoader(PdfEditorController.class.getResource(documentModel.fxml()),
+							ResourceBundle.getBundle(documentModel.bundle()), null,
+							new ControllerFactory(getApplication(), getStage(), documentModel, eventBus));
 
 					loader.load();
 
