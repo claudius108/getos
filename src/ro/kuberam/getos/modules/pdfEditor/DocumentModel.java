@@ -1,6 +1,7 @@
 package ro.kuberam.getos.modules.pdfEditor;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -19,6 +20,10 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import ro.kuberam.getos.utils.Utils;
+import technology.tabula.ObjectExtractor;
+import technology.tabula.Page;
+import technology.tabula.extractors.BasicExtractionAlgorithm;
+import technology.tabula.writers.CSVWriter;
 
 public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
@@ -130,6 +135,32 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	@Override
 	public void shutdown() {
 		localPdDocument.remove();
+	}
+
+	@Override
+	public String extractTablesFromPage(int pageNumber) {
+		ObjectExtractor oe = null;
+		String s = null;
+		
+		try {
+			oe = new ObjectExtractor(document);
+			Page page = oe.extract(pageNumber);
+			oe.close();
+
+			BasicExtractionAlgorithm bea = new BasicExtractionAlgorithm();
+			technology.tabula.Table table = bea.extract(page).get(0);
+			
+			StringBuilder sb = new StringBuilder();
+			(new CSVWriter()).write(sb, table);
+			s = sb.toString();
+			
+			System.out.println(table.getCols().size());
+			System.out.println(table.getRows().size());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return s;
 	}
 }
 

@@ -48,6 +48,12 @@ public interface DocumentModel {
 	 *
 	 */
 	Image goToPage(int pageNumber);
+	
+	/**
+	 * Extract tables from page.
+	 *
+	 */
+	Object extractTablesFromPage(int pageNumber);
 
 	/**
 	 * Closing of document.

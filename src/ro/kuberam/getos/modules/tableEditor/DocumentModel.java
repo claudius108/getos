@@ -88,6 +88,12 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	@Override
 	public void shutdown() {
 	}
+
+	@Override
+	public Object extractTablesFromPage(int pageNumber) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 
 // https://github.com/apache/tika/blob/master/tika-parsers/src/main/java/org/apache/tika/parser/pdf/PDFParser.java

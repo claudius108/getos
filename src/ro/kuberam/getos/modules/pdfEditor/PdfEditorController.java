@@ -65,8 +65,10 @@ public final class PdfEditorController extends RendererController {
 				Path targetDocumentPath = sourceDocumentPath.getParent()
 						.resolve(sourceDocumentPath.getFileName().toString().replaceFirst(".pdf", ".html"));
 
-				if (Files.exists(targetDocumentPath)) {
+				if (!Files.exists(targetDocumentPath)) {
 					generateHtmlFile(targetDocumentPath, getSourceDocumentModel());
+				} else {
+					getSourceDocumentModel().extractTablesFromPage(7);
 				}
 
 				eventBus.fireEvent("open-target-document", targetDocumentPath);
