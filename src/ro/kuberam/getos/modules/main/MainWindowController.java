@@ -29,6 +29,7 @@ import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
 import ro.kuberam.getos.documentTypeDetection.DocumentTypes;
 import ro.kuberam.getos.events.UserInterfaceEvent;
+import ro.kuberam.getos.fonts.AwesomeIcon;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
 import ro.kuberam.getos.modules.editorTab.EditorTabController;
@@ -78,6 +79,7 @@ public final class MainWindowController extends StageController {
 			event.consume();
 		});
 
+		openFileButton.setGraphic(AwesomeIcon.FILE_ALT.node());
 		openFileButton.setOnAction(event -> {
 
 			// ResourceBundle resourceBundle = getResources();
@@ -104,6 +106,7 @@ public final class MainWindowController extends StageController {
 			event.consume();
 		});
 
+		saveEditorContentButton.setGraphic(AwesomeIcon.SAVE.node());
 		saveEditorContentButton.setOnAction(event -> {
 			ResourceBundle resourceBundle = getResources();
 
@@ -119,6 +122,7 @@ public final class MainWindowController extends StageController {
 			event.consume();
 		});
 
+		closeAppButton.setGraphic(AwesomeIcon.POWER_OFF.node());
 		closeAppButton.setOnAction(event -> {
 			onStageClose();
 			event.consume();

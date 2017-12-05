@@ -8,6 +8,7 @@ import java.util.ServiceLoader;
 
 import javafx.application.Application;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.events.EventBus;
@@ -20,6 +21,7 @@ public class Getos extends Application {
 	public static EventBus eventBus;
 	public static ArrayList<EditorController> tabControllers;
 	public static HashMap<String, Constructor<?>> documentModelsRegistry = new HashMap<String, Constructor<?>>();
+	private static final String FONT_AWESOME = "/ro/kuberam/getos/fonts/fontawesome.ttf";
 
 	static {
 		eventBus = new FXEventBus();
@@ -44,6 +46,8 @@ public class Getos extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		Font.loadFont(getClass().getResource(FONT_AWESOME).toExternalForm(), 22);
+		
 		MainWindowController.create(this, stage);
 	}
 

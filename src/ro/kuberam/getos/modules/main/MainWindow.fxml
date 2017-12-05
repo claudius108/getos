@@ -67,26 +67,11 @@
 				</MenuBar>
 				<ToolBar prefHeight="17.0">
 					<items>
-						<Button fx:id="openFileButton" prefHeight="17.0"
-							style="-fx-background-color: transparent;">
-							<graphic>
-								<Glyph fontFamily="FontAwesome" fontSize="22.0" icon="FILE_ALT" />
-							</graphic>
-						</Button>
-						<Button fx:id="saveEditorContentButton" prefHeight="17.0"
-							style="-fx-background-color: transparent;">
-							<graphic>
-								<Glyph fontFamily="FontAwesome" fontSize="22.0" icon="SAVE" />
-							</graphic>
-						</Button>
+						<Button fx:id="openFileButton" style="-fx-background-color: transparent;" />
+						<Button fx:id="saveEditorContentButton" style="-fx-background-color: transparent;" />
 						<Button fx:id="pdfButton" mnemonicParsing="false" text="Editor Tab" />
 						<Pane HBox.hgrow="ALWAYS" />
-						<Button fx:id="closeAppButton" prefHeight="17.0"
-							style="-fx-background-color: transparent;">
-							<graphic>
-								<Glyph fontFamily="FontAwesome" fontSize="22.0" icon="POWER_OFF" />
-							</graphic>
-						</Button>
+						<Button fx:id="closeAppButton" style="-fx-background-color: transparent;" />
 					</items>
 				</ToolBar>
 			</children>
