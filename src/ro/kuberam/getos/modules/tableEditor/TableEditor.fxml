@@ -3,7 +3,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
-<?import org.controlsfx.control.spreadsheet.SpreadsheetView?>
+<?import javafx.scene.control.TableView?>
 
 <BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.modules.tableEditor.TableEditorController">
 	<center>
@@ -11,7 +11,7 @@
 			<content>
 				<StackPane>
 					<children>
-						<SpreadsheetView fx:id="contentSourcePane" />
+						<TableView fx:id="contentSourcePane" />
 					</children>
 				</StackPane>
 			</content>

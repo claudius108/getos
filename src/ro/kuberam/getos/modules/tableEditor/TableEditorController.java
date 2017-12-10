@@ -1,12 +1,11 @@
 package ro.kuberam.getos.modules.tableEditor;
 
-import org.controlsfx.control.spreadsheet.SpreadsheetView;
-
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.controller.factory.RendererController;
@@ -25,7 +24,7 @@ public final class TableEditorController extends RendererController {
 	private ScrollPane centerSourcePane;
 
 	@FXML
-	private SpreadsheetView contentSourcePane;
+	private TableView contentSourcePane;
 
 	public TableEditorController(Application application, Stage stage, DocumentModel documentModel, EventBus eventBus) {
 		super(application, stage, documentModel, eventBus);

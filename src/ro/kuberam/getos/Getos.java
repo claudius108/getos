@@ -1,15 +1,22 @@
 package ro.kuberam.getos;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 import java.util.ServiceLoader;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.events.EventBus;
 import ro.kuberam.getos.events.FXEventBus;
@@ -46,9 +53,36 @@ public class Getos extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		Font.loadFont(getClass().getResource(FONT_AWESOME).toExternalForm(), 22);
+//		Font.loadFont(getClass().getResource(FONT_AWESOME).toExternalForm(), 10);
+//        InputStream fontStream = Getos.class.getResourceAsStream("/ro/kuberam/getos/fonts/fontawesome-webfont.ttf");
+//        Font.loadFont(fontStream, 10);
+//        fontStream.close();
+//        
+//        System.out.println("fonts url: " + getClass().getResource(FONT_AWESOME).toExternalForm());
+//        System.out.println("fonts: " + Font.getFontNames("FontAwesome"));
+//        System.out.println("fontstream: " + (fontStream != null));
 		
-		MainWindowController.create(this, stage);
+		Font font = null;
+      try {
+        InputStream fontStream = Getos.class.getResourceAsStream("fontawesome.ttf");
+//          InputStream fontStream = new FileInputStream(new File("/home/claudius/fontawesome.ttf"));
+          font = Font.loadFont(fontStream, 22);
+          
+			fontStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+      
+      System.out.println("font: " + font);
+      System.out.println("fonts: " + Font.getFontNames("FontAwesome Regular"));
+		
+		try {
+			FXMLLoader.load(MainWindowController.class.getResource("/ro/kuberam/getos/modules/main/MainWindow.fxml"),
+					ResourceBundle.getBundle("ro.kuberam.getos.modules.main.ui"), null,
+					new ControllerFactory(this, stage));
+		} catch (Exception ex) {
+			Utils.showAlert(AlertType.ERROR, ex);
+		}
 	}
 
 	public static void main(String[] args) {

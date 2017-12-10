@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import org.controlsfx.glyphfont.Glyph?>
 
 <BorderPane fx:id="root" prefHeight="700.0" prefWidth="1000.0"
 	stylesheets="@MainWindow.css" xmlns="http://javafx.com/javafx/8.0.111"
@@ -65,13 +64,14 @@
 						</Menu>
 					</menus>
 				</MenuBar>
-				<ToolBar prefHeight="17.0">
+				<ToolBar prefHeight="22.0">
 					<items>
-						<Button fx:id="openFileButton" style="-fx-background-color: transparent;" />
-						<Button fx:id="saveEditorContentButton" style="-fx-background-color: transparent;" />
+						<Button fx:id="openFileButton" />
+						<Button fx:id="saveEditorContentButton" />
 						<Button fx:id="pdfButton" mnemonicParsing="false" text="Editor Tab" />
 						<Pane HBox.hgrow="ALWAYS" />
-						<Button fx:id="closeAppButton" style="-fx-background-color: transparent;" />
+						<Button mnemonicParsing="false" text="%fa.angle_left" />
+						<Button fx:id="closeAppButton" />
 					</items>
 				</ToolBar>
 			</children>
