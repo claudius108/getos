@@ -1,9 +1,5 @@
 package ro.kuberam.getos;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -53,29 +49,8 @@ public class Getos extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-//		Font.loadFont(getClass().getResource(FONT_AWESOME).toExternalForm(), 10);
-//        InputStream fontStream = Getos.class.getResourceAsStream("/ro/kuberam/getos/fonts/fontawesome-webfont.ttf");
-//        Font.loadFont(fontStream, 10);
-//        fontStream.close();
-//        
-//        System.out.println("fonts url: " + getClass().getResource(FONT_AWESOME).toExternalForm());
-//        System.out.println("fonts: " + Font.getFontNames("FontAwesome"));
-//        System.out.println("fontstream: " + (fontStream != null));
-		
-		Font font = null;
-      try {
-        InputStream fontStream = Getos.class.getResourceAsStream("fontawesome.ttf");
-//          InputStream fontStream = new FileInputStream(new File("/home/claudius/fontawesome.ttf"));
-          font = Font.loadFont(fontStream, 22);
-          
-			fontStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-      
-      System.out.println("font: " + font);
-      System.out.println("fonts: " + Font.getFontNames("FontAwesome Regular"));
-		
+		Font.loadFont(getClass().getResource(FONT_AWESOME).toExternalForm(), 10);
+
 		try {
 			FXMLLoader.load(MainWindowController.class.getResource("/ro/kuberam/getos/modules/main/MainWindow.fxml"),
 					ResourceBundle.getBundle("ro.kuberam.getos.modules.main.ui"), null,
