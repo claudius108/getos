@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ro.kuberam.apps</groupId>
 	<artifactId>getos</artifactId>
-	<version>0.2.4</version>
+	<version>0.2.5</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,11 +23,6 @@
 			<artifactId>OpenViewerFX</artifactId>
 			<version>7.12.28</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.controlsfx</groupId> -->
-<!-- 			<artifactId>controlsfx</artifactId> -->
-<!-- 			<version>8.40.14</version> -->
-<!-- 		</dependency> -->
 		<dependency>
 			<groupId>com.google.auto.service</groupId>
 			<artifactId>auto-service</artifactId>

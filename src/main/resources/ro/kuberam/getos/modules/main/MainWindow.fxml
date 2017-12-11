@@ -66,12 +66,11 @@
 				</MenuBar>
 				<ToolBar prefHeight="22.0">
 					<items>
-						<Button fx:id="openFileButton" />
-						<Button fx:id="saveEditorContentButton" />
+						<Button fx:id="openFileButton" text="%fa.file_alt" />
+						<Button fx:id="saveEditorContentButton" text="%fa.save" />
 						<Button fx:id="pdfButton" mnemonicParsing="false" text="Editor Tab" />
 						<Pane HBox.hgrow="ALWAYS" />
-						<Button mnemonicParsing="false" text="%fa.angle_left" />
-						<Button fx:id="closeAppButton" />
+						<Button fx:id="closeAppButton" text="%fa.power_off" />
 					</items>
 				</ToolBar>
 			</children>
