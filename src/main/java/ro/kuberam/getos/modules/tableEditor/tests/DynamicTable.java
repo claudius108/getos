@@ -27,12 +27,13 @@ import javafx.stage.Stage;
 
 public class DynamicTable extends Application {
 
+	TableView<ObservableList<StringProperty>> table = new TableView<>();
 	private char nextChar = 'A';
 
 	@Override
 	public void start(Stage primaryStage) {
 		final BorderPane root = new BorderPane();
-		final TableView<ObservableList<StringProperty>> table = new TableView<>();
+		table = new TableView<>();
 		table.setEditable(true);
 		table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		table.getSelectionModel().setCellSelectionEnabled(true);
@@ -84,9 +85,9 @@ public class DynamicTable extends Application {
 
 	private TableColumn<ObservableList<StringProperty>, String> createColumn(final int columnIndex) {
 		TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
-		String title = String.valueOf(nextChar++);
+//		String title = String.valueOf(nextChar++);
 
-		column.setText(title);
+//		column.setText(title);
 		column.setCellValueFactory(cellData -> {
 			ObservableList<StringProperty> values = cellData.getValue();
 			if (columnIndex >= values.size()) {
@@ -103,6 +104,28 @@ public class DynamicTable extends Application {
 			cellEditEvent.getTableView().getItems().get(editedRowIndex).set(editedColumnIndex,
 					new SimpleStringProperty(cellEditEvent.getNewValue()));
 		});
+		column.setSortable(false);
+		column = setColumnHeader(columnIndex, column);
+
+		return column;
+	}
+	
+	private TableColumn<ObservableList<StringProperty>, String> setColumnHeader(int columnIndex,
+			TableColumn<ObservableList<StringProperty>, String> column) {
+		String mapChar = String.valueOf(nextChar++);
+
+		Label columnHeader = new Label(mapChar);
+		columnHeader.setId(Integer.toString(columnIndex));
+
+		columnHeader.setOnMouseReleased(ev -> {
+			String columnHeaderLabelId = ((Label) ev.getSource()).getId();
+			TableColumn<ObservableList<StringProperty>, String> currentColumn = (TableColumn<ObservableList<StringProperty>, String>) table
+					.getColumns().get(Integer.parseInt(columnHeaderLabelId));
+			table.getSelectionModel().selectRange(0, currentColumn, table.getItems().size() - 1, currentColumn);
+		});
+
+		// column.setCellValueFactory(new MapValueFactory(mapChar));
+		column.setGraphic(columnHeader);
 		column.setSortable(false);
 
 		return column;
