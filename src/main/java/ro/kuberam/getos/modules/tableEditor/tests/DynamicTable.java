@@ -16,12 +16,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
-import javafx.scene.control.Control;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -29,6 +31,7 @@ import javafx.stage.Stage;
 public class DynamicTable extends Application {
 
 	TableView<ObservableList<StringProperty>> table = new TableView<>();
+	ContextMenu columnContextMenu;
 	private char nextChar = 'A';
 
 	@Override
@@ -40,52 +43,60 @@ public class DynamicTable extends Application {
 		table.getSelectionModel().setCellSelectionEnabled(true);
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		table.setFixedCellSize(Region.USE_COMPUTED_SIZE);
-		
-//		tableView.setRowFactory(new Callback<TableView<Person>, TableRow<Person>>() {  
-//	        @Override  
-//	        public TableRow<Person> call(TableView<Person> tableView2) {  
-//	            final TableRow<Person> row = new TableRow<>();  
-//	            row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {  
-//	                @Override  
-//	                public void handle(MouseEvent event) {  
-//	                    final int index = row.getIndex();  
-//	                    if (index >= 0 && index < tableView.getItems().size() && tableView.getSelectionModel().isSelected(index)  ) {
-//	                        tableView.getSelectionModel().clearSelection();
-//	                        event.consume();  
-//	                    }  
-//	                }  
-//	            });  
-//	            return row;  
-//	        }  
-//	    });
-		
-		
-//		ObjectProperty<TableRow<MyRowClass>> lastSelectedRow = new SimpleObjectProperty<>();
-//
-//	    myTableView.setRowFactory(tableView -> {
-//	        TableRow<MyRowClass> row = new TableRow<MyRowClass>();
-//
-//	        row.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
-//	            if (isNowSelected) {
-//	                lastSelectedRow.set(row);
-//	            } 
-//	        });
-//	        return row;
-//	    });
-//
-//
-//	    stage.getScene().addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-//
-//	        @Override
-//	        public void handle(MouseEvent event) {
-//	            if (lastSelectedRow.get() != null) {
-//	                Bounds boundsOfSelectedRow = lastSelectedRow.get().localToScene(lastSelectedRow.get().getLayoutBounds());
-//	                if (boundsOfSelectedRow.contains(event.getSceneX(), event.getSceneY()) == false) {
-//	                    myTableView.getSelectionModel().clearSelection();
-//	                }
-//	            }
-//	        }
-//	    });		
+
+		columnContextMenu = new ContextMenu();
+		MenuItem mi1 = new MenuItem("Delete column");
+		columnContextMenu.getItems().add(mi1);
+
+		// tableView.setRowFactory(new Callback<TableView<Person>, TableRow<Person>>() {
+		// @Override
+		// public TableRow<Person> call(TableView<Person> tableView2) {
+		// final TableRow<Person> row = new TableRow<>();
+		// row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+		// @Override
+		// public void handle(MouseEvent event) {
+		// final int index = row.getIndex();
+		// if (index >= 0 && index < tableView.getItems().size() &&
+		// tableView.getSelectionModel().isSelected(index) ) {
+		// tableView.getSelectionModel().clearSelection();
+		// event.consume();
+		// }
+		// }
+		// });
+		// return row;
+		// }
+		// });
+
+		// ObjectProperty<TableRow<MyRowClass>> lastSelectedRow = new
+		// SimpleObjectProperty<>();
+		//
+		// myTableView.setRowFactory(tableView -> {
+		// TableRow<MyRowClass> row = new TableRow<MyRowClass>();
+		//
+		// row.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+		// if (isNowSelected) {
+		// lastSelectedRow.set(row);
+		// }
+		// });
+		// return row;
+		// });
+		//
+		//
+		// stage.getScene().addEventFilter(MouseEvent.MOUSE_CLICKED, new
+		// EventHandler<MouseEvent>() {
+		//
+		// @Override
+		// public void handle(MouseEvent event) {
+		// if (lastSelectedRow.get() != null) {
+		// Bounds boundsOfSelectedRow =
+		// lastSelectedRow.get().localToScene(lastSelectedRow.get().getLayoutBounds());
+		// if (boundsOfSelectedRow.contains(event.getSceneX(), event.getSceneY()) ==
+		// false) {
+		// myTableView.getSelectionModel().clearSelection();
+		// }
+		// }
+		// }
+		// });
 
 		populateTable(table, "file:///home/claudius/comune.txt");
 
@@ -132,9 +143,9 @@ public class DynamicTable extends Application {
 
 	private TableColumn<ObservableList<StringProperty>, String> createColumn(final int columnIndex) {
 		TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
-//		String title = String.valueOf(nextChar++);
+		// String title = String.valueOf(nextChar++);
 
-//		column.setText(title);
+		// column.setText(title);
 		column.setCellValueFactory(cellData -> {
 			ObservableList<StringProperty> values = cellData.getValue();
 			if (columnIndex >= values.size()) {
@@ -156,7 +167,7 @@ public class DynamicTable extends Application {
 
 		return column;
 	}
-	
+
 	private TableColumn<ObservableList<StringProperty>, String> setColumnHeader(int columnIndex,
 			TableColumn<ObservableList<StringProperty>, String> column) {
 		String mapChar = String.valueOf(nextChar++);
@@ -164,7 +175,6 @@ public class DynamicTable extends Application {
 		Label columnHeader = new Label(mapChar);
 		columnHeader.setPrefWidth(Double.MAX_VALUE);
 		columnHeader.setId(Integer.toString(columnIndex));
-		columnHeader.getStyleClass().clear();
 
 		columnHeader.setOnMouseClicked(event -> {
 			String columnHeaderLabelId = ((Label) event.getSource()).getId();
@@ -172,8 +182,11 @@ public class DynamicTable extends Application {
 					.getColumns().get(Integer.parseInt(columnHeaderLabelId));
 			table.getSelectionModel().clearSelection();
 			table.getSelectionModel().selectRange(0, currentColumn, table.getItems().size() - 1, currentColumn);
-			column.setUserData(true);
-			
+
+			if (event.getButton() == MouseButton.SECONDARY) {
+				columnContextMenu.show(table, event.getScreenX(), event.getScreenY());
+			}
+
 			event.consume();
 		});
 
