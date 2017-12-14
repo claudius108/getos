@@ -1,15 +1,22 @@
 package ro.kuberam.getos.modules.tableEditor.tests;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -20,6 +27,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -27,11 +35,19 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import technology.tabula.ObjectExtractor;
+import technology.tabula.Page;
+import technology.tabula.RectangularTextContainer;
+import technology.tabula.extractors.BasicExtractionAlgorithm;
+import technology.tabula.writers.CSVWriter;
 
 public class DynamicTable extends Application {
 
-	TableView<ObservableList<StringProperty>> table = new TableView<>();
-	ContextMenu columnContextMenu;
+	private TableView<ObservableList<StringProperty>> table = new TableView<>();
+	private ContextMenu columnContextMenu;
+
+	private int N_COLS = 5;
+	private int N_ROWS = 38;
 	private char nextChar = 'A';
 
 	@Override
@@ -98,7 +114,7 @@ public class DynamicTable extends Application {
 		// }
 		// });
 
-		populateTable(table, "file:///home/claudius/comune.txt");
+		populateTable("file:///home/claudius/comune.txt");
 
 		root.setCenter(table);
 		Scene scene = new Scene(root, 1000, 700);
@@ -106,33 +122,36 @@ public class DynamicTable extends Application {
 		stage.show();
 	}
 
-	private void populateTable(final TableView<ObservableList<StringProperty>> table, final String urlSpec) {
-		table.getItems().clear();
+	private void populateTable(final String urlSpec) {
 		table.getColumns().clear();
 		table.setPlaceholder(new Label("Loading..."));
 		Task<Void> task = new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
-				BufferedReader in = getReaderFromUrl(urlSpec);
+				technology.tabula.Table tabulaTable = getTabulaTable(new File("/home/claudius/comune.pdf"), 7);
 
-				// Data:
-				String dataLine;
-				while ((dataLine = in.readLine()) != null) {
-					final String[] dataValues = dataLine.split(",", -1);
-					Platform.runLater(() -> {
-						// Add additional columns if necessary:
-						for (int columnIndex = table.getColumns()
-								.size(); columnIndex < dataValues.length; columnIndex++) {
-							table.getColumns().add(createColumn(columnIndex));
+				Platform.runLater(() -> {
+					try {
+						createIndexColumn();
+
+						int columnNumber = tabulaTable.getCols().size();
+
+						for (int i = 0; i < columnNumber; i++) {
+							createDataColumn(i);
 						}
-						// Add data to table:
-						ObservableList<StringProperty> data = FXCollections.observableArrayList();
-						for (String value : dataValues) {
-							data.add(new SimpleStringProperty(value));
+
+						for (List<RectangularTextContainer> row : tabulaTable.getRows()) {
+							ObservableList<StringProperty> rowData = FXCollections.observableArrayList(
+									row.stream().map(columnValue -> new SimpleStringProperty(columnValue.getText()))
+											.collect(Collectors.toList()));
+
+							table.getItems().add(rowData);
 						}
-						table.getItems().add(data);
-					});
-				}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				});
+
 				return null;
 			}
 		};
@@ -141,11 +160,32 @@ public class DynamicTable extends Application {
 		thread.start();
 	}
 
-	private TableColumn<ObservableList<StringProperty>, String> createColumn(final int columnIndex) {
-		TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
-		// String title = String.valueOf(nextChar++);
+	private void createIndexColumn() {
+		TableColumn<ObservableList<StringProperty>, String> indexColumn = new TableColumn<>();
 
-		// column.setText(title);
+		String mapChar = String.valueOf(nextChar++);
+		Label columnHeader = new Label(mapChar);
+		columnHeader.setPrefWidth(Double.MAX_VALUE);
+		indexColumn.setGraphic(columnHeader);
+
+		indexColumn.setCellFactory(column -> {
+		    return new TableCell<ObservableList<StringProperty>, String>() {
+		        @Override
+		        protected void updateItem(String item, boolean empty) {
+					super.updateItem((String) item, empty);
+					setGraphic(null);
+					setText(empty ? null : Integer.toString(getIndex() + 1));
+		        }
+		    };
+		});
+		indexColumn.setSortable(false);
+
+		table.getColumns().add(indexColumn);
+	}
+
+	private void createDataColumn(final int columnIndex) {
+		TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
+
 		column.setCellValueFactory(cellData -> {
 			ObservableList<StringProperty> values = cellData.getValue();
 			if (columnIndex >= values.size()) {
@@ -165,7 +205,7 @@ public class DynamicTable extends Application {
 		column.setSortable(false);
 		column = setColumnHeader(columnIndex, column);
 
-		return column;
+		table.getColumns().add(column);
 	}
 
 	private TableColumn<ObservableList<StringProperty>, String> setColumnHeader(int columnIndex,
@@ -192,7 +232,6 @@ public class DynamicTable extends Application {
 
 		// column.setCellValueFactory(new MapValueFactory(mapChar));
 		column.setGraphic(columnHeader);
-		column.setSortable(false);
 
 		return column;
 	}
@@ -204,36 +243,27 @@ public class DynamicTable extends Application {
 		return new BufferedReader(new InputStreamReader(in));
 	}
 
-	private ObservableList<Map<String, String>> generateDataInMap(final String urlSpec) {
-		BufferedReader in;
-		ObservableList<Map<String, String>> allData = FXCollections.observableArrayList();
+	private technology.tabula.Table getTabulaTable(File file, int pageNumber) {
+		ObjectExtractor oe = null;
+		technology.tabula.Table tabulaTable = null;
 
 		try {
-			in = getReaderFromUrl(urlSpec);
+			PDDocument document = PDDocument.load(file);
+			oe = new ObjectExtractor(document);
+			Page page = oe.extract(pageNumber);
+			oe.close();
 
-			String dataLine;
-			while ((dataLine = in.readLine()) != null) {
+			BasicExtractionAlgorithm bea = new BasicExtractionAlgorithm();
+			tabulaTable = bea.extract(page).get(0);
 
-				final String[] dataValues = dataLine.split(",", -1);
-
-				for (int i = 1; i < dataValues.length; i++) {
-					Map<String, String> dataRow = new HashMap<>();
-
-					String value = dataValues[i];
-
-					dataRow.put(String.valueOf(nextChar++), value);
-
-					allData.add(dataRow);
-				}
-
-				nextChar = 'A';
-			}
-
-		} catch (Exception e) {
+			StringBuilder sb = new StringBuilder();
+			(new CSVWriter()).write(sb, tabulaTable);
+			String s = sb.toString();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		return allData;
+		return tabulaTable;
 	}
 
 	public static void main(String[] args) {
