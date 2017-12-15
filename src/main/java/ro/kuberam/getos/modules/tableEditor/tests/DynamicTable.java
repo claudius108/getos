@@ -7,16 +7,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -46,8 +43,6 @@ public class DynamicTable extends Application {
 	private TableView<ObservableList<StringProperty>> table = new TableView<>();
 	private ContextMenu columnContextMenu;
 
-	private int N_COLS = 5;
-	private int N_ROWS = 38;
 	private char nextChar = 'A';
 
 	@Override
@@ -137,7 +132,7 @@ public class DynamicTable extends Application {
 						int columnNumber = tabulaTable.getCols().size();
 
 						for (int i = 0; i < columnNumber; i++) {
-							createDataColumn(i);
+							createDataColumn(i + 1);
 						}
 
 						for (List<RectangularTextContainer> row : tabulaTable.getRows()) {
@@ -162,11 +157,6 @@ public class DynamicTable extends Application {
 
 	private void createIndexColumn() {
 		TableColumn<ObservableList<StringProperty>, String> indexColumn = new TableColumn<>();
-
-		String mapChar = String.valueOf(nextChar++);
-		Label columnHeader = new Label(mapChar);
-		columnHeader.setPrefWidth(Double.MAX_VALUE);
-		indexColumn.setGraphic(columnHeader);
 
 		indexColumn.setCellFactory(column -> {
 		    return new TableCell<ObservableList<StringProperty>, String>() {
