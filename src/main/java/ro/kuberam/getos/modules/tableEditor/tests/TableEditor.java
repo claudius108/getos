@@ -19,6 +19,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -30,7 +31,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import technology.tabula.ObjectExtractor;
 import technology.tabula.Page;
@@ -38,7 +38,7 @@ import technology.tabula.RectangularTextContainer;
 import technology.tabula.extractors.BasicExtractionAlgorithm;
 import technology.tabula.writers.CSVWriter;
 
-public class DynamicTable extends Application {
+public class TableEditor extends Application {
 
 	private TableView<ObservableList<StringProperty>> table = new TableView<>();
 	private ContextMenu columnContextMenu;
@@ -53,7 +53,6 @@ public class DynamicTable extends Application {
 		table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		table.getSelectionModel().setCellSelectionEnabled(true);
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		table.setFixedCellSize(Region.USE_COMPUTED_SIZE);
 
 		columnContextMenu = new ContextMenu();
 		MenuItem mi1 = new MenuItem("Delete column");
@@ -165,10 +164,14 @@ public class DynamicTable extends Application {
 					super.updateItem((String) item, empty);
 					setGraphic(null);
 					setText(empty ? null : Integer.toString(getIndex() + 1));
+					setAlignment(Pos.CENTER); 
+					setStyle("-fx-background-color: -fx-inner-border, -fx-body-color;");
 		        }
 		    };
 		});
 		indexColumn.setSortable(false);
+		indexColumn.setMinWidth(50.0d);
+		indexColumn.setMaxWidth(50.0d);		
 
 		table.getColumns().add(indexColumn);
 	}
