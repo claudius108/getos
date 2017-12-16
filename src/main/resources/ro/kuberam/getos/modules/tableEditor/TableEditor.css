@@ -1,0 +1,8 @@
+TableView .indexColumnCell {
+    -fx-alignment: CENTER;
+    -fx-background-color: -fx-inner-border, -fx-body-color;
+}
+
+TableView .indexColumnCell:selected {
+    -fx-background-color: -fx-table-cell-border-color, -fx-background;
+}

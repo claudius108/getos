@@ -1,12 +1,7 @@
 package ro.kuberam.getos.modules.tableEditor.tests;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,13 +30,10 @@ import technology.tabula.ObjectExtractor;
 import technology.tabula.Page;
 import technology.tabula.RectangularTextContainer;
 import technology.tabula.extractors.BasicExtractionAlgorithm;
-import technology.tabula.writers.CSVWriter;
 
 public class TableEditor extends Application {
 
 	private TableView<ObservableList<StringProperty>> table = new TableView<>();
-	private ContextMenu columnContextMenu;
-	private ContextMenu rowContextMenu;
 
 	private char nextChar = 'A';
 
@@ -53,14 +45,6 @@ public class TableEditor extends Application {
 		table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		table.getSelectionModel().setCellSelectionEnabled(true);
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-		columnContextMenu = new ContextMenu();
-		MenuItem menuItem1 = new MenuItem("Delete column");
-		columnContextMenu.getItems().add(menuItem1);
-		
-		rowContextMenu = new ContextMenu();
-		MenuItem menuItem2 = new MenuItem("Delete row");
-		rowContextMenu.getItems().add(menuItem2);
 
 		populateTable("file:///home/claudius/comune.txt");
 
@@ -113,36 +97,42 @@ public class TableEditor extends Application {
 		TableColumn<ObservableList<StringProperty>, String> indexColumn = new TableColumn<>();
 
 		indexColumn.setCellFactory(column -> {
-		    return new TableCell<ObservableList<StringProperty>, String>() {
-		        @Override
-		        protected void updateItem(String item, boolean empty) {
+			return new TableCell<ObservableList<StringProperty>, String>() {
+				@Override
+				protected void updateItem(String item, boolean empty) {
 					super.updateItem((String) item, empty);
 					setGraphic(null);
 					setText(empty ? null : Integer.toString(getIndex() + 1));
 					getStyleClass().add("indexColumnCell");
 					
+					ContextMenu contextMenu = new ContextMenu();
+					MenuItem deleteColumnItem = new MenuItem("Remove row");
+					deleteColumnItem.setOnAction(e -> table.getItems().remove(getIndex()));
+					contextMenu.getItems().add(deleteColumnItem);
+					setContextMenu(contextMenu);
+
 					setOnMouseClicked(event -> {
 						table.getSelectionModel().clearSelection();
 						table.getSelectionModel().select(getIndex());
 
 						if (event.getButton() == MouseButton.SECONDARY) {
-							rowContextMenu.show(table, event.getScreenX(), event.getScreenY());
+							contextMenu.show(table, event.getScreenX(), event.getScreenY());
 						}
 
 						event.consume();
 					});
-		        }
-		    };
+				}
+			};
 		});
 		indexColumn.setSortable(false);
 		indexColumn.setMinWidth(50.0d);
-		indexColumn.setMaxWidth(50.0d);		
+		indexColumn.setMaxWidth(50.0d);
 
 		table.getColumns().add(indexColumn);
 	}
 
 	private void createDataColumn(final int columnIndex) {
-		TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
+		final TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
 
 		column.setCellValueFactory(cellData -> {
 			ObservableList<StringProperty> values = cellData.getValue();
@@ -161,44 +151,35 @@ public class TableEditor extends Application {
 					new SimpleStringProperty(cellEditEvent.getNewValue()));
 		});
 		column.setSortable(false);
-		column = setColumnHeader(columnIndex, column);
+		setColumnHeader(columnIndex, column);
 
 		table.getColumns().add(column);
 	}
 
-	private TableColumn<ObservableList<StringProperty>, String> setColumnHeader(int columnIndex,
-			TableColumn<ObservableList<StringProperty>, String> column) {
+	private void setColumnHeader(int columnIndex, TableColumn<ObservableList<StringProperty>, String> column) {
 		String mapChar = String.valueOf(nextChar++);
 
 		Label columnHeader = new Label(mapChar);
 		columnHeader.setPrefWidth(Double.MAX_VALUE);
-		columnHeader.setId(Integer.toString(columnIndex));
+
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem deleteColumnItem = new MenuItem("Remove column");
+		deleteColumnItem.setOnAction(e -> table.getColumns().remove(column));
+		contextMenu.getItems().add(deleteColumnItem);
+		columnHeader.setContextMenu(contextMenu);
 
 		columnHeader.setOnMouseClicked(event -> {
-			String columnHeaderLabelId = ((Label) event.getSource()).getId();
-			TableColumn<ObservableList<StringProperty>, String> currentColumn = (TableColumn<ObservableList<StringProperty>, String>) table
-					.getColumns().get(Integer.parseInt(columnHeaderLabelId));
 			table.getSelectionModel().clearSelection();
-			table.getSelectionModel().selectRange(0, currentColumn, table.getItems().size() - 1, currentColumn);
+			table.getSelectionModel().selectRange(0, column, table.getItems().size() - 1, column);
 
 			if (event.getButton() == MouseButton.SECONDARY) {
-				columnContextMenu.show(table, event.getScreenX(), event.getScreenY());
+				contextMenu.show(table, event.getScreenX(), event.getScreenY());
 			}
 
 			event.consume();
 		});
 
-		// column.setCellValueFactory(new MapValueFactory(mapChar));
 		column.setGraphic(columnHeader);
-
-		return column;
-	}
-
-	private BufferedReader getReaderFromUrl(String urlSpec) throws Exception {
-		URL url = new URL(urlSpec);
-		URLConnection connection = url.openConnection();
-		InputStream in = connection.getInputStream();
-		return new BufferedReader(new InputStreamReader(in));
 	}
 
 	private technology.tabula.Table getTabulaTable(File file, int pageNumber) {
@@ -213,10 +194,6 @@ public class TableEditor extends Application {
 
 			BasicExtractionAlgorithm bea = new BasicExtractionAlgorithm();
 			tabulaTable = bea.extract(page).get(0);
-
-			StringBuilder sb = new StringBuilder();
-			(new CSVWriter()).write(sb, tabulaTable);
-			String s = sb.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

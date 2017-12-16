@@ -5,9 +5,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.TableView?>
 
-<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.modules.tableEditor.TableEditorController">
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.111"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.kuberam.getos.modules.tableEditor.TableEditorController"
+	stylesheets="@TableEditor.css">
 	<center>
-		<ScrollPane fx:id="centerSourcePane" fitToHeight="true" fitToWidth="true" pannable="true">
+		<ScrollPane fx:id="centerSourcePane" fitToHeight="true"
+			fitToWidth="true" pannable="true">
 			<content>
 				<StackPane>
 					<children>
