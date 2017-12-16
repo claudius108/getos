@@ -19,7 +19,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -42,6 +41,7 @@ public class TableEditor extends Application {
 
 	private TableView<ObservableList<StringProperty>> table = new TableView<>();
 	private ContextMenu columnContextMenu;
+	private ContextMenu rowContextMenu;
 
 	private char nextChar = 'A';
 
@@ -55,63 +55,18 @@ public class TableEditor extends Application {
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		columnContextMenu = new ContextMenu();
-		MenuItem mi1 = new MenuItem("Delete column");
-		columnContextMenu.getItems().add(mi1);
-
-		// tableView.setRowFactory(new Callback<TableView<Person>, TableRow<Person>>() {
-		// @Override
-		// public TableRow<Person> call(TableView<Person> tableView2) {
-		// final TableRow<Person> row = new TableRow<>();
-		// row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-		// @Override
-		// public void handle(MouseEvent event) {
-		// final int index = row.getIndex();
-		// if (index >= 0 && index < tableView.getItems().size() &&
-		// tableView.getSelectionModel().isSelected(index) ) {
-		// tableView.getSelectionModel().clearSelection();
-		// event.consume();
-		// }
-		// }
-		// });
-		// return row;
-		// }
-		// });
-
-		// ObjectProperty<TableRow<MyRowClass>> lastSelectedRow = new
-		// SimpleObjectProperty<>();
-		//
-		// myTableView.setRowFactory(tableView -> {
-		// TableRow<MyRowClass> row = new TableRow<MyRowClass>();
-		//
-		// row.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
-		// if (isNowSelected) {
-		// lastSelectedRow.set(row);
-		// }
-		// });
-		// return row;
-		// });
-		//
-		//
-		// stage.getScene().addEventFilter(MouseEvent.MOUSE_CLICKED, new
-		// EventHandler<MouseEvent>() {
-		//
-		// @Override
-		// public void handle(MouseEvent event) {
-		// if (lastSelectedRow.get() != null) {
-		// Bounds boundsOfSelectedRow =
-		// lastSelectedRow.get().localToScene(lastSelectedRow.get().getLayoutBounds());
-		// if (boundsOfSelectedRow.contains(event.getSceneX(), event.getSceneY()) ==
-		// false) {
-		// myTableView.getSelectionModel().clearSelection();
-		// }
-		// }
-		// }
-		// });
+		MenuItem menuItem1 = new MenuItem("Delete column");
+		columnContextMenu.getItems().add(menuItem1);
+		
+		rowContextMenu = new ContextMenu();
+		MenuItem menuItem2 = new MenuItem("Delete row");
+		rowContextMenu.getItems().add(menuItem2);
 
 		populateTable("file:///home/claudius/comune.txt");
 
 		root.setCenter(table);
 		Scene scene = new Scene(root, 1000, 700);
+		scene.getStylesheets().add("/ro/kuberam/getos/modules/tableEditor/tests/TableEditor.css");
 		stage.setScene(scene);
 		stage.show();
 	}
@@ -164,8 +119,18 @@ public class TableEditor extends Application {
 					super.updateItem((String) item, empty);
 					setGraphic(null);
 					setText(empty ? null : Integer.toString(getIndex() + 1));
-					setAlignment(Pos.CENTER); 
-					setStyle("-fx-background-color: -fx-inner-border, -fx-body-color;");
+					getStyleClass().add("indexColumnCell");
+					
+					setOnMouseClicked(event -> {
+						table.getSelectionModel().clearSelection();
+						table.getSelectionModel().select(getIndex());
+
+						if (event.getButton() == MouseButton.SECONDARY) {
+							rowContextMenu.show(table, event.getScreenX(), event.getScreenY());
+						}
+
+						event.consume();
+					});
 		        }
 		    };
 		});
