@@ -8,12 +8,10 @@ import java.util.stream.Collectors;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -34,7 +32,7 @@ import technology.tabula.extractors.BasicExtractionAlgorithm;
 public class TableEditor extends Application {
 
 	private TableView<ObservableList<StringProperty>> table = new TableView<>();
-
+	final ObservableList<ObservableList<StringProperty>> data = FXCollections.observableArrayList();
 	private char nextChar = 'A';
 
 	@Override
@@ -50,7 +48,7 @@ public class TableEditor extends Application {
 
 		root.setCenter(table);
 		Scene scene = new Scene(root, 1000, 700);
-		scene.getStylesheets().add("/ro/kuberam/getos/modules/tableEditor/tests/TableEditor.css");
+		scene.getStylesheets().add("/ro/kuberam/getos/modules/tableEditor/TableEditor.css");
 		stage.setScene(scene);
 		stage.show();
 	}
@@ -58,39 +56,63 @@ public class TableEditor extends Application {
 	private void populateTable(final String urlSpec) {
 		table.getColumns().clear();
 		table.setPlaceholder(new Label("Loading..."));
-		Task<Void> task = new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
-				technology.tabula.Table tabulaTable = getTabulaTable(new File("/home/claudius/comune.pdf"), 7);
 
-				Platform.runLater(() -> {
-					try {
-						createIndexColumn();
+		technology.tabula.Table tabulaTable = getTabulaTable(new File("/home/claudius/comune.pdf"), 7);
 
-						int columnNumber = tabulaTable.getCols().size();
+		createIndexColumn();
 
-						for (int i = 0; i < columnNumber; i++) {
-							createDataColumn(i + 1);
-						}
+		int columnNumber = tabulaTable.getCols().size();
 
-						for (List<RectangularTextContainer> row : tabulaTable.getRows()) {
-							ObservableList<StringProperty> rowData = FXCollections.observableArrayList(
-									row.stream().map(columnValue -> new SimpleStringProperty(columnValue.getText()))
-											.collect(Collectors.toList()));
+		for (int i = 0; i < columnNumber; i++) {
+			createDataColumn(i + 1);
+		}
 
-							table.getItems().add(rowData);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				});
+		for (List<RectangularTextContainer> row : tabulaTable.getRows()) {
+			ObservableList<StringProperty> rowData = FXCollections.observableArrayList(row.stream()
+					.map(columnValue -> new SimpleStringProperty(columnValue.getText())).collect(Collectors.toList()));
 
-				return null;
-			}
-		};
-		Thread thread = new Thread(task);
-		thread.setDaemon(true);
-		thread.start();
+			data.addAll(rowData);
+		}
+		
+		table.setItems(data);
+		
+		System.out.println(data);
+
+		// Task<Void> task = new Task<Void>() {
+		// @Override
+		// protected Void call() throws Exception {
+		// technology.tabula.Table tabulaTable = getTabulaTable(new
+		// File("/home/claudius/comune.pdf"), 7);
+		//
+		// Platform.runLater(() -> {
+		// try {
+		// createIndexColumn();
+		//
+		// int columnNumber = tabulaTable.getCols().size();
+		//
+		// for (int i = 0; i < columnNumber; i++) {
+		// createDataColumn(i + 1);
+		// }
+		//
+		// for (List<RectangularTextContainer> row : tabulaTable.getRows()) {
+		// ObservableList<StringProperty> rowData = FXCollections.observableArrayList(
+		// row.stream().map(columnValue -> new
+		// SimpleStringProperty(columnValue.getText()))
+		// .collect(Collectors.toList()));
+		//
+		// table.getItems().add(rowData);
+		// }
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// });
+		//
+		// return null;
+		// }
+		// };
+		// Thread thread = new Thread(task);
+		// thread.setDaemon(true);
+		// thread.start();
 	}
 
 	private void createIndexColumn() {
@@ -104,7 +126,7 @@ public class TableEditor extends Application {
 					setGraphic(null);
 					setText(empty ? null : Integer.toString(getIndex() + 1));
 					getStyleClass().add("indexColumnCell");
-					
+
 					ContextMenu contextMenu = new ContextMenu();
 					MenuItem deleteColumnItem = new MenuItem("Remove row");
 					deleteColumnItem.setOnAction(e -> table.getItems().remove(getIndex()));
