@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javafx.application.Application;
@@ -34,6 +36,7 @@ public class TableEditor extends Application {
 	private TableView<ObservableList<StringProperty>> table = new TableView<>();
 	final ObservableList<ObservableList<StringProperty>> data = FXCollections.observableArrayList();
 	private char nextChar = 'A';
+	private XMLStreamWriter xmlWriter;
 
 	@Override
 	public void start(Stage stage) {
@@ -73,10 +76,8 @@ public class TableEditor extends Application {
 
 			data.addAll(rowData);
 		}
-		
+
 		table.setItems(data);
-		
-		System.out.println(data);
 
 		// Task<Void> task = new Task<Void>() {
 		// @Override
@@ -128,9 +129,12 @@ public class TableEditor extends Application {
 					getStyleClass().add("indexColumnCell");
 
 					ContextMenu contextMenu = new ContextMenu();
-					MenuItem deleteColumnItem = new MenuItem("Remove row");
-					deleteColumnItem.setOnAction(e -> table.getItems().remove(getIndex()));
-					contextMenu.getItems().add(deleteColumnItem);
+					MenuItem deleteRowItem = new MenuItem("Remove row");
+					deleteRowItem.setOnAction(event -> {
+						table.getItems().remove(getIndex());
+						System.out.println(data.stream().count());
+					});
+					contextMenu.getItems().add(deleteRowItem);
 					setContextMenu(contextMenu);
 
 					setOnMouseClicked(event -> {

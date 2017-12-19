@@ -72,6 +72,7 @@ public final class TableEditorController extends RendererController {
 		
 		populateTable("file:///home/claudius/comune.txt");
 
+		eventBus.fireEvent("document-opened", getSourceDocumentModel().path());
 	}
 	
 	private void populateTable(final String urlSpec) {

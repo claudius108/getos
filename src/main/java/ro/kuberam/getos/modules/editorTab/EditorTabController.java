@@ -1,7 +1,9 @@
 package ro.kuberam.getos.modules.editorTab;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -60,6 +62,8 @@ public final class EditorTabController extends EditorController {
 	public EventBus eventBus;
 	public HashMap<String, GetosEvent> eventsRegistry = new HashMap<String, GetosEvent>();
 
+	private List<Path> openedDocuments = new ArrayList<Path>();
+
 	public EditorTabController(Application application, Stage stage, DocumentModel documentModel) {
 		super(application, stage, documentModel);
 	}
@@ -71,6 +75,7 @@ public final class EditorTabController extends EditorController {
 		eventBus = new FXEventBus();
 		eventBus.registerEvent("go-to-page", new EditorEvent(EditorEvent.GO_TO_PAGE));
 		eventBus.registerEvent("open-target-document", new EditorEvent(EditorEvent.OPEN_TARGET_DOCUMENT));
+		eventBus.registerEvent("document-opened", new EditorEvent(EditorEvent.DOCUMENT_OPENED));
 
 		// register the event listers
 		eventBus.addEventHandler(EditorEvent.OPEN_TARGET_DOCUMENT, event -> {
@@ -79,6 +84,12 @@ public final class EditorTabController extends EditorController {
 			Path targetDocumentPath = (Path) event.getData();
 
 			loadRenderer(new ro.kuberam.getos.modules.tableEditor.DocumentModel(targetDocumentPath));
+
+			event.consume();
+		});
+
+		eventBus.addEventHandler(EditorEvent.DOCUMENT_OPENED, event -> {
+			openedDocuments.add((Path) event.getData());
 
 			event.consume();
 		});

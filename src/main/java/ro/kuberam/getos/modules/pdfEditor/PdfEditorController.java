@@ -82,6 +82,8 @@ public final class PdfEditorController extends RendererController {
 		// initialize the PDF viewer
 		// setDocumentRenderer(new JpedalRenderer(centerSourcePane, contentSourcePane,
 		// getDocumentModel().file()));
+		
+		eventBus.fireEvent("document-opened", getSourceDocumentModel().path());
 	}
 
 	private void generateHtmlFile(Path targetDocumentPath, DocumentModel documentModel) {

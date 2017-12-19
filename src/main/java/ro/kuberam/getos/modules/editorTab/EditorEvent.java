@@ -14,6 +14,9 @@ public class EditorEvent extends GetosEvent {
 
 	public static final EventType<EditorEvent> GO_TO_PAGE = new EventType<>(Event.ANY, "GO_TO_PAGE");
 	public static final EventType<EditorEvent> OPEN_TARGET_DOCUMENT = new EventType<>(Event.ANY, "OPEN_TARGET_DOCUMENT");
+	public static final EventType<EditorEvent> DOCUMENT_OPENED = new EventType<>(Event.ANY, "DOCUMENT_OPENED");
+	
+	
 	
 	public static final EventType<EditorEvent> ZOOM_IN = new EventType<>(Event.ANY, "ZOOM_IN");
 	public static final EventType<EditorEvent> ZOOM_OUT = new EventType<>(Event.ANY, "ZOOM_OUT");
