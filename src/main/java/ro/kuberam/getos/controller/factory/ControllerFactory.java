@@ -6,48 +6,48 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import ro.kuberam.getos.DocumentModel;
-import ro.kuberam.getos.events.EventBus;
+import ro.kuberam.getos.modules.editorTab.EditorModel;
 
 public final class ControllerFactory implements Callback<Class<?>, Object> {
 
 	private final Application application;
 	private final Stage stage;
 	private final DocumentModel documentModel;
-	private final EventBus eventBus;
+	private final EditorModel editorModel;
 
 	public ControllerFactory(Application application) {
 		this.application = application;
 		this.stage = null;
 		this.documentModel = null;
-		this.eventBus = null;
+		this.editorModel = null;
 	}
 
 	public ControllerFactory(Application pApplication, Stage stage) {
 		this.application = pApplication;
 		this.stage = stage;
 		this.documentModel = null;
-		this.eventBus = null;
+		this.editorModel = null;
 	}
 
 	public ControllerFactory(Application pApplication, Stage stage, DocumentModel documentModel) {
 		this.application = pApplication;
 		this.stage = stage;
 		this.documentModel = documentModel;
-		this.eventBus = null;
+		this.editorModel = null;
 	}
 	
-	public ControllerFactory(Application pApplication, Stage stage, DocumentModel documentModel, EventBus eventBus) {
+	public ControllerFactory(Application pApplication, Stage stage, DocumentModel documentModel, EditorModel editorModel) {
 		this.application = pApplication;
 		this.stage = stage;
 		this.documentModel = documentModel;
-		this.eventBus = eventBus;
+		this.editorModel = editorModel;
 	}
 
 	@Override
 	public Object call(Class<?> type) {
 		try {
 			if (RendererController.class.isAssignableFrom(type)) {
-				return type.getConstructors()[0].newInstance(application, stage, documentModel, eventBus);
+				return type.getConstructors()[0].newInstance(application, stage, documentModel, editorModel);
 			} else if (EditorController.class.isAssignableFrom(type)) {
 				return type.getConstructors()[0].newInstance(application, stage, documentModel);
 			} else if (StageController.class.isAssignableFrom(type)) {

@@ -6,7 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
-import ro.kuberam.getos.events.EventBus;
+import ro.kuberam.getos.modules.editorTab.EditorModel;
 
 public class RendererController extends StageController {
 
@@ -15,13 +15,13 @@ public class RendererController extends StageController {
 
 	private DocumentModel sourceDocumentModel;
 	
-	public EventBus eventBus;
+	public EditorModel editorModel;
 
-	public RendererController(Application application, Stage stage, DocumentModel sourceDocumentModel, EventBus eventBus) {
+	public RendererController(Application application, Stage stage, DocumentModel sourceDocumentModel, EditorModel editorModel) {
 		super(application, stage);
 
 		setSourceDocumentModel(sourceDocumentModel);
-		this.eventBus = eventBus;
+		this.editorModel = editorModel;
 	}
 
 	public DocumentModel getSourceDocumentModel() {

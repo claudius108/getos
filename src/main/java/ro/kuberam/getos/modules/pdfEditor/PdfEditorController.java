@@ -25,8 +25,8 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.controller.factory.RendererController;
-import ro.kuberam.getos.events.EventBus;
 import ro.kuberam.getos.modules.editorTab.EditorEvent;
+import ro.kuberam.getos.modules.editorTab.EditorModel;
 import ro.kuberam.getos.utils.Utils;
 
 public final class PdfEditorController extends RendererController {
@@ -45,14 +45,14 @@ public final class PdfEditorController extends RendererController {
 
 	private XMLStreamWriter xmlWriter;
 
-	public PdfEditorController(Application application, Stage stage, DocumentModel documentModel, EventBus eventBus) {
-		super(application, stage, documentModel, eventBus);
+	public PdfEditorController(Application application, Stage stage, DocumentModel documentModel, EditorModel editorModel) {
+		super(application, stage, documentModel, editorModel);
 	}
 
 	@FXML
 	public void initialize() {
 
-		eventBus.addEventHandler(EditorEvent.GO_TO_PAGE, event -> {
+		editorModel.eventBus.addEventHandler(EditorEvent.GO_TO_PAGE, event -> {
 			contentSourcePane.setImage(getSourceDocumentModel().goToPage((int) event.getData()));
 
 			event.consume();
@@ -71,7 +71,9 @@ public final class PdfEditorController extends RendererController {
 					getSourceDocumentModel().extractTablesFromPage(7);
 				}
 
-				eventBus.fireEvent("open-target-document", targetDocumentPath);
+				editorModel.eventBus.fireEvent("open-target-document", targetDocumentPath);
+				
+				System.out.println("editorModel = " + editorModel.openedDocuments);
 			}
 		});
 
@@ -83,7 +85,7 @@ public final class PdfEditorController extends RendererController {
 		// setDocumentRenderer(new JpedalRenderer(centerSourcePane, contentSourcePane,
 		// getDocumentModel().file()));
 		
-		eventBus.fireEvent("document-opened", getSourceDocumentModel().path());
+		editorModel.eventBus.fireEvent("document-opened", getSourceDocumentModel().path());
 	}
 
 	private void generateHtmlFile(Path targetDocumentPath, DocumentModel documentModel) {
