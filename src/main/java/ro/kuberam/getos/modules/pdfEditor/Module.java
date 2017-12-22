@@ -1,11 +1,8 @@
 package ro.kuberam.getos.modules.pdfEditor;
 
-import com.google.auto.service.AutoService;
-
 import ro.kuberam.getos.DocumentModule;
 import ro.kuberam.getos.Getos;
 
-@AutoService(DocumentModule.class)
 public class Module implements DocumentModule {
 	
 	private String documentType = "application/pdf";
