@@ -17,8 +17,6 @@ import javafx.stage.Stage;
 import ro.kuberam.getos.Getos;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.events.EventBus;
-import ro.kuberam.getos.modules.pdfEditor.DocumentModel;
-import ro.kuberam.getos.modules.pdfEditor.jpedal.JpedalRenderer;
 
 public final class HtmlEditorController extends EditorController {
 
@@ -71,7 +69,7 @@ public final class HtmlEditorController extends EditorController {
 	private BorderPane targetPane;
 
 	private static File pFile;
-	
+
 	private EventBus eventBus;
 
 	public HtmlEditorController(Application application, Stage stage, DocumentModel documentModel, EventBus eventBus) {
@@ -129,17 +127,12 @@ public final class HtmlEditorController extends EditorController {
 				Getos.eventBus.fireEvent("pdf.fit-to-page");
 			}
 		});
-		
+
 		extractTablesButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
 				contentPane.getItems().add(new BorderPane());
 			}
 		});
-
-		// detect PDF version and select the viewer accordingly
-
-		// initialize the PDF viewer
-		new JpedalRenderer(centerSourcePane, contentSourcePane, pFile);
 	}
 }

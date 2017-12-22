@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ro.kuberam.apps</groupId>
 	<artifactId>getos</artifactId>
-	<version>0.2.7</version>
+	<version>0.2.8</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,11 +17,6 @@
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
 			<version>2.0.8</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jpedal</groupId>
-			<artifactId>OpenViewerFX</artifactId>
-			<version>7.12.28</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.auto.service</groupId>
