@@ -47,8 +47,6 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 			// outputter.output(document, System.out);
 			// writer.close(); // close writer
 
-			System.out.println("generalMetadata: " + generalMetadata);
-
 			this.path = path;
 		} catch (IOException | IndexOutOfBoundsException | JDOMException ex) {
 			Utils.showAlert(AlertType.ERROR, ex);
