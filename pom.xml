@@ -22,6 +22,16 @@
 			<groupId>technology.tabula</groupId>
 			<artifactId>tabula</artifactId>
 			<version>1.0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk15on</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcmail-jdk15on</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jdom</groupId>
