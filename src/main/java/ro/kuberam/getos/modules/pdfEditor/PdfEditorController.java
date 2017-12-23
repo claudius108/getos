@@ -45,7 +45,8 @@ public final class PdfEditorController extends RendererController {
 
 	private XMLStreamWriter xmlWriter;
 
-	public PdfEditorController(Application application, Stage stage, DocumentModel documentModel, EditorModel editorModel) {
+	public PdfEditorController(Application application, Stage stage, DocumentModel documentModel,
+			EditorModel editorModel) {
 		super(application, stage, documentModel, editorModel);
 	}
 
@@ -65,15 +66,17 @@ public final class PdfEditorController extends RendererController {
 				Path targetDocumentPath = sourceDocumentPath.getParent()
 						.resolve(sourceDocumentPath.getFileName().toString().replaceFirst(".pdf", ".html"));
 
-				if (!Files.exists(targetDocumentPath)) {
-					generateHtmlFile(targetDocumentPath, getSourceDocumentModel());
-				} else {
-					getSourceDocumentModel().extractTablesFromPage(7);
-				}
+				if (editorModel.openedDocuments.contains(targetDocumentPath)) {
 
-				editorModel.eventBus.fireEvent("open-target-document", targetDocumentPath);
-				
-				System.out.println("editorModel = " + editorModel.openedDocuments);
+				} else {
+					if (!Files.exists(targetDocumentPath)) {
+						generateHtmlFile(targetDocumentPath, getSourceDocumentModel());
+					} else {
+						getSourceDocumentModel().extractTablesFromPage(7);
+					}
+
+					editorModel.eventBus.fireEvent("open-target-document", targetDocumentPath);
+				}
 			}
 		});
 
@@ -84,7 +87,7 @@ public final class PdfEditorController extends RendererController {
 		// initialize the PDF viewer
 		// setDocumentRenderer(new JpedalRenderer(centerSourcePane, contentSourcePane,
 		// getDocumentModel().file()));
-		
+
 		editorModel.eventBus.fireEvent("document-opened", getSourceDocumentModel().path());
 	}
 

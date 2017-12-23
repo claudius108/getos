@@ -12,6 +12,52 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.0.2</version>
+				<configuration>
+					<nonFilteredFileExtensions>
+						<nonFilteredFileExtension>xml</nonFilteredFileExtension>
+						<nonFilteredFileExtension>css</nonFilteredFileExtension>
+						<nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+					</nonFilteredFileExtensions>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.zenjava</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<version>8.8.3</version>
+				<configuration>
+					<mainClass>ro.kuberam.getos.Getos</mainClass>
+					<jfxMainAppJarName>getos.jar</jfxMainAppJarName>
+					<manifestAttributes>
+						<url>http://softquadrat.de</url>
+						<mode>development</mode>
+					</manifestAttributes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>create-jfxjar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
@@ -44,32 +90,5 @@
 			<version>1.1.6</version>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.zenjava</groupId>
-				<artifactId>javafx-maven-plugin</artifactId>
-				<version>8.8.3</version>
-				<configuration>
-					<mainClass>ro.kuberam.getos.Getos</mainClass>
-					<jfxMainAppJarName>getos.jar</jfxMainAppJarName>
-					<manifestAttributes>
-						<url>http://softquadrat.de</url>
-						<mode>development</mode>
-					</manifestAttributes>
-				</configuration>
-				<executions>
-					<execution>
-						<id>create-jfxjar</id>
-						<phase>package</phase>
-						<goals>
-							<goal>build-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 
 </project>
