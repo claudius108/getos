@@ -40,7 +40,7 @@ public class EditorModel {
 		eventBus.registerEvent("document-opened", new EditorEvent(EditorEvent.DOCUMENT_OPENED));
 
 		eventBus.addEventHandler(EditorEvent.OPEN_TARGET_DOCUMENT, event -> {
-			Path targetDocumentPath = (Path) event.getData();
+			Path targetDocumentPath = (Path) ((Object[]) event.getData())[0];
 
 			loadRenderer(new ro.kuberam.getos.modules.tableEditor.DocumentModel(targetDocumentPath), this);
 
@@ -48,7 +48,7 @@ public class EditorModel {
 		});
 
 		eventBus.addEventHandler(EditorEvent.DOCUMENT_OPENED, event -> {
-			openedDocuments.add((Path) event.getData());
+			openedDocuments.add((Path) ((Object[]) event.getData())[0]);
 
 			event.consume();
 		});

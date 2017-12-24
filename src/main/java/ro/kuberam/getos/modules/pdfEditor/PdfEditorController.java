@@ -54,7 +54,7 @@ public final class PdfEditorController extends RendererController {
 	public void initialize() {
 
 		editorModel.eventBus.addEventHandler(EditorEvent.GO_TO_PAGE, event -> {
-			contentSourcePane.setImage(getSourceDocumentModel().goToPage((int) event.getData()));
+			contentSourcePane.setImage(getSourceDocumentModel().goToPage((int) ((Object[]) event.getData())[0]));
 
 			event.consume();
 		});

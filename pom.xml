@@ -4,7 +4,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ro.kuberam.apps</groupId>
 	<artifactId>getos</artifactId>
-	<version>0.2.9</version>
+	<version>0.3.1</version>
+
+	<scm>
+		<connection>scm:git:https://github.com/claudius108/getos.git</connection>
+		<developerConnection>scm:git:https://github.com/claudius108/getos.git</developerConnection>
+		<url>scm:git:https://github.com/claudius108/getos.git</url>
+		<tag>HEAD</tag>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -54,6 +61,17 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>de.jutzig</groupId>
+				<artifactId>github-release-plugin</artifactId>
+				<version>1.1.1</version>
+				<configuration>
+					<description>v${project.version}</description>
+					<releaseName>${project.version}</releaseName>
+					<tag>${project.version}</tag>
+					<artifact>${project.build.directory}/${project.artifactId}-${project.version}.jar</artifact>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

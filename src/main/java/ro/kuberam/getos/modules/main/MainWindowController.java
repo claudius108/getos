@@ -73,7 +73,7 @@ public final class MainWindowController extends StageController {
 		Getos.eventBus.registerEvent("update-status-label", new UserInterfaceEvent(UserInterfaceEvent.UPDATE_STATUS_LABEL));
 
 		Getos.eventBus.addEventHandler(UserInterfaceEvent.UPDATE_STATUS_LABEL, event -> {
-			statusLabel.setText((String) event.getData());
+			statusLabel.setText((String) ((Object[]) event.getData())[0]);
 
 			event.consume();
 		});

@@ -21,7 +21,7 @@ public class GetosEvent extends Event {
 		return fData;
 	}
 
-	public GetosEvent setData(Object data) {
+	public GetosEvent setData(Object... data) {
 		fData = data;
 		
 		return this;
