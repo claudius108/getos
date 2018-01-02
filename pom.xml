@@ -5,22 +5,15 @@
 	<groupId>ro.kuberam.apps</groupId>
 	<artifactId>getos</artifactId>
 	<version>0.3.1</version>
-
-	<scm>
-		<connection>scm:git:https://github.com/claudius108/getos.git</connection>
-		<developerConnection>scm:git:https://github.com/claudius108/getos.git</developerConnection>
-		<url>scm:git:https://github.com/claudius108/getos.git</url>
-		<tag>HEAD</tag>
-	</scm>
+	<name>Getos</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-
 		<app.filename>${project.artifactId}</app.filename>
 		<app.mainClass>ro.kuberam.getos.Getos</app.mainClass>
-		<app.cacheDir>USERLIB/getos</app.cacheDir>
+		<app.cacheDir>USERLIB/getos/app</app.cacheDir>
 		<app.vendor>Ratna Design</app.vendor>
 		<app.version>${project.version}</app.version>
 		<app.url>https://raw.githubusercontent.com/claudius108/releases/master/getos/</app.url>
@@ -29,6 +22,12 @@
 		<app.acceptDowngrade>false</app.acceptDowngrade>
 		<github.global.server>github</github.global.server>
 	</properties>
+
+	<scm>
+		<connection>scm:git:https://github.com/claudius108/getos.git</connection>
+		<developerConnection>scm:git:https://github.com/claudius108/getos.git</developerConnection>
+		<url>scm:git:https://github.com/claudius108/getos.git</url>
+	</scm>
 
 	<build>
 		<resources>
@@ -42,14 +41,41 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>3.0.2</version>
-				<configuration>
-					<nonFilteredFileExtensions>
-						<nonFilteredFileExtension>xml</nonFilteredFileExtension>
-						<nonFilteredFileExtension>css</nonFilteredFileExtension>
-						<nonFilteredFileExtension>ttf</nonFilteredFileExtension>
-					</nonFilteredFileExtensions>
-					<encoding>UTF-8</encoding>
-				</configuration>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>resources</goal>
+						</goals>
+						<configuration>
+							<nonFilteredFileExtensions>
+								<nonFilteredFileExtension>xml</nonFilteredFileExtension>
+								<nonFilteredFileExtension>css</nonFilteredFileExtension>
+								<nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+							</nonFilteredFileExtensions>
+							<encoding>UTF-8</encoding>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-license</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${app.dir}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}</directory>
+									<includes>
+										<include>LICENSE</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -135,7 +161,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>installer</id>
+						<id>generate-installer</id>
 						<phase>install</phase>
 						<goals>
 							<goal>exec</goal>
@@ -163,40 +189,40 @@
 								<argument>${app.vendor}</argument>
 								<argument>-BappVersion=${app.version}</argument>
 								<argument>-Bidentifier=${project.groupId}.${project.artifactId}</argument>
+								<argument>-BlicenseFile=LICENSE</argument>
 							</arguments>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>com.github.github</groupId>
-				<artifactId>site-maven-plugin</artifactId>
-				<version>0.12</version>
-				<executions>
-					<execution>
-						<id>deploy-app</id>
-						<goals>
-							<goal>site</goal>
-						</goals>
-						<phase>package</phase>
-						<configuration>
-							<server>github</server>
-							<message>Added libs for '${project.artifactId}' v.
-								${project.version}</message>
-							<outputDirectory>${app.dir}</outputDirectory>
-							<branch>refs/heads/master</branch>
-							<merge>false</merge>
-							<includes>
-								<include>**/*.*</include>
-							</includes>
-							<repositoryName>releases</repositoryName>
-							<repositoryOwner>claudius108</repositoryOwner>
-							<path>getos</path>
-						</configuration>
-					</execution>
-				</executions>
-
-			</plugin>
+			<!-- <plugin> -->
+			<!-- <groupId>com.github.github</groupId> -->
+			<!-- <artifactId>site-maven-plugin</artifactId> -->
+			<!-- <version>0.12</version> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <id>deploy-app</id> -->
+			<!-- <goals> -->
+			<!-- <goal>site</goal> -->
+			<!-- </goals> -->
+			<!-- <phase>package</phase> -->
+			<!-- <configuration> -->
+			<!-- <server>github</server> -->
+			<!-- <message>Added libs for '${project.artifactId}' v. -->
+			<!-- ${project.version}</message> -->
+			<!-- <outputDirectory>${app.dir}</outputDirectory> -->
+			<!-- <branch>refs/heads/master</branch> -->
+			<!-- <merge>false</merge> -->
+			<!-- <includes> -->
+			<!-- <include>**/*.*</include> -->
+			<!-- </includes> -->
+			<!-- <repositoryName>releases</repositoryName> -->
+			<!-- <repositoryOwner>claudius108</repositoryOwner> -->
+			<!-- <path>getos</path> -->
+			<!-- </configuration> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
 		</plugins>
 	</build>
 
