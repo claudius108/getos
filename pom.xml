@@ -39,6 +39,8 @@
 		<app.installerdir>${project.build.directory}/installer</app.installerdir>
 		<app.acceptDowngrade>false</app.acceptDowngrade>
 		<github.global.server>github</github.global.server>
+		<jfx.launcher.name>${project.build.directory}/installer/</jfx.launcher.name>
+		<jfx.output.dir>${project.build.directory}/installer/</jfx.output.dir>
 	</properties>
 
 	<build>
@@ -59,6 +61,11 @@
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
 					<version>1.6.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.0.2</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -102,95 +109,33 @@
 					<!-- </execution> -->
 				</executions>
 			</plugin>
-			<!-- <plugin> -->
-			<!-- <groupId>org.codehaus.mojo</groupId> -->
-			<!-- <artifactId>exec-maven-plugin</artifactId> -->
-			<!-- <version>1.6.0</version> -->
-			<!-- Embed app.xml inside fxlauncher.xml so we don't need to reference 
-				app.xml to start the app -->
-			<!-- <execution> -->
-			<!-- <id>embed-manifest-in-launcher</id> -->
-			<!-- <phase>package</phase> -->
-			<!-- <goals> -->
-			<!-- <goal>exec</goal> -->
-			<!-- </goals> -->
-			<!-- <configuration> -->
-			<!-- <executable>jar</executable> -->
-			<!-- <workingDirectory>${app.dir}</workingDirectory> -->
-			<!-- <arguments> -->
-			<!-- <argument>uf</argument> -->
-			<!-- <argument>fxlauncher.jar</argument> -->
-			<!-- <argument>app.xml</argument> -->
-			<!-- </arguments> -->
-			<!-- </configuration> -->
-			<!-- </execution> -->
-			<!-- <execution> -->
-			<!-- <id>generate-installer</id> -->
-			<!-- <phase>install</phase> -->
-			<!-- <goals> -->
-			<!-- <goal>exec</goal> -->
-			<!-- </goals> -->
-			<!-- <configuration> -->
-			<!-- <executable>javapackager</executable> -->
-			<!-- <arguments> -->
-			<!-- <argument>-deploy</argument> -->
-			<!-- <argument>-native</argument> -->
-			<!-- <argument>-outdir</argument> -->
-			<!-- <argument>${app.installerdir}</argument> -->
-			<!-- <argument>-outfile</argument> -->
-			<!-- <argument>${app.filename}</argument> -->
-			<!-- <argument>-srcdir</argument> -->
-			<!-- <argument>${app.dir}</argument> -->
-			<!-- <argument>-srcfiles</argument> -->
-			<!-- <argument>fxlauncher.jar</argument> -->
-			<!-- <argument>-appclass</argument> -->
-			<!-- <argument>fxlauncher.Launcher</argument> -->
-			<!-- <argument>-name</argument> -->
-			<!-- <argument>${project.name}</argument> -->
-			<!-- <argument>-title</argument> -->
-			<!-- <argument>${project.name}</argument> -->
-			<!-- <argument>-vendor</argument> -->
-			<!-- <argument>${app.vendor}</argument> -->
-			<!-- <argument>-BappVersion=${app.version}</argument> -->
-			<!-- <argument>-Bidentifier=${project.groupId}.${project.artifactId}</argument> -->
-			<!-- <argument>-BlicenseFile=LICENSE</argument> -->
-			<!-- </arguments> -->
-			<!-- </configuration> -->
-			<!-- </execution> -->
-			<!-- </executions> -->
-			<!-- </plugin> -->
 
-
-			<!-- <plugin> -->
-			<!-- <groupId>com.zenjava</groupId> -->
-			<!-- <artifactId>javafx-maven-plugin</artifactId> -->
-			<!-- <version>8.6.0</version> -->
-			<!-- <configuration> -->
-			<!-- <mainClass>fxlauncher.Launcher</mainClass> -->
-			<!-- <jfxMainAppJarName>${project.artifactId}.jar</jfxMainAppJarName> -->
-			<!-- <nativeReleaseVersion>${project.version}</nativeReleaseVersion> -->
-			<!-- <needShortcut>true</needShortcut> -->
-			<!-- <appName>${project.artifactId}</appName> -->
-			<!-- <additionalAppResources>${project.basedir}/src/main/deploy</additionalAppResources> -->
-			<!-- </configuration> -->
-			<!-- <executions> -->
-			<!-- <execution> -->
-			<!-- required before build-native -->
-			<!-- <id>create-jfxjar</id> -->
-			<!-- <phase>package</phase> -->
-			<!-- <goals> -->
-			<!-- <goal>build-jar</goal> -->
-			<!-- </goals> -->
-			<!-- </execution> -->
-			<!-- <execution> -->
-			<!-- <id>create-native</id> -->
-			<!-- <phase>package</phase> -->
-			<!-- <goals> -->
-			<!-- <goal>build-native</goal> -->
-			<!-- </goals> -->
-			<!-- </execution> -->
-			<!-- </executions> -->
-			<!-- </plugin> -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<!-- Generate app.xml manifest -->
+				<executions>
+					<execution>
+						<id>create-manifest</id>
+						<phase>package</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<mainClass>fxlauncher.CreateManifest</mainClass>
+							<arguments>
+								<argument>${project.build.directory}</argument>
+								<argument>${app.mainClass}</argument>
+								<argument>${project.build.directory}</argument>
+								<argument>--cache-dir=${app.cacheDir}</argument>
+								<argument>--accept-downgrade=${app.acceptDowngrade}</argument>
+								<argument>--include-extensions=jpg</argument>
+								<argument>${app.parameters}</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -204,7 +149,7 @@
 						<artifactId>maven-resources-plugin</artifactId>
 						<executions>
 							<execution>
-								<id>copy-app-jar</id>
+								<id>copy-app-jar-and-descriptor</id>
 								<phase>package</phase>
 								<goals>
 									<goal>resources</goal>
@@ -216,6 +161,7 @@
 											<directory>${project.build.directory}</directory>
 											<includes>
 												<include>${project.build.finalName}.${project.packaging}</include>
+												<include>app.xml</include>
 											</includes>
 										</resource>
 									</resources>
@@ -226,7 +172,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
-						<version>3.0.2</version>
 						<executions>
 							<execution>
 								<id>copy-dependencies-without-launcher</id>
@@ -253,32 +198,6 @@
 							<!-- <includeArtifactIds>fxlauncher</includeArtifactIds> -->
 							<!-- </configuration> -->
 							<!-- </execution> -->
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<!-- Generate app.xml manifest -->
-						<executions>
-							<execution>
-								<id>create-manifest</id>
-								<phase>package</phase>
-								<goals>
-									<goal>java</goal>
-								</goals>
-								<configuration>
-									<mainClass>fxlauncher.CreateManifest</mainClass>
-									<arguments>
-										<argument>${app.url}</argument>
-										<argument>${app.mainClass}</argument>
-										<argument>${app.dir}</argument>
-										<argument>--cache-dir=${app.cacheDir}</argument>
-										<argument>--accept-downgrade=${app.acceptDowngrade}</argument>
-										<argument>--include-extensions=jpg</argument>
-										<argument>${app.parameters}</argument>
-									</arguments>
-								</configuration>
-							</execution>
 						</executions>
 					</plugin>
 					<plugin>
@@ -326,6 +245,147 @@
 					<!-- </execution> -->
 					<!-- </executions> -->
 					<!-- </plugin> -->
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>deploy-app-installer</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-launcher-to-project.build.directory</id>
+								<phase>package</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+									<stripVersion>true</stripVersion>
+									<includeArtifactIds>fxlauncher</includeArtifactIds>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<!-- Embed app.xml inside fxlauncher.xml so we don't need to reference 
+							app.xml to start the app -->
+						<executions>
+							<execution>
+								<id>embed-manifest-in-launcher</id>
+								<phase>package</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>jar</executable>
+									<workingDirectory>${project.build.directory}</workingDirectory>
+									<arguments>
+										<argument>uf</argument>
+										<argument>${jfx.launcher.name}</argument>
+										<argument>app.xml</argument>
+									</arguments>
+								</configuration>
+							</execution>
+							<!-- <execution> -->
+							<!-- <id>generate-installer</id> -->
+							<!-- <phase>install</phase> -->
+							<!-- <goals> -->
+							<!-- <goal>exec</goal> -->
+							<!-- </goals> -->
+							<!-- <configuration> -->
+							<!-- <executable>javapackager</executable> -->
+							<!-- <arguments> -->
+							<!-- <argument>-deploy</argument> -->
+							<!-- <argument>-native</argument> -->
+							<!-- <argument>-outdir</argument> -->
+							<!-- <argument>${app.installerdir}</argument> -->
+							<!-- <argument>-outfile</argument> -->
+							<!-- <argument>${app.filename}</argument> -->
+							<!-- <argument>-srcdir</argument> -->
+							<!-- <argument>${app.dir}</argument> -->
+							<!-- <argument>-srcfiles</argument> -->
+							<!-- <argument>${jfx.launcher.name}</argument> -->
+							<!-- <argument>-appclass</argument> -->
+							<!-- <argument>fxlauncher.Launcher</argument> -->
+							<!-- <argument>-name</argument> -->
+							<!-- <argument>${project.name}</argument> -->
+							<!-- <argument>-title</argument> -->
+							<!-- <argument>${project.name}</argument> -->
+							<!-- <argument>-vendor</argument> -->
+							<!-- <argument>${app.vendor}</argument> -->
+							<!-- <argument>-BappVersion=${app.version}</argument> -->
+							<!-- <argument>-Bidentifier=${project.groupId}.${project.artifactId}</argument> -->
+							<!-- <argument>-BlicenseFile=LICENSE</argument> -->
+							<!-- </arguments> -->
+							<!-- </configuration> -->
+							<!-- </execution> -->
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-launcher-to-jfx.output.dir</id>
+								<phase>package</phase>
+								<goals>
+									<goal>resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${jfx.output.dir}</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}</directory>
+											<includes>
+												<include>${jfx.launcher.name}</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+
+					<plugin>
+						<groupId>com.zenjava</groupId>
+						<artifactId>javafx-maven-plugin</artifactId>
+						<version>8.6.0</version>
+						<configuration>
+							<jfxAppOutputDir>${jfx.output.dir}</jfxAppOutputDir>
+							<mainClass>fxlauncher.Launcher</mainClass>
+							<jfxMainAppJarName>${project.artifactId}.jar</jfxMainAppJarName>
+							<nativeReleaseVersion>${project.version}</nativeReleaseVersion>
+							<needShortcut>true</needShortcut>
+							<appName>${project.artifactId}</appName>
+							<additionalAppResources>${project.basedir}/src/main/deploy</additionalAppResources>
+							<allPermissions>true</allPermissions>
+
+						</configuration>
+						<executions>
+							<execution>
+								<!-- required before build-native -->
+								<id>create-jfxjar</id>
+								<phase>package</phase>
+								<goals>
+									<goal>build-jar</goal>
+								</goals>
+							</execution>
+							<!-- <execution> -->
+							<!-- <id>create-native</id> -->
+							<!-- <phase>package</phase> -->
+							<!-- <goals> -->
+							<!-- <goal>build-native</goal> -->
+							<!-- </goals> -->
+							<!-- </execution> -->
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
