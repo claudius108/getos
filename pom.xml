@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ro.kuberam.apps</groupId>
 	<artifactId>getos</artifactId>
-	<version>0.3.1</version>
+	<version>0.4.1</version>
 	<name>Getos</name>
 	<organization>
 		<name>Kuberam</name>
@@ -48,11 +48,24 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.0.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.6.0</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.0.2</version>
 				<executions>
 					<execution>
 						<id>copy-resources</id>
@@ -69,206 +82,254 @@
 							<encoding>UTF-8</encoding>
 						</configuration>
 					</execution>
-<!-- 					<execution> -->
-<!-- 						<id>copy-license</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>copy-resources</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<outputDirectory>${app.dir}</outputDirectory> -->
-<!-- 							<resources> -->
-<!-- 								<resource> -->
-<!-- 									<directory>${basedir}</directory> -->
-<!-- 									<includes> -->
-<!-- 										<include>LICENSE</include> -->
-<!-- 									</includes> -->
-<!-- 								</resource> -->
-<!-- 							</resources> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
+					<!-- <execution> -->
+					<!-- <id>copy-license</id> -->
+					<!-- <phase>package</phase> -->
+					<!-- <goals> -->
+					<!-- <goal>copy-resources</goal> -->
+					<!-- </goals> -->
+					<!-- <configuration> -->
+					<!-- <outputDirectory>${app.dir}</outputDirectory> -->
+					<!-- <resources> -->
+					<!-- <resource> -->
+					<!-- <directory>${basedir}</directory> -->
+					<!-- <includes> -->
+					<!-- <include>LICENSE</include> -->
+					<!-- </includes> -->
+					<!-- </resource> -->
+					<!-- </resources> -->
+					<!-- </configuration> -->
+					<!-- </execution> -->
 				</executions>
 			</plugin>
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
-<!-- 				<artifactId>maven-jar-plugin</artifactId> -->
-<!-- 				<version>3.0.2</version> -->
-<!-- 				<configuration> -->
-<!-- 					<outputDirectory>${app.dir}</outputDirectory> -->
-<!-- 				</configuration> -->
-<!-- 			</plugin> -->
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
-<!-- 				<artifactId>maven-dependency-plugin</artifactId> -->
-<!-- 				<version>3.0.2</version> -->
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<id>copy-dependencies-without-launcher</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>copy-dependencies</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<excludeScope>provided</excludeScope> -->
-<!-- 							<outputDirectory>${app.dir}/lib</outputDirectory> -->
-<!-- 							<stripVersion>true</stripVersion> -->
-<!-- 							<excludeArtifactIds>fxlauncher</excludeArtifactIds> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 						<id>copy-launcher</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>copy-dependencies</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<outputDirectory>${app.dir}</outputDirectory> -->
-<!-- 							<stripVersion>true</stripVersion> -->
-<!-- 							<includeArtifactIds>fxlauncher</includeArtifactIds> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-<!-- 			</plugin> -->
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.codehaus.mojo</groupId> -->
-<!-- 				<artifactId>exec-maven-plugin</artifactId> -->
-<!-- 				<version>1.6.0</version> -->
-<!-- 				Generate app.xml manifest -->
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<id>create-manifest</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>java</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<mainClass>fxlauncher.CreateManifest</mainClass> -->
-<!-- 							<arguments> -->
-<!-- 								<argument>${app.url}</argument> -->
-<!-- 								<argument>${app.mainClass}</argument> -->
-<!-- 								<argument>${app.dir}</argument> -->
-<!-- 								<argument>**cache-dir=${app.cacheDir}</argument> -->
-<!-- 								<argument>**accept-downgrade=${app.acceptDowngrade}</argument> -->
-<!-- 								<argument>**include-extensions=jpg</argument> -->
-<!-- 								<argument>${app.parameters}</argument> -->
-<!-- 							</arguments> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 					Embed app.xml inside fxlauncher.xml so we don't need to reference 
-						app.xml to start the app -->
-<!-- 					<execution> -->
-<!-- 						<id>embed-manifest-in-launcher</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>exec</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<executable>jar</executable> -->
-<!-- 							<workingDirectory>${app.dir}</workingDirectory> -->
-<!-- 							<arguments> -->
-<!-- 								<argument>uf</argument> -->
-<!-- 								<argument>fxlauncher.jar</argument> -->
-<!-- 								<argument>app.xml</argument> -->
-<!-- 							</arguments> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 						<id>generate-installer</id> -->
-<!-- 						<phase>install</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>exec</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<executable>javapackager</executable> -->
-<!-- 							<arguments> -->
-<!-- 								<argument>-deploy</argument> -->
-<!-- 								<argument>-native</argument> -->
-<!-- 								<argument>-outdir</argument> -->
-<!-- 								<argument>${app.installerdir}</argument> -->
-<!-- 								<argument>-outfile</argument> -->
-<!-- 								<argument>${app.filename}</argument> -->
-<!-- 								<argument>-srcdir</argument> -->
-<!-- 								<argument>${app.dir}</argument> -->
-<!-- 								<argument>-srcfiles</argument> -->
-<!-- 								<argument>fxlauncher.jar</argument> -->
-<!-- 								<argument>-appclass</argument> -->
-<!-- 								<argument>fxlauncher.Launcher</argument> -->
-<!-- 								<argument>-name</argument> -->
-<!-- 								<argument>${project.name}</argument> -->
-<!-- 								<argument>-title</argument> -->
-<!-- 								<argument>${project.name}</argument> -->
-<!-- 								<argument>-vendor</argument> -->
-<!-- 								<argument>${app.vendor}</argument> -->
-<!-- 								<argument>-BappVersion=${app.version}</argument> -->
-<!-- 								<argument>-Bidentifier=${project.groupId}.${project.artifactId}</argument> -->
-<!-- 								<argument>-BlicenseFile=LICENSE</argument> -->
-<!-- 							</arguments> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-<!-- 			</plugin> -->
 			<!-- <plugin> -->
-			<!-- <groupId>com.github.github</groupId> -->
-			<!-- <artifactId>site-maven-plugin</artifactId> -->
-			<!-- <version>0.12</version> -->
-			<!-- <executions> -->
+			<!-- <groupId>org.codehaus.mojo</groupId> -->
+			<!-- <artifactId>exec-maven-plugin</artifactId> -->
+			<!-- <version>1.6.0</version> -->
+			<!-- Embed app.xml inside fxlauncher.xml so we don't need to reference 
+				app.xml to start the app -->
 			<!-- <execution> -->
-			<!-- <id>deploy-app</id> -->
-			<!-- <goals> -->
-			<!-- <goal>site</goal> -->
-			<!-- </goals> -->
+			<!-- <id>embed-manifest-in-launcher</id> -->
 			<!-- <phase>package</phase> -->
+			<!-- <goals> -->
+			<!-- <goal>exec</goal> -->
+			<!-- </goals> -->
 			<!-- <configuration> -->
-			<!-- <server>github</server> -->
-			<!-- <message>Added libs for '${project.artifactId}' v. -->
-			<!-- ${project.version}</message> -->
-			<!-- <outputDirectory>${app.dir}</outputDirectory> -->
-			<!-- <branch>refs/heads/master</branch> -->
-			<!-- <merge>false</merge> -->
-			<!-- <includes> -->
-			<!-- <include>**/*.*</include> -->
-			<!-- </includes> -->
-			<!-- <repositoryName>releases</repositoryName> -->
-			<!-- <repositoryOwner>claudius108</repositoryOwner> -->
-			<!-- <path>getos</path> -->
+			<!-- <executable>jar</executable> -->
+			<!-- <workingDirectory>${app.dir}</workingDirectory> -->
+			<!-- <arguments> -->
+			<!-- <argument>uf</argument> -->
+			<!-- <argument>fxlauncher.jar</argument> -->
+			<!-- <argument>app.xml</argument> -->
+			<!-- </arguments> -->
+			<!-- </configuration> -->
+			<!-- </execution> -->
+			<!-- <execution> -->
+			<!-- <id>generate-installer</id> -->
+			<!-- <phase>install</phase> -->
+			<!-- <goals> -->
+			<!-- <goal>exec</goal> -->
+			<!-- </goals> -->
+			<!-- <configuration> -->
+			<!-- <executable>javapackager</executable> -->
+			<!-- <arguments> -->
+			<!-- <argument>-deploy</argument> -->
+			<!-- <argument>-native</argument> -->
+			<!-- <argument>-outdir</argument> -->
+			<!-- <argument>${app.installerdir}</argument> -->
+			<!-- <argument>-outfile</argument> -->
+			<!-- <argument>${app.filename}</argument> -->
+			<!-- <argument>-srcdir</argument> -->
+			<!-- <argument>${app.dir}</argument> -->
+			<!-- <argument>-srcfiles</argument> -->
+			<!-- <argument>fxlauncher.jar</argument> -->
+			<!-- <argument>-appclass</argument> -->
+			<!-- <argument>fxlauncher.Launcher</argument> -->
+			<!-- <argument>-name</argument> -->
+			<!-- <argument>${project.name}</argument> -->
+			<!-- <argument>-title</argument> -->
+			<!-- <argument>${project.name}</argument> -->
+			<!-- <argument>-vendor</argument> -->
+			<!-- <argument>${app.vendor}</argument> -->
+			<!-- <argument>-BappVersion=${app.version}</argument> -->
+			<!-- <argument>-Bidentifier=${project.groupId}.${project.artifactId}</argument> -->
+			<!-- <argument>-BlicenseFile=LICENSE</argument> -->
+			<!-- </arguments> -->
 			<!-- </configuration> -->
 			<!-- </execution> -->
 			<!-- </executions> -->
 			<!-- </plugin> -->
 
 
-			<plugin>
-				<groupId>com.zenjava</groupId>
-				<artifactId>javafx-maven-plugin</artifactId>
-				<version>8.6.0</version>
-				<configuration>
-					<mainClass>fxlauncher.Launcher</mainClass>
-					<jfxMainAppJarName>${project.artifactId}.jar</jfxMainAppJarName>
-					<nativeReleaseVersion>${project.version}</nativeReleaseVersion>
-					<needShortcut>true</needShortcut>
-					<appName>${project.artifactId}</appName>
-					<additionalAppResources>${project.basedir}/src/main/deploy</additionalAppResources>
-				</configuration>
-				<executions>
-					<execution>
-						<!-- required before build-native -->
-						<id>create-jfxjar</id>
-						<phase>package</phase>
-						<goals>
-							<goal>build-jar</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>create-native</id>
-						<phase>package</phase>
-						<goals>
-							<goal>build-native</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+			<!-- <plugin> -->
+			<!-- <groupId>com.zenjava</groupId> -->
+			<!-- <artifactId>javafx-maven-plugin</artifactId> -->
+			<!-- <version>8.6.0</version> -->
+			<!-- <configuration> -->
+			<!-- <mainClass>fxlauncher.Launcher</mainClass> -->
+			<!-- <jfxMainAppJarName>${project.artifactId}.jar</jfxMainAppJarName> -->
+			<!-- <nativeReleaseVersion>${project.version}</nativeReleaseVersion> -->
+			<!-- <needShortcut>true</needShortcut> -->
+			<!-- <appName>${project.artifactId}</appName> -->
+			<!-- <additionalAppResources>${project.basedir}/src/main/deploy</additionalAppResources> -->
+			<!-- </configuration> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- required before build-native -->
+			<!-- <id>create-jfxjar</id> -->
+			<!-- <phase>package</phase> -->
+			<!-- <goals> -->
+			<!-- <goal>build-jar</goal> -->
+			<!-- </goals> -->
+			<!-- </execution> -->
+			<!-- <execution> -->
+			<!-- <id>create-native</id> -->
+			<!-- <phase>package</phase> -->
+			<!-- <goals> -->
+			<!-- <goal>build-native</goal> -->
+			<!-- </goals> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>deploy-app</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-app-jar</id>
+								<phase>package</phase>
+								<goals>
+									<goal>resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${app.dir}</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}</directory>
+											<includes>
+												<include>${project.build.finalName}.${project.packaging}</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>3.0.2</version>
+						<executions>
+							<execution>
+								<id>copy-dependencies-without-launcher</id>
+								<phase>package</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<excludeScope>provided</excludeScope>
+									<outputDirectory>${app.dir}/lib</outputDirectory>
+									<stripVersion>true</stripVersion>
+									<excludeArtifactIds>fxlauncher</excludeArtifactIds>
+								</configuration>
+							</execution>
+							<!-- <execution> -->
+							<!-- <id>copy-launcher</id> -->
+							<!-- <phase>package</phase> -->
+							<!-- <goals> -->
+							<!-- <goal>copy-dependencies</goal> -->
+							<!-- </goals> -->
+							<!-- <configuration> -->
+							<!-- <outputDirectory>${app.dir}</outputDirectory> -->
+							<!-- <stripVersion>true</stripVersion> -->
+							<!-- <includeArtifactIds>fxlauncher</includeArtifactIds> -->
+							<!-- </configuration> -->
+							<!-- </execution> -->
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<!-- Generate app.xml manifest -->
+						<executions>
+							<execution>
+								<id>create-manifest</id>
+								<phase>package</phase>
+								<goals>
+									<goal>java</goal>
+								</goals>
+								<configuration>
+									<mainClass>fxlauncher.CreateManifest</mainClass>
+									<arguments>
+										<argument>${app.url}</argument>
+										<argument>${app.mainClass}</argument>
+										<argument>${app.dir}</argument>
+										<argument>--cache-dir=${app.cacheDir}</argument>
+										<argument>--accept-downgrade=${app.acceptDowngrade}</argument>
+										<argument>--include-extensions=jpg</argument>
+										<argument>${app.parameters}</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>com.github.github</groupId>
+						<artifactId>site-maven-plugin</artifactId>
+						<version>0.12</version>
+						<executions>
+							<execution>
+								<id>deploy-app-to-github</id>
+								<goals>
+									<goal>site</goal>
+								</goals>
+								<phase>package</phase>
+								<configuration>
+									<server>github</server>
+									<message>Added libs for v.${project.version}</message>
+									<outputDirectory>${app.dir}</outputDirectory>
+									<branch>refs/heads/master</branch>
+									<merge>false</merge>
+									<includes>
+										<include>**/*.*</include>
+									</includes>
+									<repositoryName>releases</repositoryName>
+									<repositoryOwner>claudius108</repositoryOwner>
+									<path>getos</path>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- <plugin> -->
+					<!-- <groupId>org.apache.maven.plugins</groupId> -->
+					<!-- <artifactId>maven-jar-plugin</artifactId> -->
+					<!-- <version>3.0.2</version> -->
+					<!-- <executions> -->
+					<!-- <execution> -->
+					<!-- <id>deploy-app-build-jar</id> -->
+					<!-- <phase>package</phase> -->
+					<!-- <goals> -->
+					<!-- <goal>jar</goal> -->
+					<!-- </goals> -->
+					<!-- <configuration> -->
+					<!-- <outputDirectory>${app.dir}</outputDirectory> -->
+					<!-- </configuration> -->
+					<!-- </execution> -->
+					<!-- </executions> -->
+					<!-- </plugin> -->
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>
@@ -301,11 +362,11 @@
 			<artifactId>jaxen</artifactId>
 			<version>1.1.6</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>no.tornado</groupId> -->
-<!-- 			<artifactId>fxlauncher</artifactId> -->
-<!-- 			<version>1.0.16</version> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>no.tornado</groupId>
+			<artifactId>fxlauncher</artifactId>
+			<version>1.0.16</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
