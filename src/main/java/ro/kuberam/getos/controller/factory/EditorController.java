@@ -9,7 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
-import ro.kuberam.getos.Getos;
+import ro.kuberam.getos.App;
 import ro.kuberam.getos.modules.editorTab.EditorTab;
 
 public class EditorController extends StageController {
@@ -61,7 +61,7 @@ public class EditorController extends StageController {
 	}
 
 	public void onEditorTabSelected() {
-		Getos.eventBus.fireEvent("update-status-label", getSourceDocumentModel().path().toString());
+		App.eventBus.fireEvent("update-status-label", getSourceDocumentModel().path().toString());
 
 		// todo: later we can use an other kind of control to show character
 		// count

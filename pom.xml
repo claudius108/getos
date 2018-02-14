@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>ro.kuberam.apps</groupId>
 	<artifactId>getos</artifactId>
 	<version>0.4.3</version>
@@ -31,16 +31,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<app.filename>${project.artifactId}</app.filename>
-		<app.mainClass>ro.kuberam.getos.Getos</app.mainClass>
-		<app.cacheDir>USERLIB/getos/app</app.cacheDir>
-		<app.vendor>Ratna Design</app.vendor>
-		<app.version>${project.version}</app.version>
-		<app.url>https://raw.githubusercontent.com/claudius108/releases/master/getos/</app.url>
-		<app.dir>${project.build.directory}/app</app.dir>
-		<app.acceptDowngrade>false</app.acceptDowngrade>
-		<github.global.server>github</github.global.server>
-		<jfx.launcher.name>fxlauncher.jar</jfx.launcher.name>
-		<jfx.output.dir>${project.build.directory}/jfx/</jfx.output.dir>
+		<app.mainClass>ro.kuberam.getos.App</app.mainClass>
 	</properties>
 
 	<build>
@@ -57,301 +48,41 @@
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>3.0.2</version>
 				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>exec-maven-plugin</artifactId>
-					<version>1.6.0</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>3.0.2</version>
-				</plugin>
-				<plugin>
-					<groupId>com.github.github</groupId>
-					<artifactId>site-maven-plugin</artifactId>
-					<version>0.12</version>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<nonFilteredFileExtensions>
+						<nonFilteredFileExtension>xml</nonFilteredFileExtension>
+						<nonFilteredFileExtension>css</nonFilteredFileExtension>
+						<nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+					</nonFilteredFileExtensions>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.zenjava</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<version>8.8.3</version>
+				<configuration>
+					<mainClass>${app.mainClass}</mainClass>
+					<jfxMainAppJarName>getos.jar</jfxMainAppJarName>
+				</configuration>
 				<executions>
 					<execution>
-						<id>copy-resources</id>
-						<phase>validate</phase>
+						<id>create-jfxjar</id>
+						<phase>package</phase>
 						<goals>
-							<goal>resources</goal>
+							<goal>build-jar</goal>
 						</goals>
-						<configuration>
-							<nonFilteredFileExtensions>
-								<nonFilteredFileExtension>xml</nonFilteredFileExtension>
-								<nonFilteredFileExtension>css</nonFilteredFileExtension>
-								<nonFilteredFileExtension>ttf</nonFilteredFileExtension>
-							</nonFilteredFileExtensions>
-							<encoding>UTF-8</encoding>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>deploy-app</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-resources-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>copy-app-jar-and-descriptor</id>
-								<phase>package</phase>
-								<goals>
-									<goal>resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${app.dir}</outputDirectory>
-									<resources>
-										<resource>
-											<directory>${project.build.directory}</directory>
-											<includes>
-												<include>${project.build.finalName}.${project.packaging}</include>
-												<include>app.xml</include>
-											</includes>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>copy-dependencies-without-launcher</id>
-								<phase>package</phase>
-								<goals>
-									<goal>copy-dependencies</goal>
-								</goals>
-								<configuration>
-									<excludeScope>provided</excludeScope>
-									<outputDirectory>${app.dir}/lib</outputDirectory>
-									<stripVersion>true</stripVersion>
-									<excludeArtifactIds>fxlauncher</excludeArtifactIds>
-								</configuration>
-							</execution>
-							<!-- <execution> -->
-							<!-- <id>copy-launcher</id> -->
-							<!-- <phase>package</phase> -->
-							<!-- <goals> -->
-							<!-- <goal>copy-dependencies</goal> -->
-							<!-- </goals> -->
-							<!-- <configuration> -->
-							<!-- <outputDirectory>${app.dir}</outputDirectory> -->
-							<!-- <stripVersion>true</stripVersion> -->
-							<!-- <includeArtifactIds>fxlauncher</includeArtifactIds> -->
-							<!-- </configuration> -->
-							<!-- </execution> -->
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>com.github.github</groupId>
-						<artifactId>site-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>deploy-app-to-github</id>
-								<goals>
-									<goal>site</goal>
-								</goals>
-								<phase>package</phase>
-								<configuration>
-									<server>github</server>
-									<message>Added v. ${project.version} of app.</message>
-									<outputDirectory>${app.dir}</outputDirectory>
-									<branch>refs/heads/master</branch>
-									<merge>false</merge>
-									<includes>
-										<include>**/*.*</include>
-									</includes>
-									<repositoryName>releases</repositoryName>
-									<repositoryOwner>claudius108</repositoryOwner>
-									<path>getos-app</path>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-
-					<!-- <plugin> -->
-					<!-- <groupId>org.apache.maven.plugins</groupId> -->
-					<!-- <artifactId>maven-jar-plugin</artifactId> -->
-					<!-- <version>3.0.2</version> -->
-					<!-- <executions> -->
-					<!-- <execution> -->
-					<!-- <id>deploy-app-build-jar</id> -->
-					<!-- <phase>package</phase> -->
-					<!-- <goals> -->
-					<!-- <goal>jar</goal> -->
-					<!-- </goals> -->
-					<!-- <configuration> -->
-					<!-- <outputDirectory>${app.dir}</outputDirectory> -->
-					<!-- </configuration> -->
-					<!-- </execution> -->
-					<!-- </executions> -->
-					<!-- </plugin> -->
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>deploy-installer</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>copy-launcher-to-project.build.directory</id>
-								<phase>package</phase>
-								<goals>
-									<goal>copy-dependencies</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${jfx.output.dir}</outputDirectory>
-									<stripVersion>true</stripVersion>
-									<includeArtifactIds>fxlauncher</includeArtifactIds>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>embed-manifest-in-launcher</id>
-								<phase>package</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<configuration>
-									<executable>jar</executable>
-									<workingDirectory>${jfx.output.dir}</workingDirectory>
-									<arguments>
-										<argument>uf</argument>
-										<argument>${jfx.launcher.name}</argument>
-										<argument>../app.xml</argument>
-									</arguments>
-								</configuration>
-							</execution>
-							<!-- <execution> -->
-							<!-- <id>generate-installer</id> -->
-							<!-- <phase>install</phase> -->
-							<!-- <goals> -->
-							<!-- <goal>exec</goal> -->
-							<!-- </goals> -->
-							<!-- <configuration> -->
-							<!-- <executable>javapackager</executable> -->
-							<!-- <arguments> -->
-							<!-- <argument>-deploy</argument> -->
-							<!-- <argument>-native</argument> -->
-							<!-- <argument>-outdir</argument> -->
-							<!-- <argument>${app.installerdir}</argument> -->
-							<!-- <argument>-outfile</argument> -->
-							<!-- <argument>${app.filename}</argument> -->
-							<!-- <argument>-srcdir</argument> -->
-							<!-- <argument>${app.dir}</argument> -->
-							<!-- <argument>-srcfiles</argument> -->
-							<!-- <argument>${jfx.launcher.name}</argument> -->
-							<!-- <argument>-appclass</argument> -->
-							<!-- <argument>fxlauncher.Launcher</argument> -->
-							<!-- <argument>-name</argument> -->
-							<!-- <argument>${project.name}</argument> -->
-							<!-- <argument>-title</argument> -->
-							<!-- <argument>${project.name}</argument> -->
-							<!-- <argument>-vendor</argument> -->
-							<!-- <argument>${app.vendor}</argument> -->
-							<!-- <argument>-BappVersion=${app.version}</argument> -->
-							<!-- <argument>-Bidentifier=${project.groupId}.${project.artifactId}</argument> -->
-							<!-- <argument>-BlicenseFile=LICENSE</argument> -->
-							<!-- </arguments> -->
-							<!-- </configuration> -->
-							<!-- </execution> -->
-						</executions>
-					</plugin>
-
-
-
-					<!-- <plugin> -->
-					<!-- <groupId>com.zenjava</groupId> -->
-					<!-- <artifactId>javafx-maven-plugin</artifactId> -->
-					<!-- <version>8.8.3</version> -->
-					<!-- <configuration> -->
-					<!-- <jfxAppOutputDir>${jfx.output.dir}</jfxAppOutputDir> -->
-					<!-- <mainClass>fxlauncher.Launcher</mainClass> -->
-					<!-- <jfxMainAppJarName>${project.artifactId}.jar</jfxMainAppJarName> -->
-					<!-- <nativeReleaseVersion>${project.version}</nativeReleaseVersion> -->
-					<!-- <needShortcut>true</needShortcut> -->
-					<!-- <appName>${project.artifactId}</appName> -->
-					<!-- <additionalAppResources>${project.basedir}/src/main/deploy</additionalAppResources> -->
-					<!-- <allPermissions>true</allPermissions> -->
-					<!-- <skipJNLP>true</skipJNLP> -->
-					<!-- </configuration> -->
-					<!-- <executions> -->
-					<!-- <execution> -->
-					<!-- <id>create-jfxjar</id> -->
-					<!-- <phase>package</phase> -->
-					<!-- <goals> -->
-					<!-- <goal>build-jar</goal> -->
-					<!-- </goals> -->
-					<!-- </execution> -->
-					<!-- <execution> -->
-					<!-- <id>create-native</id> -->
-					<!-- <phase>package</phase> -->
-					<!-- <goals> -->
-					<!-- <goal>build-native</goal> -->
-					<!-- </goals> -->
-					<!-- </execution> -->
-					<!-- </executions> -->
-					<!-- </plugin> -->
-
-
-					<!-- <plugin> -->
-					<!-- <groupId>com.github.github</groupId> -->
-					<!-- <artifactId>site-maven-plugin</artifactId> -->
-					<!-- <executions> -->
-					<!-- <execution> -->
-					<!-- <id>deploy-installer-to-github</id> -->
-					<!-- <goals> -->
-					<!-- <goal>site</goal> -->
-					<!-- </goals> -->
-					<!-- <phase>package</phase> -->
-					<!-- <configuration> -->
-					<!-- <server>github</server> -->
-					<!-- <message>Added installer for app.</message> -->
-					<!-- <outputDirectory>${jfx.output.dir}</outputDirectory> -->
-					<!-- <branch>refs/heads/master</branch> -->
-					<!-- <merge>false</merge> -->
-					<!-- <includes> -->
-					<!-- <include>**/*.*</include> -->
-					<!-- </includes> -->
-					<!-- <repositoryName>releases</repositoryName> -->
-					<!-- <repositoryOwner>claudius108</repositoryOwner> -->
-					<!-- <path>getos-installer</path> -->
-					<!-- </configuration> -->
-					<!-- </execution> -->
-					<!-- </executions> -->
-					<!-- </plugin> -->
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 
 	<dependencies>
 		<dependency>

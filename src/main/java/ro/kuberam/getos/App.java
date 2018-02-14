@@ -19,7 +19,7 @@ import ro.kuberam.getos.events.FXEventBus;
 import ro.kuberam.getos.modules.main.MainWindowController;
 import ro.kuberam.getos.utils.Utils;
 
-public class Getos extends Application {
+public class App extends Application {
 
 	public static EventBus eventBus;
 	public static ArrayList<EditorController> tabControllers;

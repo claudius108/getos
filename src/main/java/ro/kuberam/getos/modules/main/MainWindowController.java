@@ -23,7 +23,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
-import ro.kuberam.getos.Getos;
+import ro.kuberam.getos.App;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
@@ -70,9 +70,9 @@ public final class MainWindowController extends StageController {
 	@FXML
 	public void initialize() {
 		
-		Getos.eventBus.registerEvent("update-status-label", new UserInterfaceEvent(UserInterfaceEvent.UPDATE_STATUS_LABEL));
+		App.eventBus.registerEvent("update-status-label", new UserInterfaceEvent(UserInterfaceEvent.UPDATE_STATUS_LABEL));
 
-		Getos.eventBus.addEventHandler(UserInterfaceEvent.UPDATE_STATUS_LABEL, event -> {
+		App.eventBus.addEventHandler(UserInterfaceEvent.UPDATE_STATUS_LABEL, event -> {
 			statusLabel.setText((String) ((Object[]) event.getData())[0]);
 
 			event.consume();
@@ -173,7 +173,7 @@ public final class MainWindowController extends StageController {
 	}
 
 	private void onStageClose() {
-		Getos.tabControllers.forEach(tabController -> {
+		App.tabControllers.forEach(tabController -> {
 			if (tabController.isEdited()) {
 				// todo: show yes/no save dialog
 				tabController.saveContent();
@@ -211,7 +211,7 @@ public final class MainWindowController extends StageController {
 				if (newTabController.isEdited()) {
 					newTabController.saveContent();
 				}
-				Getos.tabControllers.remove(newTabController);
+				App.tabControllers.remove(newTabController);
 				newTabController.shutDown();
 				if (tabPane.getTabs().size() == 1) {
 					statusLabel.setText("");
@@ -219,13 +219,13 @@ public final class MainWindowController extends StageController {
 			});
 			newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue) {
-					EditorController tabController = Getos.tabControllers.get(tabPane.getTabs().indexOf(newTab));
+					EditorController tabController = App.tabControllers.get(tabPane.getTabs().indexOf(newTab));
 					tabController.onEditorTabSelected();
 				}
 			});
 
 			newTabController.setEditorTab(newTab);
-			Getos.tabControllers.add(newTabController);
+			App.tabControllers.add(newTabController);
 			tabPane.getTabs().add(newTab);
 			tabPane.getSelectionModel().select(newTab);
 
@@ -244,7 +244,7 @@ public final class MainWindowController extends StageController {
 
 		DocumentModel documentModel = null;
 		try {
-			documentModel = (DocumentModel) Getos.documentModelsRegistry.get(documentType)
+			documentModel = (DocumentModel) App.documentModelsRegistry.get(documentType)
 					.newInstance(path);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {

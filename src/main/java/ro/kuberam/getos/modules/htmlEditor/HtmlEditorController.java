@@ -14,7 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ro.kuberam.getos.Getos;
+import ro.kuberam.getos.App;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.events.EventBus;
 
@@ -96,35 +96,35 @@ public final class HtmlEditorController extends EditorController {
 		zoomInButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent("pdf.zoom-in");
+				App.eventBus.fireEvent("pdf.zoom-in");
 			}
 		});
 
 		zoomOutButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent("pdf.zoom-out");
+				App.eventBus.fireEvent("pdf.zoom-out");
 			}
 		});
 
 		fitToWidthButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent("pdf.fit-to-width");
+				App.eventBus.fireEvent("pdf.fit-to-width");
 			}
 		});
 
 		fitToHeightButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent("pdf.fit-to-height");
+				App.eventBus.fireEvent("pdf.fit-to-height");
 			}
 		});
 
 		fitToPageButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent t) {
-				Getos.eventBus.fireEvent("pdf.fit-to-page");
+				App.eventBus.fireEvent("pdf.fit-to-page");
 			}
 		});
 
