@@ -69,8 +69,9 @@ public final class MainWindowController extends StageController {
 
 	@FXML
 	public void initialize() {
-		
-		App.eventBus.registerEvent("update-status-label", new UserInterfaceEvent(UserInterfaceEvent.UPDATE_STATUS_LABEL));
+
+		App.eventBus.registerEvent("update-status-label",
+				new UserInterfaceEvent(UserInterfaceEvent.UPDATE_STATUS_LABEL));
 
 		App.eventBus.addEventHandler(UserInterfaceEvent.UPDATE_STATUS_LABEL, event -> {
 			statusLabel.setText((String) ((Object[]) event.getData())[0]);
@@ -92,14 +93,6 @@ public final class MainWindowController extends StageController {
 			Path path = Paths.get("/home/claudius/comune.pdf");
 
 			openFile(path);
-
-			event.consume();
-		});
-
-		pdfButton.setOnAction(event -> {
-			File file = new File("/home/claudius/ABBYYOCRInstallationGuide.pdf");
-
-			openFile(file.toPath());
 
 			event.consume();
 		});
@@ -238,14 +231,14 @@ public final class MainWindowController extends StageController {
 		String documentType = detectDocumentType(path.toFile());
 
 		if (documentType == null) {
-			Utils.showAlert(AlertType.ERROR, path.getFileName().toString(), getResources().getString("cant_handle_filetype"));
+			Utils.showAlert(AlertType.ERROR, path.getFileName().toString(),
+					getResources().getString("cant_handle_filetype"));
 			return;
 		}
 
 		DocumentModel documentModel = null;
 		try {
-			documentModel = (DocumentModel) App.documentModelsRegistry.get(documentType)
-					.newInstance(path);
+			documentModel = (DocumentModel) App.documentModelsRegistry.get(documentType).newInstance(path);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			e.printStackTrace();

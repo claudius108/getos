@@ -68,7 +68,6 @@
 					<items>
 						<Button fx:id="openFileButton" text="%fa.file_alt" />
 						<Button fx:id="saveEditorContentButton" text="%fa.save" />
-						<Button fx:id="pdfButton" mnemonicParsing="false" text="Editor Tab" />
 						<Pane HBox.hgrow="ALWAYS" />
 						<Button fx:id="closeAppButton" text="%fa.power_off" />
 					</items>
