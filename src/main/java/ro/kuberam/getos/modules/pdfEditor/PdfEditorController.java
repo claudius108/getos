@@ -35,6 +35,9 @@ public final class PdfEditorController extends RendererController {
 	private ComboBox<String> selectEditorCombobox;
 
 	@FXML
+	private Button extractMetadataButton;
+	
+	@FXML
 	private Button extractTablesButton;
 
 	@FXML
