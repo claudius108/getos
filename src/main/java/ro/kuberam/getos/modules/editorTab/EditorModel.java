@@ -42,6 +42,7 @@ public class EditorModel {
 		eventBus.addEventHandler(EditorEvent.OPEN_TARGET_DOCUMENT, event -> {
 			Path targetDocumentPath = (Path) ((Object[]) event.getData())[0];
 
+			System.out.println("targetDocumentPath " + targetDocumentPath);
 			loadRenderer(new ro.kuberam.getos.modules.tableEditor.DocumentModel(targetDocumentPath), this);
 
 			event.consume();

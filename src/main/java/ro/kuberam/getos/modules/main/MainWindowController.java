@@ -228,7 +228,7 @@ public final class MainWindowController extends StageController {
 	}
 
 	private void openFile(Path path) {
-		String documentType = detectDocumentType(path.toFile());
+		String documentType = DocumentTypes.getTypeByExtension(path.toFile());
 
 		if (documentType == null) {
 			Utils.showAlert(AlertType.ERROR, path.getFileName().toString(),
@@ -245,17 +245,5 @@ public final class MainWindowController extends StageController {
 		}
 
 		createNewEditorTab(documentModel);
-	}
-
-	private String detectDocumentType(File file) {
-		String documentType = null;
-
-		DocumentTypes type = DocumentTypes.getTypeByExtension(file);
-
-		if (type != null) {
-			documentType = type.getMimeType();
-		}
-
-		return documentType;
 	}
 }

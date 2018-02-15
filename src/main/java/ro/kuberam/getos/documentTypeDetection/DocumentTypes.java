@@ -33,18 +33,19 @@ public enum DocumentTypes {
 		return this.extensions;
 	}
 
-	public static DocumentTypes getTypeByExtension(File file) {
+	public static String getTypeByExtension(File file) {
+		String documentType = null;
 		String extension = Utils.getExtension(file);
 
 		for (DocumentTypes type : values()) {
 			for (String registeredExtension : type.extensions) {
 				if (registeredExtension.equals(extension)) {
-					return type;
+					documentType = type.getMimeType();
 				}
 			}
 		}
-		
-		return null;
+
+		return documentType;
 	}
 
 	public static DocumentTypes getTypeByMimeType(String mimeType) {
