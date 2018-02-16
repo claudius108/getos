@@ -1,7 +1,6 @@
 package ro.kuberam.getos.modules.main;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
@@ -22,8 +21,8 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.App;
+import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
@@ -92,7 +91,7 @@ public final class MainWindowController extends StageController {
 
 			Path path = Paths.get("/home/claudius/comune.pdf");
 
-			openFile(path);
+			createNewEditorTab(DocumentTypes.getDocumentModel(path, getResources()));
 
 			event.consume();
 		});
@@ -107,7 +106,7 @@ public final class MainWindowController extends StageController {
 				fileChooser.setInitialDirectory(file.getParentFile());
 			}
 
-			openFile(file.toPath());
+			createNewEditorTab(DocumentTypes.getDocumentModel(file.toPath(), getResources()));
 
 			event.consume();
 		});
@@ -154,7 +153,7 @@ public final class MainWindowController extends StageController {
 				if (db.hasFiles()) {
 					success = true;
 					for (File file : db.getFiles()) {
-						openFile(file.toPath());
+						createNewEditorTab(DocumentTypes.getDocumentModel(file.toPath(), getResources()));
 					}
 				}
 				event.setDropCompleted(success);
@@ -225,25 +224,5 @@ public final class MainWindowController extends StageController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private void openFile(Path path) {
-		String documentType = DocumentTypes.getTypeByExtension(path.toFile());
-
-		if (documentType == null) {
-			Utils.showAlert(AlertType.ERROR, path.getFileName().toString(),
-					getResources().getString("cant_handle_filetype"));
-			return;
-		}
-
-		DocumentModel documentModel = null;
-		try {
-			documentModel = (DocumentModel) App.documentModelsRegistry.get(documentType).newInstance(path);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			e.printStackTrace();
-		}
-
-		createNewEditorTab(documentModel);
 	}
 }

@@ -1,10 +1,15 @@
 package ro.kuberam.getos.documentType;
 
-import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
+import ro.kuberam.getos.App;
+import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.utils.Utils;
 
 public enum DocumentTypes {
@@ -24,28 +29,13 @@ public enum DocumentTypes {
 	public String getDescription() {
 		return this.description;
 	}
-	
+
 	public String getMimeType() {
 		return this.mimeType;
 	}
 
 	public String[] getExtensions() {
 		return this.extensions;
-	}
-
-	public static String getTypeByExtension(File file) {
-		String documentType = null;
-		String extension = Utils.getExtension(file);
-
-		for (DocumentTypes type : values()) {
-			for (String registeredExtension : type.extensions) {
-				if (registeredExtension.equals(extension)) {
-					documentType = type.getMimeType();
-				}
-			}
-		}
-
-		return documentType;
 	}
 
 	public static DocumentTypes getTypeByMimeType(String mimeType) {
@@ -55,6 +45,36 @@ public enum DocumentTypes {
 			}
 		}
 		return null;
+	}
+
+	public static DocumentModel getDocumentModel(Path path, ResourceBundle resources) {
+		String documentType = null;
+		String extension = Utils.getExtension(path.toFile());
+
+		for (DocumentTypes type : values()) {
+			for (String registeredExtension : type.extensions) {
+				if (registeredExtension.equals(extension)) {
+					documentType = type.getMimeType();
+				}
+			}
+		}
+
+		if (documentType == null) {
+			Utils.showAlert(AlertType.ERROR, path.getFileName().toString(),
+					resources.getString("cant_handle_filetype"));
+			return null;
+		}
+
+		System.out.println("documentType " + documentType);
+		DocumentModel documentModel = null;
+		try {
+			documentModel = (DocumentModel) App.documentModelsRegistry.get(documentType).newInstance(path);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			e.printStackTrace();
+		}
+
+		return documentModel;
 	}
 
 	public static List<FileChooser.ExtensionFilter> getExtensionFilters() {

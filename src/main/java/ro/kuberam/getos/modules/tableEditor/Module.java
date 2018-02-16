@@ -4,7 +4,7 @@ import ro.kuberam.getos.DocumentModule;
 
 public class Module implements DocumentModule {
 	
-	private String documentType = "table";
+	private String documentType = "text/html";
 
 	@Override
 	public String getDocumentType() {

@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SplitPane;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 import ro.kuberam.getos.DocumentModel;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.RendererController;
+import ro.kuberam.getos.documentType.DocumentTypes;
 import ro.kuberam.getos.events.EventBus;
 import ro.kuberam.getos.events.FXEventBus;
 import ro.kuberam.getos.events.GetosEvent;
@@ -29,6 +31,9 @@ public class EditorModel {
 	public List<Path> openedDocuments = new ArrayList<Path>();
 	private SplitPane contentPane;
 
+	@FXML
+	private ResourceBundle resources;
+
 	public EditorModel(Application application, Stage stage, SplitPane contentPane) {
 		this.application = application;
 		this.stage = stage;
@@ -42,8 +47,7 @@ public class EditorModel {
 		eventBus.addEventHandler(EditorEvent.OPEN_TARGET_DOCUMENT, event -> {
 			Path targetDocumentPath = (Path) ((Object[]) event.getData())[0];
 
-			System.out.println("targetDocumentPath " + targetDocumentPath);
-			loadRenderer(new ro.kuberam.getos.modules.tableEditor.DocumentModel(targetDocumentPath), this);
+			loadRenderer(DocumentTypes.getDocumentModel(targetDocumentPath, resources), this);
 
 			event.consume();
 		});
