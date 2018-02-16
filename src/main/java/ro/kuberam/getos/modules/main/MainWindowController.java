@@ -27,7 +27,7 @@ import ro.kuberam.getos.App;
 import ro.kuberam.getos.controller.factory.ControllerFactory;
 import ro.kuberam.getos.controller.factory.EditorController;
 import ro.kuberam.getos.controller.factory.StageController;
-import ro.kuberam.getos.documentTypeDetection.DocumentTypes;
+import ro.kuberam.getos.documentType.DocumentTypes;
 import ro.kuberam.getos.events.UserInterfaceEvent;
 import ro.kuberam.getos.modules.about.AboutDialogController;
 import ro.kuberam.getos.modules.editorTab.EditorTab;

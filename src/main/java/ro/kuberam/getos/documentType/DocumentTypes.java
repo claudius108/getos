@@ -1,4 +1,4 @@
-package ro.kuberam.getos.documentTypeDetection;
+package ro.kuberam.getos.documentType;
 
 import java.io.File;
 import java.util.ArrayList;
