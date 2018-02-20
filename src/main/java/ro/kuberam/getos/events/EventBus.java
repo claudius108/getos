@@ -40,7 +40,7 @@ public interface EventBus {
      * @param eventName the event name
      * @param data the event data
      */
-    void fireEvent(String eventName, Object data);
+    void fireEvent(String eventName, Object... data);
     
     /**
      * Register an event.
