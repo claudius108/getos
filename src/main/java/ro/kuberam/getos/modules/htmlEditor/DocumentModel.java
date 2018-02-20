@@ -35,6 +35,7 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	public static LinkedHashMap<String, String> specificMetadata;
 
 	private Path path;
+	private int currentPage;
 
 	public DocumentModel(Path path) {
 		try {
@@ -127,6 +128,16 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	public Object extractTablesFromPage(int pageNumber) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int currentPage() {
+		return currentPage;
+	}
+
+	@Override
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
 	}
 }
 

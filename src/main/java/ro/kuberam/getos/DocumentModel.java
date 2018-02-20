@@ -42,6 +42,13 @@ public interface DocumentModel {
 	 *
 	 */
 	String bundle();
+	
+	/**
+	 * Document's current page.
+	 *
+	 */
+	int currentPage();
+	void setCurrentPage(int currentPage);
 
 	/**
 	 * Get a page from document.

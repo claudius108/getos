@@ -1,7 +1,6 @@
 package ro.kuberam.getos.modules.pdfEditor;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -41,6 +40,7 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	public static LinkedHashMap<String, String> specificMetadata;
 
 	private Path path;
+	private int currentPage;
 
 	public DocumentModel(Path path) {
 		try {
@@ -141,7 +141,7 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 	public String extractTablesFromPage(int pageNumber) {
 		ObjectExtractor oe = null;
 		String s = null;
-		
+
 		try {
 			oe = new ObjectExtractor(document);
 			Page page = oe.extract(pageNumber);
@@ -149,18 +149,28 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
 			BasicExtractionAlgorithm bea = new BasicExtractionAlgorithm();
 			technology.tabula.Table table = bea.extract(page).get(0);
-			
+
 			StringBuilder sb = new StringBuilder();
 			(new CSVWriter()).write(sb, table);
 			s = sb.toString();
-			
+
 			System.out.println(table.getCols().size());
 			System.out.println(table.getRows().size());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return s;
+	}
+
+	@Override
+	public int currentPage() {
+		return currentPage;
+	}
+
+	@Override
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
 	}
 }
 
