@@ -6,14 +6,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jdom2.Element;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -34,7 +33,6 @@ import ro.kuberam.getos.modules.editorTab.EditorEvent;
 import ro.kuberam.getos.modules.editorTab.EditorModel;
 import technology.tabula.ObjectExtractor;
 import technology.tabula.Page;
-import technology.tabula.RectangularTextContainer;
 import technology.tabula.extractors.BasicExtractionAlgorithm;
 
 public final class TableEditorController extends RendererController {
@@ -50,67 +48,55 @@ public final class TableEditorController extends RendererController {
 
 	@FXML
 	private TableView<ObservableList<StringProperty>> contentSourcePane;
-	
+
 	private char nextChar = 'A';
 
-	public TableEditorController(Application application, Stage stage, DocumentModel documentModel, EditorModel editorModel) {
+	public TableEditorController(Application application, Stage stage, DocumentModel documentModel,
+			EditorModel editorModel) {
 		super(application, stage, documentModel, editorModel);
 	}
 
 	@FXML
 	public void initialize() {
 		editorModel.eventBus.addEventHandler(EditorEvent.GO_TO_PAGE, event -> {
-//			contentSourcePane.setImage(getSourceDocumentModel().goToPage((int) event.getData()));
+			// contentSourcePane.setImage(getSourceDocumentModel().goToPage((int)
+			// event.getData()));
 
 			event.consume();
 		});
-		
+
 		contentSourcePane.setEditable(true);
 		contentSourcePane.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		contentSourcePane.getSelectionModel().setCellSelectionEnabled(true);
 		contentSourcePane.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		
-		populateTable("file:///home/claudius/comune.txt");
+
+		int pageNumber = getSourceDocumentModel().currentPage();
+		List<Element> tableElements = (List<Element>) getSourceDocumentModel().extractTablesFromPage(pageNumber);
+
+		for (Element tableElement : tableElements) {
+			List<Element> rows = tableElement.getChild("tbody").getChildren();
+			int columnsNumber = rows.get(0).getChildren().size();
+
+			contentSourcePane.getColumns().clear();
+			contentSourcePane.setPlaceholder(new Label("Loading..."));
+
+			createIndexColumn();
+
+			for (int i = 0; i < columnsNumber; i++) {
+				createDataColumn(i + 1);
+			}
+
+			for (Element row : rows) {
+				List<Element> columns = row.getChildren();
+
+				ObservableList<StringProperty> rowData = FXCollections.observableArrayList(columns.stream()
+						.map(column -> new SimpleStringProperty(column.getText())).collect(Collectors.toList()));
+
+				contentSourcePane.getItems().add(rowData);
+			}
+		}
 
 		editorModel.eventBus.fireEvent("document-opened", getSourceDocumentModel().path());
-	}
-	
-	private void populateTable(final String urlSpec) {
-		contentSourcePane.getColumns().clear();
-		contentSourcePane.setPlaceholder(new Label("Loading..."));
-		Task<Void> task = new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
-				technology.tabula.Table tabulaTable = getTabulaTable(new File("/home/claudius/comune.pdf"), 7);
-
-				Platform.runLater(() -> {
-					try {
-						createIndexColumn();
-
-						int columnNumber = tabulaTable.getCols().size();
-
-						for (int i = 0; i < columnNumber; i++) {
-							createDataColumn(i + 1);
-						}
-
-						for (List<RectangularTextContainer> row : tabulaTable.getRows()) {
-							ObservableList<StringProperty> rowData = FXCollections.observableArrayList(
-									row.stream().map(columnValue -> new SimpleStringProperty(columnValue.getText()))
-											.collect(Collectors.toList()));
-
-							contentSourcePane.getItems().add(rowData);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				});
-
-				return null;
-			}
-		};
-		Thread thread = new Thread(task);
-		thread.setDaemon(true);
-		thread.start();
 	}
 
 	private void createIndexColumn() {
@@ -124,7 +110,7 @@ public final class TableEditorController extends RendererController {
 					setGraphic(null);
 					setText(empty ? null : Integer.toString(getIndex() + 1));
 					getStyleClass().add("indexColumnCell");
-					
+
 					ContextMenu contextMenu = new ContextMenu();
 					MenuItem deleteColumnItem = new MenuItem("Remove row");
 					deleteColumnItem.setOnAction(e -> contentSourcePane.getItems().remove(getIndex()));
@@ -190,7 +176,8 @@ public final class TableEditorController extends RendererController {
 
 		columnHeader.setOnMouseClicked(event -> {
 			contentSourcePane.getSelectionModel().clearSelection();
-			contentSourcePane.getSelectionModel().selectRange(0, column, contentSourcePane.getItems().size() - 1, column);
+			contentSourcePane.getSelectionModel().selectRange(0, column, contentSourcePane.getItems().size() - 1,
+					column);
 
 			if (event.getButton() == MouseButton.SECONDARY) {
 				contextMenu.show(contentSourcePane, event.getScreenX(), event.getScreenY());

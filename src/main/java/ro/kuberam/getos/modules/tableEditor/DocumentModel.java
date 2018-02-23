@@ -90,8 +90,11 @@ public class DocumentModel implements ro.kuberam.getos.DocumentModel {
 
 	@Override
 	public Object extractTablesFromPage(int pageNumber) {
-		// TODO Auto-generated method stub
-		return null;
+		XPathExpression<Element> xpath = XPathFactory.instance().compile("/html/body/div[@data-page-number = '" +  pageNumber + "']/table",
+				Filters.element());
+		List<Element> tableElements = xpath.evaluate(document);
+		
+		return tableElements;
 	}
 
 	@Override

@@ -78,7 +78,7 @@ public final class PdfEditorController extends RendererController {
 						getSourceDocumentModel().extractTablesFromPage(7);
 					}
 
-					editorModel.eventBus.fireEvent("open-target-document", targetDocumentPath);
+					editorModel.eventBus.fireEvent("open-target-document", new Object[] {targetDocumentPath, 7});
 				}
 			}
 		});

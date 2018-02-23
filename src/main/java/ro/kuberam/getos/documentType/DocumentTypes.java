@@ -65,7 +65,6 @@ public enum DocumentTypes {
 			return null;
 		}
 
-		System.out.println("documentType " + documentType);
 		DocumentModel documentModel = null;
 		try {
 			documentModel = (DocumentModel) App.documentModelsRegistry.get(documentType).newInstance(path);

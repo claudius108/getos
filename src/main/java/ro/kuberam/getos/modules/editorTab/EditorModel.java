@@ -46,8 +46,12 @@ public class EditorModel {
 
 		eventBus.addEventHandler(EditorEvent.OPEN_TARGET_DOCUMENT, event -> {
 			Path targetDocumentPath = (Path) ((Object[]) event.getData())[0];
+			int pageNumber = (int) ((Object[]) event.getData())[1];
 
-			loadRenderer(DocumentTypes.getDocumentModel(targetDocumentPath, resources), this);
+			DocumentModel documentModel = DocumentTypes.getDocumentModel(targetDocumentPath, resources);
+			documentModel.setCurrentPage(pageNumber);
+
+			loadRenderer(documentModel, this);
 
 			event.consume();
 		});
